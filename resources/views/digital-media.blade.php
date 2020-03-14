@@ -1,6 +1,6 @@
 @extends('layout/index')
 
-@section('title', 'CC 147')
+@section('title', 'Digital Media')
 
 @section('liblary')
 @endsection
