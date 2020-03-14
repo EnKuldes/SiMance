@@ -32,3 +32,13 @@ Route::get('/cc-147', function () {
 Route::get('/digital-media', function () {
     return view('digital-media');
 });
+
+
+Route::get('/c4', function () {
+    return view('c4');
+});
+
+
+Route::get('/myindihome', function () {
+    return view('myindihome');
+});
