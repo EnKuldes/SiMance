@@ -75,7 +75,7 @@ var EchartsColumnsWaterfalls = function() {
 
                 // Add legend
                 legend: {
-                    data: ['Evaporation', 'Precipitation'],
+                    data: ['COF', 'Call W 20 Sec'],
                     itemHeight: 8,
                     itemGap: 20,
                     textStyle: {
@@ -97,7 +97,7 @@ var EchartsColumnsWaterfalls = function() {
                 // Horizontal axis
                 xAxis: [{
                     type: 'category',
-                    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
                     axisLabel: {
                         color: '#333'
                     },
@@ -142,9 +142,9 @@ var EchartsColumnsWaterfalls = function() {
                 // Add series
                 series: [
                     {
-                        name: 'Evaporation',
+                        name: 'COF',
                         type: 'bar',
-                        data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
+                        data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 15.6, 12.2, 32.6, 20.0, 6.4, 3.3],
                         itemStyle: {
                             normal: {
                                 label: {
@@ -161,9 +161,9 @@ var EchartsColumnsWaterfalls = function() {
                         }
                     },
                     {
-                        name: 'Precipitation',
+                        name: 'Call W 20 Sec',
                         type: 'bar',
-                        data: [2.6, 5.9, 9.0, 26.4, 58.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
+                        data: [2.6, 5.9, 9.0, 26.4, 58.7, 70.7, 17.6, 12.2, 48.7, 18.8, 6.0, 2.3],
                         itemStyle: {
                             normal: {
                                 label: {
@@ -485,7 +485,7 @@ var EchartsColumnsWaterfalls = function() {
                                 barBorderColor: '#FF7043',
                                 barBorderWidth: 6,
                                 label: {
-                                    show: true, 
+                                    show: true,
                                     position: 'top',
                                     formatter: function (params) {
                                         for (var i = 0, l = columns_thermometer_options.xAxis[0].data.length; i < l; i++) {
