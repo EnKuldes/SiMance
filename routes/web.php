@@ -17,9 +17,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/login', function () {
+# Disable karna sudah di pindahkan ke Auth Login
+/*Route::get('/login-1', function () {
     return view('login');
-});
+});*/
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -40,3 +41,12 @@ Route::get('/c4', function () {
 Route::get('/myindihome', function () {
     return view('myindihome');
 });
+
+Auth::routes([
+	'register' => false, // Registration Routes...
+	'reset' => false, // Password Reset Routes...
+	'verify' => false, // Email Verification Routes...
+	'confirm' => false, // Password Routes...
+]);
+
+Route::get('/home', 'HomeController@index')->name('home');
