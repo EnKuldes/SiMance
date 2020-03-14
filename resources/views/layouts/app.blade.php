@@ -53,6 +53,7 @@
           </a>
         </li>
 
+        @if (Auth::user()->layanan == 1)
         <li class="nav-item">
           <a href="/cc-147"
             class="navbar-nav-link">
@@ -60,7 +61,8 @@
             CC 147
           </a>
         </li>
-
+            
+        @elseif (Auth::user()->layanan == 2)
         <li class="nav-item">
           <a href="/digital-media"
             class="navbar-nav-link">
@@ -68,7 +70,8 @@
             Digital Media
           </a>
         </li>
-
+        
+        @elseif (Auth::user()->layanan == 3)
         <li class="nav-item">
           <a href="/c4"
             class="navbar-nav-link">
@@ -76,7 +79,8 @@
             C4
           </a>
         </li>
-
+        
+        @elseif (Auth::user()->layanan == 4)
         <li class="nav-item">
           <a href="/myindihome"
             class="navbar-nav-link">
@@ -84,6 +88,9 @@
             myIndiHome
           </a>
         </li>
+            
+        @endif
+
       </ul>
       <ul class="navbar-nav ml-auto">
         <li class="nav-item"  style="padding-top:5px;">
