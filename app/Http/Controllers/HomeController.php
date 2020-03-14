@@ -23,6 +23,26 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        return view('dashboard');
+    }
+    public function dashboard()
+    {
+        return view('dashboard');
+    }
+    public function cc_147()
+    {
+        return view('cc-147');
+    }
+    public function digital_media()
+    {
+        return view('digital-media');
+    }
+    public function c4()
+    {
+        return view('c4');
+    }
+    public function myindihome()
+    {
+        return view('myindihome');
     }
 }

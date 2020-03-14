@@ -45,7 +45,7 @@
       <div class="content d-flex justify-content-center align-items-center">
 
         <!-- Login card -->
-        <form method="POST" action="{{ route('login') }}">
+        <form class="login-form" method="POST" action="{{ route('login') }}">
             {{-- Input CSRF --}}
             @csrf
 

@@ -7,74 +7,162 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>@yield('title') | SiMance</title>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <!-- Global stylesheets -->
+  {{-- <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css"> --}}
+  <link href="{{ asset('assets/images/favicon.ico') }}" rel="icon">
+  <link href="{{ asset('assets/css/google-style.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ asset('assets/css/icons/icomoon/styles.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ asset('assets/css/bootstrap_limitless.min.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ asset('assets/css/layout.min.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ asset('assets/css/components.min.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ asset('assets/css/colors.min.css') }}" rel="stylesheet" type="text/css">
+  <!-- /global stylesheets -->
 
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+  <!-- Core JS files -->
+  <script src="{{ asset('assets/js/main/jquery.min.js') }}"></script>
+  <script src="{{ asset('assets/js/main/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ asset('assets/js/plugins/loaders/blockui.min.js') }}"></script>
+  <!-- /core JS files -->
 
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+  <!-- Theme JS files -->
+  @yield('liblary')
+
+  <script src="{{ asset('assets/js/app.js') }}"></script>
+
+  @yield('extra-liblary')
+  <!-- /theme JS files -->
 </head>
-<body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <main class="py-4">
-            @yield('content')
-        </main>
+<body @yield('sidebar')>
+  <!-- Main navbar -->
+  <div class="navbar navbar-expand-md navbar-dark navbar-sm bg-teal-600">
+    <div class="d-md-none">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-mobile">
+        <i class="icon-tree5"></i>
+      </button>
     </div>
+    <div class="collapse navbar-collapse" id="navbar-mobile">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a href="/dashboard"
+            class="navbar-nav-link">
+            <i class="icon-meter-fast mr-2"></i>
+            Dashboard
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="/cc-147"
+            class="navbar-nav-link">
+            <i class="icon-headset mr-2"></i>
+            CC 147
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="/digital-media"
+            class="navbar-nav-link">
+            <i class="icon-presentation mr-2"></i>
+            Digital Media
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="/c4"
+            class="navbar-nav-link">
+            <i class="icon-cogs mr-2"></i>
+            C4
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="/myindihome"
+            class="navbar-nav-link">
+            <i class="icon-home5 mr-2"></i>
+            myIndiHome
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item"  style="padding-top:5px;">
+          <?php if(!isset($_POST["filter"])){ ?>
+          <form method="post" action="">
+            <button type="button" class="btn bg-teal-400 btn-sm daterange-ranges">
+              <i class="icon-calendar22 mr-2"></i>
+              <span></span>
+            </button>
+            <input type="hidden" name="startDate" id="startDate" value="<?php echo date("Y-m-d"); ?>" required>
+            <input type="hidden" name="endDate" id="endDate" value="<?php echo date("Y-m-d"); ?>" required>
+            <button type="submit" name="filter" class="btn btn-sm bg-teal-400 btn-icon"><i class="icon-search4"></i></button>
+          </form>
+          <?php }else{ ?>
+          <span class="badge bg-teal-400 font-weight-semibold" style="font-size:10pt;padding:10px;"><i class="icon-calendar22 mr-2"></i> <?php echo date("d F, Y", strtotime($_POST["startDate"]))." - ".date("d F, Y", strtotime($_POST["endDate"])); ?></span>
+          <a href="" class="badge bg-danger font-weight-semibold" style="font-size:10pt;padding:5px;"><i class="icon-cross2"></i></a>
+          <?php } ?>
+        </li>
+        <li class="nav-item dropdown dropdown-user">
+          <a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">
+            <img src="{{ asset('assets/images/image.png') }}" class="rounded-circle" alt="">
+            <span>{{ Auth::user()->name }}</span>
+          </a>
+
+          <div class="dropdown-menu dropdown-menu-right">
+            <a class="dropdown-item" href="{{ route('logout') }}"
+                onclick="event.preventDefault();
+                document.getElementById('logout-form').submit();">
+                <i class="icon-switch2"></i> {{ __('Logout') }}
+            </a>
+
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- /main navbar -->
+
+  <!-- Page content -->
+  <div class="page-content">
+    <!-- Main content -->
+    <div class="content-wrapper">
+
+      <!-- Content area -->
+      <div class="content">
+        @yield('content')
+      </div>
+      <!-- /content area -->
+
+      <!-- Footer -->
+      <div class="navbar navbar-expand-lg navbar-light">
+        <div class="text-center d-lg-none w-100">
+          <button type="button" class="navbar-toggler dropdown-toggle" data-toggle="collapse"
+            data-target="#navbar-footer">
+            <i class="icon-unfold mr-2"></i>
+            Footer
+          </button>
+        </div>
+
+        <div class="navbar-collapse collapse" id="navbar-footer">
+          <span class="navbar-text">
+            &copy; 2020. <a href="#">SiMance 1.0 </a> by <a href="#">DevOps Infomedia</a>
+          </span>
+
+          <span class="navbar-text ml-xl-auto">
+            <strong>System Integrated Performance</strong>
+          </span>
+        </div>
+      </div>
+      <!-- /footer -->
+
+    </div>
+    <!-- /main content -->
+  </div>
+  <!-- /page content -->
+  @yield('script')
 </body>
+
 </html>
