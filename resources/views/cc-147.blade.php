@@ -136,7 +136,7 @@
             </form> --}}
             <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync"></i></button>
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
-              data-target="#insert-service-level"><i class="icon-pencil7"></i></button>
+              data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
           </div>
         </div>
 
@@ -264,7 +264,8 @@
     <div class="tab-pane fade" id="target_bobot_management">
       <div class="card">
         <ul class="nav nav-tabs nav-tabs-bottom nav-justified mb-0">
-          <li class="nav-item"><a href="#tab-service_level" class="nav-link active" data-toggle="tab">Service Level</a></li>
+          <li class="nav-item"><a href="#tab-service_level" class="nav-link active" data-toggle="tab">Service Level</a>
+          </li>
           <li class="nav-item"><a href="#tab-fcr" class="nav-link" data-toggle="tab">FCR</a></li>
           <li class="nav-item"><a href="#tab-rasio_sales" class="nav-link" data-toggle="tab">Rasio Sales</a>
           </li>
@@ -312,10 +313,10 @@
                       </span>
 
 
-                  <div class="float-right pb-1">
-                    <button type="submit" class="btn btn-primary btn-sm">Submit <i
-                        class="icon-paperplane"></i></button>
-                  </div>
+                      <div class="float-right pb-1">
+                        <button type="submit" class="btn btn-primary btn-sm">Submit <i
+                            class="icon-paperplane"></i></button>
+                      </div>
                     </legend>
 
                     <div class="row">
@@ -329,8 +330,8 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <label>Satuan</label>
-                          <select data-placeholder="Pilih Satuan" class="form-control form-control-select2"
-                            data-fouc required>
+                          <select data-placeholder="Pilih Satuan" class="form-control form-control-select2" data-fouc
+                            required>
                             <option></option>
                             <option value="percent">Percent (%)</option>
                             <option value="satuan">Satuan</option>
@@ -352,8 +353,8 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <label>Satuan</label>
-                          <select data-placeholder="Pilih Satuan" class="form-control form-control-select2"
-                            data-fouc required>
+                          <select data-placeholder="Pilih Satuan" class="form-control form-control-select2" data-fouc
+                            required>
                             <option value="percent">Percent (%)</option>
                           </select>
                         </div>
@@ -404,10 +405,10 @@
                       </span>
 
 
-                  <div class="float-right pb-1">
-                    <button type="submit" class="btn btn-primary btn-sm">Submit <i
-                        class="icon-paperplane"></i></button>
-                  </div>
+                      <div class="float-right pb-1">
+                        <button type="submit" class="btn btn-primary btn-sm">Submit <i
+                            class="icon-paperplane"></i></button>
+                      </div>
                     </legend>
 
                     <div class="row">
@@ -421,8 +422,8 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <label>Satuan</label>
-                          <select data-placeholder="Pilih Satuan" class="form-control form-control-select2"
-                            data-fouc required>
+                          <select data-placeholder="Pilih Satuan" class="form-control form-control-select2" data-fouc
+                            required>
                             <option></option>
                             <option value="percent">Percent (%)</option>
                             <option value="satuan">Satuan</option>
@@ -444,8 +445,8 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <label>Satuan</label>
-                          <select data-placeholder="Pilih Satuan" class="form-control form-control-select2"
-                            data-fouc required>
+                          <select data-placeholder="Pilih Satuan" class="form-control form-control-select2" data-fouc
+                            required>
                             <option value="percent">Percent (%)</option>
                           </select>
                         </div>
@@ -583,178 +584,45 @@
 </div> --}}
 
 <!-- Horizontal form modal -->
-<div id="insert-service-level" class="modal fade" tabindex="-1">
+<div id="insert-new-data" class="modal fade" tabindex="-1">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Insert Data</h5>
+        <h5 class="modal-title">Insert Data [ <?php echo date("d - M, Y"); ?> ]</h5>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
 
       <form action="#" class="form-horizontal">
         <div class="modal-body">
           <div class="form-group row">
-            <label class="col-form-label col-sm-6">COF</label>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" autocomplete="off" name="cof" id="cof">
+            <label class="col-form-label col-sm-5">Parameter</label>
+            <div class="col-sm-7">
+              <select data-placeholder="Pilih Parameter" class="form-control form-control-select2" name="parameter" id="parameter" data-fouc required>
+                <option></option>
+                <option value="service_level">Service Level</option>
+                <option value="fcr">FCR</option>
+                <option value="rasio_sales">Rasio Sales</option>
+                <option value="ces">CES (by customer)</option>
+                <option value="quality_layanan">Quality Layanan</option>
+              </select>
             </div>
           </div>
 
           <div class="form-group row">
-            <label class="col-form-label col-sm-6">Call</label>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" autocomplete="off" name="call" id="call">
-            </div>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn bg-primary">Submit</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-<!-- /horizontal form modal -->
-
-<!-- Horizontal form modal -->
-<div id="insert-fcr" class="modal fade" tabindex="-1">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Insert Data</h5>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-
-      <form action="#" class="form-horizontal">
-        <div class="modal-body">
-          <div class="form-group row">
-            <label class="col-form-label col-sm-6">Closed by Frontliner</label>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" autocomplete="off" name="closed" id="closed">
+            <label class="col-form-label col-sm-5">Item</label>
+            <div class="col-sm-7">
+              <select data-placeholder="Pilih Item" class="form-control form-control-select2" name="item" id="item" data-fouc required>
+                <option></option>
+                <option value="cof">COF</option>
+                <option value="call">Call</option>
+              </select>
             </div>
           </div>
 
           <div class="form-group row">
-            <label class="col-form-label col-sm-6">Tiket Logic</label>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" autocomplete="off" name="tiket_logic" id="tiket_logic">
-            </div>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn bg-primary">Submit</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-<!-- /horizontal form modal -->
-
-<!-- Horizontal form modal -->
-<div id="insert-rasio-sales" class="modal fade" tabindex="-1">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Insert Data</h5>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-
-      <form action="#" class="form-horizontal">
-        <div class="modal-body">
-          <div class="form-group row">
-            <label class="col-form-label col-sm-6">Add On</label>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" autocomplete="off" name="add_on" id="add_on">
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label class="col-form-label col-sm-6">PSB</label>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" autocomplete="off" name="psb" id="psb">
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label class="col-form-label col-sm-6">CWC Regis</label>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" autocomplete="off" name="cwc_regis" id="cwc_regis">
-            </div>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn bg-primary">Submit</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-<!-- /horizontal form modal -->
-
-<!-- Horizontal form modal -->
-<div id="insert-ces" class="modal fade" tabindex="-1">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Insert Data</h5>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-
-      <form action="#" class="form-horizontal">
-        <div class="modal-body">
-          <div class="form-group row">
-            <label class="col-form-label col-sm-6">Puas</label>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" autocomplete="off" name="puas" id="puas">
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label class="col-form-label col-sm-6">Tiket Puas</label>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" autocomplete="off" name="tidak_puas" id="tidak_puas">
-            </div>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn bg-primary">Submit</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-<!-- /horizontal form modal -->
-
-<!-- Horizontal form modal -->
-<div id="insert-quality-layanan" class="modal fade" tabindex="-1">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Insert Data</h5>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-
-      <form action="#" class="form-horizontal">
-        <div class="modal-body">
-          <div class="form-group row">
-            <label class="col-form-label col-sm-6">Agent OK</label>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" autocomplete="off" name="agent_ok" id="agent_ok">
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label class="col-form-label col-sm-6">Agent NOK</label>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" autocomplete="off" name="agent_nok" id="agent_nok">
+            <label class="col-form-label col-sm-5">Value</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" autocomplete="off" name="value_item" id="value_item">
             </div>
           </div>
         </div>
