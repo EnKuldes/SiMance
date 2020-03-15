@@ -21,6 +21,25 @@
 @section('script')
 {{-- Javascript --}}
 <script type="text/javascript">
+  function numbersonly(e){
+    var unicode=e.charCode? e.charCode : e.keyCode
+    if (unicode!=8){ //if the key isn't the backspace key (which we should allow)
+        if (unicode<48||unicode>57) //if not a number
+            return false //disable key press
+    }
+}
+
+  $('.equipCatValidation').on('keyup keydown', function(e){
+    console.log($(this).val() > 100)
+        if ($(this).val() > 100
+            && e.keyCode !== 46
+            && e.keyCode !== 8
+           ) {
+           e.preventDefault();
+           $(this).val(100);
+        }
+    });
+
   // Func Chaining
   function chain1() {
     $.ajaxSetup({
@@ -1116,85 +1135,78 @@
 
   <!-- Left sidebar component -->
   <div
-  class="sidebar sidebar-light bg-transparent sidebar-component sidebar-component-left wmin-300 border-0 shadow-0 sidebar-expand-md">
+    class="sidebar sidebar-light bg-transparent sidebar-component sidebar-component-left wmin-300 border-0 shadow-0 sidebar-expand-md">
 
-  <!-- Sidebar content -->
-  <div class="sidebar-content">
+    <!-- Sidebar content -->
+    <div class="sidebar-content">
 
-    <!-- Navigation -->
-    <div class="card">
-      <div class="card-body p-0">
-        <ul class="nav nav-sidebar mb-2">
-          <li class="nav-item-header">Parameter</li>
-          <li class="nav-item">
-            <a href="#service_level" class="nav-link active" data-toggle="tab">
-              <i class="icon-cog"></i>
-              Service Level
-              <span class="badge bg-info badge-pill ml-auto">29%</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#fcr" class="nav-link" data-toggle="tab">
-              <i class="icon-watch2"></i>
-              FCR
-              <span class="badge bg-info badge-pill ml-auto">21%</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#rasio_sales" class="nav-link" data-toggle="tab">
-              <i class="icon-clipboard5"></i>
-              Rasio Sales
-              <span class="badge bg-info badge-pill ml-auto">29%</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#ces" class="nav-link" data-toggle="tab">
-              <i class="icon-search4"></i>
-              CES (by customer)
-              <span class="badge bg-info badge-pill ml-auto">16%</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#quality_layanan" class="nav-link" data-toggle="tab">
-              <i class="icon-thumbs-up2"></i>
-              Quality Layanan
-              <span class="badge bg-info badge-pill ml-auto">66%</span>
-            </a>
-          </li>
-          <li class="nav-item-header">Resource</li>
-          <li class="nav-item">
-            <a href="#target_bobot_management" class="nav-link" data-toggle="tab">
-              <i class="icon-target2"></i><i class="icon-law"></i>
-              Target & Bobot Management
-            </a>
-          </li>
-        </ul>
+      <!-- Navigation -->
+      <div class="card">
+        <div class="card-body p-0">
+          <ul class="nav nav-sidebar mb-2">
+            <li class="nav-item-header">Parameter</li>
+            <li class="nav-item">
+              <a href="#service_level" class="nav-link active" data-toggle="tab">
+                <i class="icon-cog"></i>
+                Service Level
+                <span class="badge bg-info badge-pill ml-auto">29%</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#fcr" class="nav-link" data-toggle="tab">
+                <i class="icon-watch2"></i>
+                FCR
+                <span class="badge bg-info badge-pill ml-auto">21%</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#rasio_sales" class="nav-link" data-toggle="tab">
+                <i class="icon-clipboard5"></i>
+                Rasio Sales
+                <span class="badge bg-info badge-pill ml-auto">29%</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#ces" class="nav-link" data-toggle="tab">
+                <i class="icon-search4"></i>
+                CES (by customer)
+                <span class="badge bg-info badge-pill ml-auto">16%</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#quality_layanan" class="nav-link" data-toggle="tab">
+                <i class="icon-thumbs-up2"></i>
+                Quality Layanan
+                <span class="badge bg-info badge-pill ml-auto">66%</span>
+              </a>
+            </li>
+            <li class="nav-item-header">Resource</li>
+            <li class="nav-item">
+              <a href="#target_bobot_management" class="nav-link" data-toggle="tab">
+                <i class="icon-target2"></i><i class="icon-law"></i>
+                Target & Bobot Management
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
+      <!-- /navigation -->
+
     </div>
-    <!-- /navigation -->
+    <!-- /sidebar content -->
 
   </div>
-  <!-- /sidebar content -->
-
-</div>
-<!-- /left sidebar component -->
+  <!-- /left sidebar component -->
 
 
-<!-- Right content -->
-<div class="tab-content w-100 overflow-auto">
-  <div class="tab-pane fade active show" id="service_level">
-    <!-- Basic columns -->
-    <div class="card">
-      <div class="card-header header-elements-inline">
-        <h5 class="card-title">Service Level [<?php echo date("F - Y"); ?>]</h5>
-        <div class="header-elements">
-            {{-- <form action="#">
-              <select class="form-control wmin-100">
-                <option value="jan">Jan</option>
-                <option value="feb">Feb</option>
-                <option value="mar">Mar</option>
-              </select>
-            </form> --}}
+  <!-- Right content -->
+  <div class="tab-content w-100 overflow-auto">
+    <div class="tab-pane fade active show" id="service_level">
+      <!-- Basic columns -->
+      <div class="card">
+        <div class="card-header header-elements-inline">
+          <h5 class="card-title">Service Level [<?php echo date("F - Y"); ?>]</h5>
+          <div class="header-elements">
             <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync"></i></button>
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
               data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
@@ -1216,13 +1228,6 @@
         <div class="card-header header-elements-inline">
           <h5 class="card-title">FCR [<?php echo date("F - Y"); ?>]</h5>
           <div class="header-elements">
-            {{-- <form action="#">
-              <select class="form-control wmin-100">
-                <option value="jan">Jan</option>
-                <option value="feb">Feb</option>
-                <option value="mar">Mar</option>
-              </select>
-            </form> --}}
             <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync"></i></button>
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
               data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
@@ -1244,13 +1249,6 @@
         <div class="card-header header-elements-inline">
           <h5 class="card-title">Rasio Sales [<?php echo date("F - Y"); ?>]</h5>
           <div class="header-elements">
-            {{-- <form action="#">
-              <select class="form-control wmin-100">
-                <option value="jan">Jan</option>
-                <option value="feb">Feb</option>
-                <option value="mar">Mar</option>
-              </select>
-            </form> --}}
             <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync"></i></button>
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
               data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
@@ -1272,13 +1270,6 @@
         <div class="card-header header-elements-inline">
           <h5 class="card-title">CES (by customer) [<?php echo date("F - Y"); ?>]</h5>
           <div class="header-elements">
-            {{-- <form action="#">
-              <select class="form-control wmin-100">
-                <option value="jan">Jan</option>
-                <option value="feb">Feb</option>
-                <option value="mar">Mar</option>
-              </select>
-            </form> --}}
             <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync"></i></button>
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
               data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
@@ -1300,13 +1291,6 @@
         <div class="card-header header-elements-inline">
           <h5 class="card-title">Quality Layanan [<?php echo date("F - Y"); ?>]</h5>
           <div class="header-elements">
-            {{-- <form action="#">
-              <select class="form-control wmin-100">
-                <option value="jan">Jan</option>
-                <option value="feb">Feb</option>
-                <option value="mar">Mar</option>
-              </select>
-            </form> --}}
             <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync"></i></button>
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
               data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
@@ -1549,108 +1533,6 @@
 </div>
 <!-- /inner container -->
 
-{{-- <div class="card">
-  <div class="card-header header-elements-inline">
-    <h5 class="card-title">Service Level</h5>
-    <div class="header-elements">
-      <div class="list-icons">
-        <a class="list-icons-item" data-action="reload"></a>
-        <button type="button" class="btn btn-link p-0" data-toggle="modal" data-target="#insert-service-level"><i
-            class="icon-pencil7"></i></button>
-      </div>
-    </div>
-  </div>
-
-  <div class="table-responsive">
-    <table class="table table-xs table-striped table-bordered">
-      <thead>
-        <tr>
-          <th rowspan="2">Formulasi</th>
-          <th colspan="31">Periode </th>
-          <th rowspan="2">Total</th>
-        </tr>
-        <tr>
-          <th>1</th>
-          <th>2</th>
-          <th>3</th>
-          <th>4</th>
-          <th>5</th>
-          <th>6</th>
-          <th>7</th>
-          <th>8</th>
-          <th>9</th>
-          <th>10</th>
-          <th>11</th>
-          <th>12</th>
-          <th>13</th>
-          <th>14</th>
-          <th>15</th>
-          <th>16</th>
-          <th>17</th>
-          <th>18</th>
-          <th>19</th>
-          <th>20</th>
-          <th>21</th>
-          <th>22</th>
-          <th>23</th>
-          <th>24</th>
-          <th>25</th>
-          <th>26</th>
-          <th>27</th>
-          <th>28</th>
-          <th>29</th>
-          <th>30</th>
-          <th>31</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>Eugene</td>
-          <td>Kopyov</td>
-          <td>@Kopyov</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Victoria</td>
-          <td>Baker</td>
-          <td>@Vicky</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>James</td>
-          <td>Alexander</td>
-          <td>@Alex</td>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td>Franklin</td>
-          <td>Morrison</td>
-          <td>@Frank</td>
-        </tr>
-        <tr>
-          <td>5</td>
-          <td>Winnie</td>
-          <td>the Pooh</td>
-          <td>@Winnie</td>
-        </tr>
-        <tr>
-          <td>6</td>
-          <td>Garry</td>
-          <td>Smith</td>
-          <td>@Garry</td>
-        </tr>
-        <tr>
-          <td>7</td>
-          <td>Ian</td>
-          <td>Berg</td>
-          <td>@Ian</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div> --}}
-
 <!-- Horizontal form modal -->
 <div id="insert-new-data" class="modal fade" tabindex="-1">
   <div class="modal-dialog modal-sm">
@@ -1665,15 +1547,8 @@
           <div class="form-group row">
             <label class="col-form-label col-sm-5">Parameter</label>
             <div class="col-sm-7">
-              <select data-placeholder="Pilih Parameter" class="form-control form-control-select2" name="select_parameter" id="select_parameter" data-fouc required>
-                {{-- 
-                <option></option>
-                <option value="service_level">Service Level</option>
-                <option value="fcr">FCR</option>
-                <option value="rasio_sales">Rasio Sales</option>
-                <option value="ces">CES (by customer)</option>
-                <option value="quality_layanan">Quality Layanan</option>
-                --}}
+              <select data-placeholder="Pilih Parameter" class="form-control form-control-select2"
+                name="select_parameter" id="select_parameter" data-fouc required>
               </select>
             </div>
           </div>
@@ -1681,12 +1556,8 @@
           <div class="form-group row">
             <label class="col-form-label col-sm-5">Item</label>
             <div class="col-sm-7">
-              <select data-placeholder="Pilih Item" class="form-control form-control-select2" name="select_formulasi" id="select_formulasi" data-fouc required>
-                {{-- 
-                <option></option>
-                <option value="cof">COF</option>
-                <option value="call">Call</option>
-                --}}
+              <select data-placeholder="Pilih Item" class="form-control form-control-select2" name="select_formulasi"
+                id="select_formulasi" data-fouc required>
               </select>
             </div>
           </div>
@@ -1694,14 +1565,16 @@
           <div class="form-group row">
             <label class="col-form-label col-sm-5">Value</label>
             <div class="col-sm-7">
-              <input type="text" class="form-control" autocomplete="off" name="value_formulasi" id="value_formulasi">
+              <input type="text" class="form-control" autocomplete="off" name="value_formulasi" id="value_formulasi" onkeypress="return numbersonly(event)">
             </div>
           </div>
         </div>
 
         <div class="modal-footer">
           <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn bg-primary btn-ladda btn-ladda-spinner" data-style="expand-left" data-spinner-color="#333" data-spinner-size="20" id="saveBtn"><span class="ladda-label">Submit</span></button>
+          <button type="submit" class="btn bg-primary btn-ladda btn-ladda-spinner" data-style="expand-left"
+            data-spinner-color="#333" data-spinner-size="20" id="saveBtn"><span
+              class="ladda-label">Submit</span></button>
         </div>
       </form>
     </div>
