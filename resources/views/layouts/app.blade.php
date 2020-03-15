@@ -25,13 +25,14 @@
   <script src="{{ asset('assets/js/main/jquery.min.js') }}"></script>
   <script src="{{ asset('assets/js/main/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('assets/js/plugins/loaders/blockui.min.js') }}"></script>
+  <script src="assets/js/plugins/notifications/pnotify.min.js"></script>
   <!-- /core JS files -->
 
   <!-- Theme JS files -->
   @yield('liblary')
 
   <script src="{{ asset('assets/js/app.js') }}"></script>
-
+  <script src="assets/js/demo_pages/extra_pnotify.js"></script>
   @yield('extra-liblary')
   <!-- /theme JS files -->
 </head>
@@ -121,6 +122,7 @@
     <!-- Main content -->
     <div class="content-wrapper">
 
+      <button type="button" class="btn btn-light form-control" id="pnotify-styled-left">Launch <i class="icon-play3 ml-2"></i></button>
       <!-- Content area -->
       <div class="content">
         @yield('content')
