@@ -34,8 +34,8 @@
   @yield('liblary')
 
   <script src="{{ asset('assets/js/app.js') }}"></script>
-  <script src="assets/js/demo_pages/extra_pnotify.js"></script>
-  <script src="assets/js/demo_pages/components_buttons.js"></script>
+  <script src="{{ asset('assets/js/demo_pages/extra_pnotify.js') }}"></script>
+  <script src="{{ asset('assets/js/demo_pages/components_buttons.js') }}"></script>
   @yield('extra-liblary')
   <!-- /theme JS files -->
 </head>
@@ -124,14 +124,6 @@
   <div class="page-content">
     <!-- Main content -->
     <div class="content-wrapper">
-
-      <button type="button" class="btn btn-light form-control" id="pnotify-styled-left">Launch <i class="icon-play3 ml-2"></i></button>
-      <button type="button" class="btn btn-light btn-ladda btn-ladda-spinner" data-style="expand-left" data-spinner-color="#333" data-spinner-size="20">
-        <span class="ladda-label">Spinner</span>
-      </button>
-      <button type="button" class="btn bg-teal btn-ladda btn-ladda-progress" data-style="expand-left" data-spinner-size="20">
-        <span class="ladda-label">Spinner + Progress</span>
-      </button>
       <!-- Content area -->
       <div class="content">
         @yield('content')
