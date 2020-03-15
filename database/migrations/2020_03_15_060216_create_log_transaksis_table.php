@@ -19,13 +19,17 @@ class CreateLogTransaksisTable extends Migration
             // $table->foreign('layanan')->references('id')->on('layanans')->onDelete('cascade')->onUpdate('cascade');
             $table->integer('parameter')->unsigned()->change();
             // $table->foreign('parameter')->references('id')->on('parameters')->onDelete('cascade')->onUpdate('cascade');
-            $table->integer('formulasi')->unsigned()->change();
-            // $table->foreign('formulasi')->references('id')->on('formulasis')->onDelete('cascade')->onUpdate('cascade');
             $table->string('satuan');
             $table->integer('target');
             $table->integer('bobot');
-            $table->enum('status',['current','old'])->default('current');
+            $table->integer('realisasi');
+            $table->integer('achievement');
+            $table->integer('persetasi_bobot');
+            // Nilai Acgievments didapat dari Realiasi / Target
+            // Persentasi Bobot didapat achievemenst * bobots
+            //$table->enum('status',['current','old'])->default('current');
             $table->date('log_date');
+            $table->timestamps();
         });
     }
 
