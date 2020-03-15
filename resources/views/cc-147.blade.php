@@ -19,14 +19,13 @@
 @section('script')
 {{-- Javascript --}}
 <script type="text/javascript">
-  function isNumberKey(evt)
-  {
-     var charCode = (evt.which) ? evt.which : event.keyCode
-     if (charCode > 31 && (charCode < 48 || charCode > 57))
-        return false;
-
-     return true;
-  }
+  function numbersonly(e){
+    var unicode=e.charCode? e.charCode : e.keyCode
+    if (unicode!=8){ //if the key isn't the backspace key (which we should allow)
+        if (unicode<48||unicode>57) //if not a number
+            return false //disable key press
+    }
+}
 
   $('.equipCatValidation').on('keyup keydown', function(e){
     console.log($(this).val() > 100)
@@ -626,8 +625,7 @@
           <div class="form-group row">
             <label class="col-form-label col-sm-5">Value</label>
             <div class="col-sm-7">
-              <input type="number" class="form-control equipCatValidation" autocomplete="off" name="value_formulasi" id="value_formulasi"
-                maxlength="3">
+              <input type="text" class="form-control" autocomplete="off" name="value_formulasi" id="value_formulasi" onkeypress="return numbersonly(event)">
             </div>
           </div>
         </div>
