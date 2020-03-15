@@ -36,4 +36,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    # ID Layanan belongsTo tabel Layanans
+    public function layanan()
+    {
+        return $this->belongsTo('App\layanan', 'layanan');
+    }
 }
