@@ -35,7 +35,11 @@ class HomeController extends Controller
     }
     public function cc_147()
     {
-        return view('cc-147');
+      $data['parameters_tab'] = DB::table('parameters')->select('id', 'parameter_desc')->where([
+        ['is_enabled','=','1']
+      ])->where('id_layanan', '=', auth()->user()->layanan)->get();
+
+      return view('cc-147')->with('data',$data);;
     }
     public function digital_media()
     {
@@ -65,11 +69,7 @@ class HomeController extends Controller
           , 'tanggal' => now()->format('Y-m-d')
         ],
         [
-          /*'id_layanan' => auth()->user()->layanan
-          , 'id_parameter' => $request->select_parameter
-          , 'id_formulasi' => $request->select_formulasi
-          , 'tanggal' => now()
-          ,*/ 'nilai' => $request->value_formulasi
+          'nilai' => $request->value_formulasi
           , 'user_input' => auth()->user()->username
         ]
       );
@@ -78,6 +78,51 @@ class HomeController extends Controller
       }
       // Return hasilnya
       return response()->json(['success' => "success"], 200);
+    }
+
+    # Save KPI/target dan Bobot
+    public function save_kpi(Request $request)
+    {
+      # code...
+    }
+
+    # Get KPI
+    public function get_kpi(Request $request)
+    {
+      $datas = DB::table('kpi')
+      ->leftJoin('parameters', 'parameters.id', '=', 'kpi.id_parameter')
+      ->select('kpi.satuan', 'kpi.target', 'kpi.bobot', 'parameters.parameter_desc')->where([
+        ['kpi.active', '=', 'current']
+        , ['kpi.id_layanan', '=', auth()->user()->layanan]
+        , ['kpi.id_parameter', '=', $request->id_parameter]
+      ])->get();
+      $datas->map(function ($datas, $i) {
+        $datas->cur_target = $datas->target." ".$datas->satuan;
+        $datas->cur_bobot = $datas->bobot." %";
+        return $datas;
+      });
+      return response()->json($datas);
+    }
+
+    # Get Monthly Data
+    public function get_monthly_data(Request $request)
+    {
+      $datas = DB::table('daily_transaksis')
+      ->leftJoin('formulasis', 'daily_transaksis.id_formulasi', '=', 'formulasis.id')
+      ->leftJoin('parameters', 'parameters.id', '=', 'formulasis.id_parameter')
+      ->where([
+        ['parameters.id_layanan', '=', auth()->user()->layanan]
+      ])
+      ->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH(CURRENT_DATE()) AND YEAR(daily_transaksis.tanggal) = YEAR(CURRENT_DATE())')
+      ->selectRaw(
+        'DAY(daily_transaksis.tanggal) AS `day`
+        , DATE_FORMAT(daily_transaksis.tanggal, "%Y-%m") AS `date`
+        , daily_transaksis.nilai AS value_item
+        , formulasis.formulasi_desc AS value_desc
+        , parameters.parameter_desc AS parameter_desc'
+      )
+      ->get();
+      return response()->json($datas);
     }
 
     # Chaining
@@ -103,6 +148,22 @@ class HomeController extends Controller
         }
         elseif (!empty($request->id_parameter)) {
           $datas->where('id_parameter', '=', $request->id_parameter);
+        }
+      }
+      $datas = $datas->get();
+      return response()->json($datas);
+    }
+    public function list_date(Request $request)
+    {
+      $datas = DB::table('daily_transaksis')->where([
+        ['id_layanan','=',auth()->user()->layanan]
+      ]);
+      if ( request()->ajax() ) {
+        if (!empty($request->select_year)) {
+          $datas->whereYear('tanggal', '=', $request->select_year)->select(DB::raw('MONTH(`tanggal`) as `month`'))->distinct()->orderBy('month', 'asc');
+        }
+        else {
+          $datas->select(DB::raw('YEAR(`tanggal`) as `year`'))->distinct()->orderBy('year', 'desc');
         }
       }
       $datas = $datas->get();

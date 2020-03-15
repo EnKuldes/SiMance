@@ -10,8 +10,10 @@
 @endsection
 
 @section('extra-liblary')
+{{-- 
 <script src="assets/js/demo_pages/charts/echarts/columns_waterfalls.js"></script>
 <script src="assets/js/demo_pages/charts/echarts/lines.js"></script>
+--}}
 <script src="assets/js/demo_pages/form_select2.js"></script>
 <script src="assets/js/demo_pages/form_layouts.js"></script>
 @endsection
@@ -73,6 +75,98 @@
 
     });
   }
+  function chain3() {
+      var tempYear = 0;
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+      $.ajax({
+       type:"post",
+       url:'/list-date',
+       //data: {'id_parameter':id},
+       success: function(data){
+        var ahtml = '<option></option>';
+        for (var i = 0; i < data.length; i++) {
+          ahtml+="<option value='"+data[i]['year']+"'>"+data[i]['year']+"</option>"
+          if (i == 0) { tempYear = data[i]['year']; }
+        }
+        $('#list_year').html(ahtml);
+      },
+      error : function(data) {
+
+        console.log("error chain2");
+
+      }
+    }).done(function(){
+      $('#list_year').val(tempYear).trigger('change');
+
+    });
+  }
+  function chain4(id) {
+      var tempMonth = 0;
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+      $.ajax({
+       type:"post",
+       url:'/list-date',
+       data: {'select_year':id},
+       success: function(data){
+        var ahtml = '<option></option>';
+        for (var i = 0; i < data.length; i++) {
+          ahtml+="<option value='"+data[i]['month']+"'>"+data[i]['month']+"</option>"
+          if (i == 0) { tempMonth = data[i]['month']; }
+        }
+        $('#list_month').html(ahtml);
+
+      },
+      error : function(data) {
+
+        console.log("error chain2");
+
+      }
+    }).done(function(){
+      $('#list_month').val(tempMonth).trigger('change');
+
+    });
+  }
+  // Func-Func
+  function tab_for_parameter(id_parameter) {
+    get_current_kpi(id_parameter);
+    $('#form-target-bobot input[name=value_parameter]').val(id_parameter);
+  }
+  function get_current_kpi(id_parameter) {
+    $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+      $.ajax({
+       type:"post",
+       url:'/get-current-kpi',
+       data: {'id_parameter':id_parameter},
+       success: function(data){
+        var spanTitles = ['cur_target', 'cur_bobot', 'param_name'];
+        var valueTitles = ['cur_target', 'cur_bobot', 'parameter_desc'];
+        for (var i = 0; i < spanTitles.length; i++) {
+          $("#" + spanTitles[i]).html(data[0][valueTitles[i]]);
+        }
+      },
+      error : function(data) {
+
+        console.log("Error");
+
+      }
+    }).done(function(){
+
+    });
+  }
+
+  // Form On Submit
   $('#form-insert-daily').on('submit', function(e){
     e.preventDefault();
     $('#saveBtn').button('loading');
@@ -110,7 +204,9 @@
     // Document Ready
     $(document).ready(function() {
       chain1();
+      chain3();
       reset_input();
+      init_chart_element();
     });
   // On Change Events
   $("#select_parameter").change(function() {
@@ -118,6 +214,20 @@
     if (id != "" && id != null)
     {
       chain2(id);
+    }
+  });
+  $("#list_year").change(function() {
+    var id = $(this).val();
+    if (id != "" && id != null)
+    {
+      chain4(id);
+    }
+  });
+  $("#list_month").change(function() {
+    var id = $(this).val();
+    if (id != "" && id != null)
+    {
+      get_monthly_data( $("#list_year").val(), $(this).val() );
     }
   });
   // Button On Click
@@ -132,9 +242,832 @@
       //element.remove()
       reset_input();
     });
+</script>
+<script type="text/javascript">
+  // Charts
+  var columns_basic = echarts.init( document.getElementById('columns_basic') );
+  var line_basic = echarts.init( document.getElementById("line_basic") );
+  var line_basic1 = echarts.init( document.getElementById("line_basic1") );
+  var line_basic2 = echarts.init( document.getElementById("line_basic2") );
+  var line_stacked = echarts.init( document.getElementById("line_stacked") );
+
+  // Options
+  // Yang perlu diisi Legend.data, xAxis.data, Series
+  var columns_basic_options = {
+    // Define colors
+    color: ['#2ec7c9','#b6a2de','#5ab1ef','#ffb980','#d87a80'],
+    // Global text styles
+    textStyle: {
+      fontFamily: 'Roboto, Arial, Verdana, sans-serif',
+      fontSize: 13
+    },
+    // Chart animation duration
+    animationDuration: 750,
+    // Setup grid
+    grid: {
+      left: 0,
+      right: 40,
+      top: 35,
+      bottom: 0,
+      containLabel: true
+    },
+    // Add legend
+    legend: {
+      //data: ['COF', 'Call W 20 Sec'],
+      itemHeight: 8,
+      itemGap: 20,
+      textStyle: {
+        padding: [0, 5]
+      }
+    },
+    // Add tooltip
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(0,0,0,0.75)',
+      padding: [10, 15],
+      textStyle: {
+        fontSize: 13,
+        fontFamily: 'Roboto, sans-serif'
+      }
+    },
+    // Horizontal axis
+    xAxis: [{
+      type: 'category',
+      //data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
+      axisLabel: {
+        color: '#333'
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#999'
+        }
+      },
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: '#eee',
+          type: 'dashed'
+        }
+      }
+    }],
+    // Vertical axis
+    yAxis: [{
+      type: 'value',
+      axisLabel: {
+        color: '#333'
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#999'
+        }
+      },
+      splitLine: {
+        lineStyle: {
+          color: ['#eee']
+        }
+      },
+      splitArea: {
+        show: true,
+        areaStyle: {
+          color: ['rgba(250,250,250,0.1)', 'rgba(0,0,0,0.01)']
+        }
+      }
+    }],
+    // Add series
+    /*series: [
+    {
+      name: 'COF',
+      type: 'bar',
+      data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 15.6, 12.2, 32.6, 20.0, 6.4, 3.3],
+      itemStyle: {
+        normal: {
+          label: {
+            show: true,
+            position: 'top',
+            textStyle: {
+              fontWeight: 500
+            }
+          }
+        }
+      },
+      markLine: {
+        data: [{type: 'average', name: 'Average'}]
+      }
+    },
+    {
+      name: 'Call W 20 Sec',
+      type: 'bar',
+      data: [2.6, 5.9, 9.0, 26.4, 58.7, 70.7, 17.6, 12.2, 48.7, 18.8, 6.0, 2.3],
+      itemStyle: {
+        normal: {
+          label: {
+            show: true,
+            position: 'top',
+            textStyle: {
+              fontWeight: 500
+            }
+          }
+        }
+      },
+      markLine: {
+        data: [{type: 'average', name: 'Average'}]
+      }
+    }
+    ]*/
+    };
+  var line_basic_options = {
+        // Define colors
+        color: ["#EF5350", "#66BB6A", "#2196F3"],
+
+        // Global text styles
+        textStyle: {
+          fontFamily: "Roboto, Arial, Verdana, sans-serif",
+          fontSize: 13
+        },
+
+        // Chart animation duration
+        animationDuration: 750,
+
+        // Setup grid
+        grid: {
+          left: 0,
+          right: 40,
+          top: 35,
+          bottom: 0,
+          containLabel: true
+        },
+
+        // Add legend
+        legend: {
+          //data: ["Total Incident Logic", "Closed by Frontliner", "Tiket Logic"],
+          itemHeight: 8,
+          itemGap: 20
+        },
+
+        // Add tooltip
+        tooltip: {
+          trigger: "axis",
+          backgroundColor: "rgba(0,0,0,0.75)",
+          padding: [10, 15],
+          textStyle: {
+            fontSize: 13,
+            fontFamily: "Roboto, sans-serif"
+          }
+        },
+
+        // Horizontal axis
+        xAxis: [
+          {
+            type: "category",
+            boundaryGap: false,
+            //data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
+            axisLabel: {
+              color: "#333"
+            },
+            axisLine: {
+              lineStyle: {
+                color: "#999"
+              }
+            },
+            splitLine: {
+              lineStyle: {
+                color: ["#eee"]
+              }
+            }
+          }
+        ],
+
+        // Vertical axis
+        yAxis: [
+          {
+            type: "value",
+            axisLabel: {
+              formatter: "{value}",
+              color: "#333"
+            },
+            axisLine: {
+              lineStyle: {
+                color: "#999"
+              }
+            },
+            splitLine: {
+              lineStyle: {
+                color: ["#eee"]
+              }
+            },
+            splitArea: {
+              show: true,
+              areaStyle: {
+                color: ["rgba(250,250,250,0.1)", "rgba(0,0,0,0.01)"]
+              }
+            }
+          }
+        ],
+
+        // Add series
+        /*series: [
+          {
+            name: "Total Incident Logic",
+            type: "line",
+            data: [11, 11, 15, 13, 12, 13, 10],
+            smooth: true,
+            symbolSize: 7,
+            markLine: {
+              data: [
+                {
+                  type: "average",
+                  name: "Average"
+                }
+              ]
+            },
+            itemStyle: {
+              normal: {
+                borderWidth: 2
+              }
+            }
+          },
+          {
+            name: "Closed by Frontliner",
+            type: "line",
+            data: [1, 22, 22, 25, 32, 22, 20],
+            smooth: true,
+            symbolSize: 7,
+            markLine: {
+              data: [
+                {
+                  type: "average",
+                  name: "Average"
+                }
+              ]
+            },
+            itemStyle: {
+              normal: {
+                borderWidth: 2
+              }
+            }
+          },
+          {
+            name: "Tiket Logic",
+            type: "line",
+            data: [31, 24, 24, 35, 33, 12, 30],
+            smooth: true,
+            symbolSize: 7,
+            markLine: {
+              data: [
+                {
+                  type: "average",
+                  name: "Average"
+                }
+              ]
+            },
+            itemStyle: {
+              normal: {
+                borderWidth: 2
+              }
+            }
+          }
+        ]*/
+      };
+  var line_basic1_options = {
+        // Define colors
+        color: ["#2196F3", "#66BB6A", "#EF5350"],
+
+        // Global text styles
+        textStyle: {
+          fontFamily: "Roboto, Arial, Verdana, sans-serif",
+          fontSize: 13
+        },
+
+        // Chart animation duration
+        animationDuration: 750,
+
+        // Setup grid
+        grid: {
+          left: 0,
+          right: 40,
+          top: 35,
+          bottom: 0,
+          containLabel: true
+        },
+
+        // Add legend
+        legend: {
+          //data: ["Total Responden", "Puas", "Tiket Puas"],
+          itemHeight: 8,
+          itemGap: 20
+        },
+
+        // Add tooltip
+        tooltip: {
+          trigger: "axis",
+          backgroundColor: "rgba(0,0,0,0.75)",
+          padding: [10, 15],
+          textStyle: {
+            fontSize: 13,
+            fontFamily: "Roboto, sans-serif"
+          }
+        },
+
+        // Horizontal axis
+        xAxis: [
+          {
+            type: "category",
+            boundaryGap: false,
+            //data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
+            axisLabel: {
+              color: "#333"
+            },
+            axisLine: {
+              lineStyle: {
+                color: "#999"
+              }
+            },
+            splitLine: {
+              lineStyle: {
+                color: ["#eee"]
+              }
+            }
+          }
+        ],
+
+        // Vertical axis
+        yAxis: [
+          {
+            type: "value",
+            axisLabel: {
+              formatter: "{value}",
+              color: "#333"
+            },
+            axisLine: {
+              lineStyle: {
+                color: "#999"
+              }
+            },
+            splitLine: {
+              lineStyle: {
+                color: ["#eee"]
+              }
+            },
+            splitArea: {
+              show: true,
+              areaStyle: {
+                color: ["rgba(250,250,250,0.1)", "rgba(0,0,0,0.01)"]
+              }
+            }
+          }
+        ],
+
+        // Add series
+        /*series: [
+          {
+            name: "Total Responden",
+            type: "line",
+            data: [11, 11, 15, 13, 12, 13, 10],
+            smooth: true,
+            symbolSize: 7,
+            markLine: {
+              data: [
+                {
+                  type: "average",
+                  name: "Average"
+                }
+              ]
+            },
+            itemStyle: {
+              normal: {
+                borderWidth: 2
+              }
+            }
+          },
+          {
+            name: "Puas",
+            type: "line",
+            data: [1, 22, 22, 25, 32, 22, 20],
+            smooth: true,
+            symbolSize: 7,
+            markLine: {
+              data: [
+                {
+                  type: "average",
+                  name: "Average"
+                }
+              ]
+            },
+            itemStyle: {
+              normal: {
+                borderWidth: 2
+              }
+            }
+          },
+          {
+            name: "Tiket Puas",
+            type: "line",
+            data: [31, 24, 24, 35, 33, 12, 30],
+            smooth: true,
+            symbolSize: 7,
+            markLine: {
+              data: [
+                {
+                  type: "average",
+                  name: "Average"
+                }
+              ]
+            },
+            itemStyle: {
+              normal: {
+                borderWidth: 2
+              }
+            }
+          }
+        ]*/
+      };
+  var line_basic2_options = {
+        // Define colors
+        color: ["#2196F3", "#66BB6A", "#EF5350"],
+
+        // Global text styles
+        textStyle: {
+          fontFamily: "Roboto, Arial, Verdana, sans-serif",
+          fontSize: 13
+        },
+
+        // Chart animation duration
+        animationDuration: 750,
+
+        // Setup grid
+        grid: {
+          left: 0,
+          right: 40,
+          top: 35,
+          bottom: 0,
+          containLabel: true
+        },
+
+        // Add legend
+        legend: {
+          //data: ["Total Agent", "Agent OK", "Agent NOK"],
+          itemHeight: 8,
+          itemGap: 20
+        },
+
+        // Add tooltip
+        tooltip: {
+          trigger: "axis",
+          backgroundColor: "rgba(0,0,0,0.75)",
+          padding: [10, 15],
+          textStyle: {
+            fontSize: 13,
+            fontFamily: "Roboto, sans-serif"
+          }
+        },
+
+        // Horizontal axis
+        xAxis: [
+          {
+            type: "category",
+            boundaryGap: false,
+            //data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
+            axisLabel: {
+              color: "#333"
+            },
+            axisLine: {
+              lineStyle: {
+                color: "#999"
+              }
+            },
+            splitLine: {
+              lineStyle: {
+                color: ["#eee"]
+              }
+            }
+          }
+        ],
+
+        // Vertical axis
+        yAxis: [
+          {
+            type: "value",
+            axisLabel: {
+              formatter: "{value}",
+              color: "#333"
+            },
+            axisLine: {
+              lineStyle: {
+                color: "#999"
+              }
+            },
+            splitLine: {
+              lineStyle: {
+                color: ["#eee"]
+              }
+            },
+            splitArea: {
+              show: true,
+              areaStyle: {
+                color: ["rgba(250,250,250,0.1)", "rgba(0,0,0,0.01)"]
+              }
+            }
+          }
+        ],
+
+        // Add series
+        /*series: [
+          {
+            name: "Total Agent",
+            type: "line",
+            data: [11, 11, 15, 13, 12, 13, 10],
+            smooth: true,
+            symbolSize: 7,
+            markLine: {
+              data: [
+                {
+                  type: "average",
+                  name: "Average"
+                }
+              ]
+            },
+            itemStyle: {
+              normal: {
+                borderWidth: 2
+              }
+            }
+          },
+          {
+            name: "Agent OK",
+            type: "line",
+            data: [1, 22, 22, 25, 32, 22, 20],
+            smooth: true,
+            symbolSize: 7,
+            markLine: {
+              data: [
+                {
+                  type: "average",
+                  name: "Average"
+                }
+              ]
+            },
+            itemStyle: {
+              normal: {
+                borderWidth: 2
+              }
+            }
+          },
+          {
+            name: "Agent NOK",
+            type: "line",
+            data: [31, 24, 24, 35, 33, 12, 30],
+            smooth: true,
+            symbolSize: 7,
+            markLine: {
+              data: [
+                {
+                  type: "average",
+                  name: "Average"
+                }
+              ]
+            },
+            itemStyle: {
+              normal: {
+                borderWidth: 2
+              }
+            }
+          }
+        ]*/
+      };
+  var line_stacked_options = {
+        // Global text styles
+        textStyle: {
+          fontFamily: "Roboto, Arial, Verdana, sans-serif",
+          fontSize: 13
+        },
+
+        // Chart animation duration
+        animationDuration: 750,
+
+        // Setup grid
+        grid: {
+          left: 0,
+          right: 20,
+          top: 35,
+          bottom: 0,
+          containLabel: true
+        },
+
+        // Add legend
+        legend: {
+          //data: ["Total Transaksi", "Transaksi Add On", "Transaksi PSB", "CWC REGIS"],
+          itemHeight: 8,
+          itemGap: 20
+        },
+
+        // Add tooltip
+        tooltip: {
+          trigger: "axis",
+          backgroundColor: "rgba(0,0,0,0.75)",
+          padding: [10, 15],
+          textStyle: {
+            fontSize: 13,
+            fontFamily: "Roboto, sans-serif"
+          }
+        },
+
+        // Horizontal axis
+        xAxis: [
+          {
+            type: "category",
+            boundaryGap: false,
+            //data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
+            axisLabel: {
+              color: "#333"
+            },
+            axisLine: {
+              lineStyle: {
+                color: "#999"
+              }
+            },
+            splitLine: {
+              lineStyle: {
+                color: ["#eee"]
+              }
+            }
+          }
+        ],
+
+        // Vertical axis
+        yAxis: [
+          {
+            type: "value",
+            axisLabel: {
+              color: "#333"
+            },
+            axisLine: {
+              lineStyle: {
+                color: "#999"
+              }
+            },
+            splitLine: {
+              lineStyle: {
+                color: ["#eee"]
+              }
+            },
+            splitArea: {
+              show: true,
+              areaStyle: {
+                color: ["rgba(250,250,250,0.1)", "rgba(0,0,0,0.01)"]
+              }
+            }
+          }
+        ],
+
+        // Add series
+        /*series: [
+          {
+            name: "Total Transaksi",
+            type: "line",
+            stack: "Total",
+            smooth: true,
+            symbolSize: 7,
+            data: [120, 132, 101, 134, 90, 230, 210],
+            itemStyle: {
+              normal: {
+                borderWidth: 2
+              }
+            }
+          },
+          {
+            name: "Transaksi Add On",
+            type: "line",
+            stack: "Total",
+            smooth: true,
+            symbolSize: 7,
+            data: [220, 182, 191, 234, 290, 330, 310],
+            itemStyle: {
+              normal: {
+                borderWidth: 2
+              }
+            }
+          },
+          {
+            name: "Transaksi PSB",
+            type: "line",
+            stack: "Total",
+            smooth: true,
+            symbolSize: 7,
+            data: [150, 232, 201, 154, 190, 330, 410],
+            itemStyle: {
+              normal: {
+                borderWidth: 2
+              }
+            }
+          },
+          {
+            name: "CWC REGIS",
+            type: "line",
+            stack: "Total",
+            smooth: true,
+            symbolSize: 7,
+            data: [320, 332, 301, 334, 390, 330, 320],
+            itemStyle: {
+              normal: {
+                borderWidth: 2
+              }
+            }
+          }
+        ]*/
+      };
+  // Func untuk Transform
+  function trans_val(data, key) {
+    var resArr = [];
+    var retArr = []
+    data.filter(function(item){
+      var i = resArr.findIndex(x => (x[key] == item[key]));
+      if(i <= -1){
+            resArr.push(item);
+      }
+      return null;
+    });
+    //console.log(resArr)
+    for (var i = 0; i < resArr.length; i++) {
+      retArr.push(resArr[i][key])
+    }
+    return retArr;
+  }
+  // Get Data Monthly
+  function get_monthly_data(year, month) {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    $.ajax({
+     type:"post",
+     url:'/get-monthly-data',
+         //data: {},
+         success: function(data){
+          console.log(data);
+          // Disini harus bikin Legend.Data, xAxis.data dan Series
+          var list_parameter = trans_val(data, 'parameter_desc');
+          var list_day = trans_val(data, 'day');
+          
+          columns_basic_options.xAxis[0].data = list_day;
+          line_basic_options.xAxis[0].data = list_day;
+          line_basic1_options.xAxis[0].data = list_day;
+          line_basic2_options.xAxis[0].data = list_day;
+          line_stacked_options.xAxis[0].data = list_day;
+          
+          
+          console.log(list_parameter)
+          console.log(list_day)
+
+          init_chart_element()
+
+        },
+        error: function(jqXhr, json, errorThrown){// this are default for ajax errors
+          var errors = jqXhr.responseJSON;
+          var errorsHtml = '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Error ' + jqXhr.status + ': ' + errorThrown + '</div>';
+          notificationScript("error", "Error " + jqXhr.status, errorThrown);
+          $.each(errors['errors'], function (index, value) {
+            errorsHtml += '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + value + '</div>';
+            notificationScript("error", "Error Field", value);
+          });
+        }
+      }).done(function(){
+
+      });
+    }
   // Refresh Charts
   function refresh_charts() {
     notificationScript("info", "Info", "Onprogress.");
+  }
+
+  function init_chart_element() {
+    columns_basic.setOption(columns_basic_options, true);
+    line_basic.setOption(line_basic_options, true);
+    line_basic1.setOption(line_basic1_options, true);
+    line_basic2.setOption(line_basic2_options, true);
+    line_stacked.setOption(line_stacked_options, true);
+  }
+
+  // On Resize
+  window.onresize = function () {
+    setTimeout(function (){
+    
+      columns_basic.resize();
+      line_basic.resize();
+      line_basic1.resize();
+      line_basic2.resize();
+      line_stacked.resize();
+
+    }, 200);
+  }
+
+  // Clear Chart Area
+  function f_clear_chart(){ 
+    columns_basic.clear();
+    line_basic.clear();
+    line_basic1.clear();
+    line_basic2.clear();
+    line_stacked.clear();    
   }
 </script>
 @endsection
@@ -160,19 +1093,19 @@
     </span>
 
     <ul class="navbar-nav flex-wrap">
+      <select data-placeholder="This Yeaar" class="form-control select" data-fouc id="list_year">
+        <option></option>
+        <option value="2019">2019</option>
+        <option value="2020">2020</option>
+      </select>
+    </ul>
+
+    <ul class="navbar-nav flex-wrap">
       <select data-placeholder="This Month" class="form-control select" data-fouc id="list_month">
         <option></option>
         <option value="jan">Jan</option>
         <option value="feb">Feb</option>
         <option value="mar">Mar</option>
-      </select>
-    </ul>
-
-    <ul class="navbar-nav flex-wrap">
-      <select data-placeholder="This Yeaar" class="form-control select" data-fouc id="list_year">
-        <option></option>
-        <option value="2019">2019</option>
-        <option value="2020">2020</option>
       </select>
     </ul>
   </div>
@@ -392,18 +1325,22 @@
     <div class="tab-pane fade" id="target_bobot_management">
       <div class="card">
         <ul class="nav nav-tabs nav-tabs-bottom nav-justified mb-0">
-          <li class="nav-item"><a href="#tab-service_level" class="nav-link active" data-toggle="tab">Service Level</a>
-          </li>
+          @foreach ($data['parameters_tab'] as $record)
+            <li class="nav-item"><a href="#tab-target-bobot-management" class="nav-link" data-toggle="tab" onclick="tab_for_parameter({{ $record->id }})">{{ $record->parameter_desc }}</a>
+            </li>
+          @endforeach
+          {{--
           <li class="nav-item"><a href="#tab-fcr" class="nav-link" data-toggle="tab">FCR</a></li>
           <li class="nav-item"><a href="#tab-rasio_sales" class="nav-link" data-toggle="tab">Rasio Sales</a>
           </li>
           <li class="nav-item"><a href="#tab-ces" class="nav-link" data-toggle="tab">CES (by customer)</a></li>
           <li class="nav-item"><a href="#tab-quality_layanan" class="nav-link" data-toggle="tab">Quality Layanan</a>
           </li>
+          --}}
         </ul>
 
         <div class="tab-content card-body border-top-0 rounded-top-0 mb-0">
-          <div class="tab-pane fade active show" id="tab-service_level">
+          <div class="tab-pane fade" id="tab-target-bobot-management">
             <div class="row">
               <div class="col-md-4">
                 <div class="card-body text-center">
@@ -413,7 +1350,7 @@
                     </div>
 
                     <div class="media-body text-right">
-                      <h3 class="font-weight-semibold mb-0">95%</h3>
+                      <h3 class="font-weight-semibold mb-0" id="cur_target"></h3>
                       <span class="text-uppercase font-size-sm text-muted">Current Target</span>
                     </div>
                   </div>
@@ -426,18 +1363,19 @@
                     </div>
 
                     <div class="media-body text-right">
-                      <h3 class="font-weight-semibold mb-0">25%</h3>
+                      <h3 class="font-weight-semibold mb-0" id="cur_bobot"></h3>
                       <span class="text-uppercase font-size-sm text-muted">Current Bobot</span>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="col-md-8">
-                <form action="#">
+                <form id="form-target-bobot">
+                  <input type="hidden" name="value_parameter" id="value_parameter" value="0">
                   <fieldset>
                     <legend class="font-weight-semibold p-0">
                       <span class="float-left pt-2">
-                        <i class="icon-cog mr-2"></i> Setting Target & Bobot Service Level
+                        <i class="icon-cog mr-2"></i> Setting Target & Bobot <span id="param_name"></span>
                       </span>
 
 
@@ -495,6 +1433,7 @@
             <!-- /form inputs -->
           </div>
 
+          {{-- 
           <div class="tab-pane fade" id="tab-fcr">
             <div class="row">
               <div class="col-md-4">
@@ -598,6 +1537,7 @@
           <div class="tab-pane fade" id="tab-quality_layanan">
             DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg whatever.
           </div>
+          --}}
         </div>
       </div>
     </div>

@@ -61,3 +61,7 @@ Route::post('/daily/save', 'HomeController@save_daily_input')->name('save_daily_
 // Chain
 Route::post('/list-parameter', 'HomeController@list_parameter')->name('chain');
 Route::post('/list-formulasi', 'HomeController@list_formulasi')->name('chain');
+Route::post('/list-date', 'HomeController@list_date')->name('chain');
+// 
+Route::post('/get-current-kpi', 'HomeController@get_kpi')->name('get_information');
+Route::post('/get-monthly-data', 'HomeController@get_monthly_data')->name('get_information');

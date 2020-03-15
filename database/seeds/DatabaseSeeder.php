@@ -132,6 +132,27 @@ class DatabaseSeeder extends Seeder
         );
         DB::table('formulasis')->insert($data_formula);
 
-
+        // Insert ke KPI
+        $data_kpi = array(
+            array('id_layanan' => '1', 'id_parameter' => '1', 'satuan' => '%', 'target' => '95', 'bobot' => '20'),
+            array('id_layanan' => '1', 'id_parameter' => '2', 'satuan' => '%', 'target' => '90', 'bobot' => '25'),
+            array('id_layanan' => '1', 'id_parameter' => '3', 'satuan' => '%', 'target' => '12', 'bobot' => '10'),
+            array('id_layanan' => '1', 'id_parameter' => '4', 'satuan' => '%', 'target' => '90', 'bobot' => '25'),
+            array('id_layanan' => '1', 'id_parameter' => '5', 'satuan' => '%', 'target' => '2', 'bobot' => '20'),
+            array('id_layanan' => '2', 'id_parameter' => '6', 'satuan' => 'Minute', 'target' => '5', 'bobot' => '20'),
+            array('id_layanan' => '2', 'id_parameter' => '7', 'satuan' => '%', 'target' => '90', 'bobot' => '25'),
+            array('id_layanan' => '2', 'id_parameter' => '8', 'satuan' => '%', 'target' => '15', 'bobot' => '10'),
+            array('id_layanan' => '2', 'id_parameter' => '9', 'satuan' => '%', 'target' => '90', 'bobot' => '25'),
+            array('id_layanan' => '2', 'id_parameter' => '10', 'satuan' => '%', 'target' => '5', 'bobot' => '20'),
+            array('id_layanan' => '3', 'id_parameter' => '11', 'satuan' => '%', 'target' => '98', 'bobot' => '30'),
+            array('id_layanan' => '3', 'id_parameter' => '12', 'satuan' => '%', 'target' => '85', 'bobot' => '40'),
+            array('id_layanan' => '3', 'id_parameter' => '13', 'satuan' => '%', 'target' => '98', 'bobot' => '20'),
+            array('id_layanan' => '3', 'id_parameter' => '14', 'satuan' => '%', 'target' => '98', 'bobot' => '10'),
+            array('id_layanan' => '4', 'id_parameter' => '15', 'satuan' => 'Mio', 'target' => '8200000', 'bobot' => '15'),
+            array('id_layanan' => '4', 'id_parameter' => '16', 'satuan' => 'Mio', 'target' => '1200000', 'bobot' => '15'),
+            array('id_layanan' => '4', 'id_parameter' => '17', 'satuan' => 'Star', 'target' => '4.1', 'bobot' => '30'),
+            array('id_layanan' => '4', 'id_parameter' => '18', 'satuan' => '%', 'target' => '98', 'bobot' => '40')
+        );
+        DB::table('kpi')->insert($data_kpi);
     }
 }

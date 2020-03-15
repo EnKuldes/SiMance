@@ -18,9 +18,9 @@ class CreateKpisTable extends Migration
             $table->tinyInteger('id_layanan');
             $table->tinyInteger('id_parameter');
             $table->string('satuan');
-            $table->integer('target');
+            $table->decimal('target', 10, 2);
             $table->integer('bobot');
-            $table->date('tanggal');
+            //$table->date('tanggal');
             $table->enum('active',['old','current'])->default('current');
             $table->timestamps();
         });
