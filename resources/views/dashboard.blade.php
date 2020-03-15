@@ -66,7 +66,7 @@
       <div class="card-header header-elements-inline">
         <h5 class="card-title font-weight-bold">CC 147</h5>
         <div class="header-elements">
-          <span class="font-weight-bold font-size-lg text-info-600 ml-2">TOTAL BOBOT | 120%</span>
+          <span class="font-weight-bold font-size-lg text-info-600 ml-2">TOTAL BOBOT | {{ round($t_bobot) }} %</span>
         </div>
       </div>
 
@@ -76,46 +76,46 @@
             <legend class="font-weight-bold font-size-lg"><i class="icon-law mr-2"></i> Target & Bobot</legend>
             <ul class="list-unstyled mb-0">
               <li class="mb-3">
-                <div class="d-flex align-items-center mb-1">Service Level <span class="text-muted ml-auto">Target 50% | Bobot 20%</span></div>
+                <div class="d-flex align-items-center mb-1">Service Level <span class="text-muted ml-auto">Target {{ round($target_service_level) }}% | Bobot {{ round($bobot_service_level) }}%</span></div>
                 <div class="progress" style="height: 1rem;">
-                  <div class="progress-bar bg-info" style="width: 150%">
-                    <span>150% Complete</span>
+                  <div class="progress-bar bg-info" style="width: <?=$target_service_level?>%">
+                    <span>{{ round($target_service_level) }}% Complete</span>
                   </div>
                 </div>
               </li>
 
               <li class="mb-3">
-                <div class="d-flex align-items-center mb-1">FCR <span class="text-muted ml-auto">Target 90% | Bobot 25%</span></div>
+                <div class="d-flex align-items-center mb-1">FCR <span class="text-muted ml-auto">Target {{ round($target_fcr) }}% | Bobot {{ round($bobot_fcr) }}%</span></div>
                 <div class="progress" style="height: 1rem;">
-                  <div class="progress-bar bg-orange" style="width: 70%">
-                    <span>70% Complete</span>
+                  <div class="progress-bar bg-orange" style="width: <?=$target_fcr?>%">
+                    <span>{{ round($target_fcr) }}% Complete</span>
                   </div>
                 </div>
               </li>
 
               <li class="mb-3">
-                <div class="d-flex align-items-center mb-1">Rasio Sales <span class="text-muted ml-auto">Target 15% | Bobot 10%</span></div>
+                <div class="d-flex align-items-center mb-1">Rasio Sales <span class="text-muted ml-auto">Target {{ round($target_rasio_sales) }}% | Bobot {{ round($bobot_rasio_sales) }}%</span></div>
                 <div class="progress" style="height: 1rem;">
-                  <div class="progress-bar bg-success" style="width: 80%">
-                    <span>80% Complete</span>
+                  <div class="progress-bar bg-success" style="width: <?=$target_rasio_sales?>%">
+                    <span>{{ round($target_rasio_sales) }}% Complete</span>
                   </div>
                 </div>
               </li>
 
               <li class="mb-3">
-                <div class="d-flex align-items-center mb-1">CES (by customer) <span class="text-muted ml-auto">Target 90% | Bobot 25%</span></div>
+                <div class="d-flex align-items-center mb-1">CES (by customer) <span class="text-muted ml-auto">Target {{ round($target_ces) }}% | Bobot {{ round($bobot_ces) }}%</span></div>
                 <div class="progress" style="height: 1rem;">
-                  <div class="progress-bar bg-pink" style="width: 80%">
-                    <span>80% Complete</span>
+                  <div class="progress-bar bg-pink" style="width: <?=$target_ces?>%">
+                    <span>{{ round($target_ces) }}% Complete</span>
                   </div>
                 </div>
               </li>
 
               <li>
-                <div class="d-flex align-items-center mb-1">Quality Layanan <span class="text-muted ml-auto">Target 5% | Bobot 20%</span></div>
+                <div class="d-flex align-items-center mb-1">Quality Layanan <span class="text-muted ml-auto">Target {{ round($target_quality_layanan) }}% | Bobot {{ round($bobot_quality_layanan) }}%</span></div>
                 <div class="progress" style="height: 1rem;">
-                  <div class="progress-bar bg-primary" style="width: 60%">
-                    <span>60% Complete</span>
+                  <div class="progress-bar bg-primary" style="width: <?=$target_quality_layanan?>%">
+                    <span>{{ round($target_quality_layanan) }}% Complete</span>
                   </div>
                 </div>
               </li>
@@ -144,13 +144,13 @@
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">80 %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ optional($service_level)->realisasi }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">84 %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ optional($service_level)->achievement }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">17 %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ optional($service_level)->persetasi_bobot }} %</p>
                     </td>
                   </tr>
 
@@ -158,20 +158,20 @@
                     <td>
                       <div class="d-flex align-items-center">
                         <div>
-                          <a href="#" class="text-default font-weight-semibold letter-icon-title">Alpha application</a>
+                          <a href="#" class="text-default font-weight-semibold letter-icon-title">FCR</a>
                           <div class="text-muted font-size-sm"><i class="icon-spinner11 font-size-sm mr-1"></i> Renewal
                           </div>
                         </div>
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">80 %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ optional($fcr)->realisasi }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">84 %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ optional($fcr)->achievement }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">17 %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ optional($fcr)->persetasi_bobot }} %</p>
                     </td>
                   </tr>
 
@@ -179,20 +179,20 @@
                     <td>
                       <div class="d-flex align-items-center">
                         <div>
-                          <a href="#" class="text-default font-weight-semibold letter-icon-title">Delta application</a>
+                          <a href="#" class="text-default font-weight-semibold letter-icon-title">Rasio Sales</a>
                           <div class="text-muted font-size-sm"><i class="icon-lifebuoy font-size-sm mr-1"></i> Support
                           </div>
                         </div>
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">80 %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ optional($rasio_sales)->realisasi }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">84 %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ optional($rasio_sales)->achievement }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">17 %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ optional($rasio_sales)->persetasi_bobot }} %</p>
                     </td>
                   </tr>
 
@@ -200,20 +200,20 @@
                     <td>
                       <div class="d-flex align-items-center">
                         <div>
-                          <a href="#" class="text-default font-weight-semibold letter-icon-title">Omega application</a>
+                          <a href="#" class="text-default font-weight-semibold letter-icon-title">CES ( by Customer )</a>
                           <div class="text-muted font-size-sm"><i class="icon-lifebuoy font-size-sm mr-1"></i> Support
                           </div>
                         </div>
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">80 %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ optional($ces)->realisasi }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">84 %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ optional($ces)->achievement }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">17 %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ optional($ces)->persetasi_bobot }} %</p>
                     </td>
                   </tr>
 
@@ -221,20 +221,20 @@
                     <td>
                       <div class="d-flex align-items-center">
                         <div>
-                          <a href="#" class="text-default font-weight-semibold letter-icon-title">Alpha application</a>
+                          <a href="#" class="text-default font-weight-semibold letter-icon-title">Quality Layanan</a>
                           <div class="text-muted font-size-sm"><i class="icon-spinner11 font-size-sm mr-2"></i> Renewal
                           </div>
                         </div>
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">80 %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ optional($quality_layanan)->realisasi }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">84 %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ optional($quality_layanan)->achievement }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">17 %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ optional($ces)->persetasi_bobot }} %</p>
                     </td>
                   </tr>
                 </tbody>
