@@ -85,22 +85,6 @@
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item"  style="padding-top:5px;">
-          <?php if(!isset($_POST["filter"])){ ?>
-          <form method="post" action="">
-            <button type="button" class="btn bg-teal-400 btn-sm daterange-ranges">
-              <i class="icon-calendar22 mr-2"></i>
-              <span></span>
-            </button>
-            <input type="hidden" name="startDate" id="startDate" value="<?php echo date("Y-m-d"); ?>" required>
-            <input type="hidden" name="endDate" id="endDate" value="<?php echo date("Y-m-d"); ?>" required>
-            <button type="submit" name="filter" class="btn btn-sm bg-teal-400 btn-icon"><i class="icon-search4"></i></button>
-          </form>
-          <?php }else{ ?>
-          <span class="badge bg-teal-400 font-weight-semibold" style="font-size:10pt;padding:10px;"><i class="icon-calendar22 mr-2"></i> <?php echo date("d F, Y", strtotime($_POST["startDate"]))." - ".date("d F, Y", strtotime($_POST["endDate"])); ?></span>
-          <a href="" class="badge bg-danger font-weight-semibold" style="font-size:10pt;padding:5px;"><i class="icon-cross2"></i></a>
-          <?php } ?>
-        </li>
         <li class="nav-item dropdown dropdown-user">
           <a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">
             <img src="{{ asset('assets/images/image.png') }}" class="rounded-circle" alt="">
