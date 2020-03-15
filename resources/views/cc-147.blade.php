@@ -17,6 +17,126 @@
 @endsection
 
 @section('script')
+{{-- Javascript --}}
+<script type="text/javascript">
+  // Func Chaining
+  function chain1() {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    $.ajax({
+     type:"post",
+     url:'/list-parameter',
+         //data: {},
+         success: function(data){
+
+          var ahtml = '<option></option>';
+          for (var i = 0; i < data.length; i++) {
+            ahtml+="<option value='"+data[i]['id']+"'>"+data[i]['parameter_desc']+"</option>"
+          }
+          $('#select_parameter').html(ahtml);
+        },
+        error : function(data) {
+
+          console.log("error chain1");
+        }
+      }).done(function(){
+
+      });
+    }
+    function chain2(id) {
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+      $.ajax({
+       type:"post",
+       url:'/list-formulasi',
+       data: {'id_parameter':id},
+       success: function(data){
+        var ahtml = '<option></option>';
+        for (var i = 0; i < data.length; i++) {
+          ahtml+="<option value='"+data[i]['id']+"'>"+data[i]['formulasi_desc']+"</option>"
+        }
+        $('#select_formulasi').html(ahtml);
+
+      },
+      error : function(data) {
+
+        console.log("error chain2");
+
+      }
+    }).done(function(){
+
+    });
+  }
+  $('#form-insert-daily').on('submit', function(e){
+    e.preventDefault();
+    $('#saveBtn').button('loading');
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    $.ajax({
+     type:"post",
+     url:'/daily/save',
+     data: $( this ).serialize(),
+     success: function(data){
+      $('#saveBtn').button('reset');
+      notificationScript("success", "Success", "Successfully submit form.");
+      refresh_charts();
+      $('#insert-new-data').modal('hide');
+    },
+          error: function(jqXhr, json, errorThrown){// this are default for ajax errors
+            $('#saveBtn').button('reset');
+            var errors = jqXhr.responseJSON;
+            var errorsHtml = '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Error ' + jqXhr.status + ': ' + errorThrown + '</div>';
+            notificationScript("error", "Error " + jqXhr.status, errorThrown);
+            $.each(errors['errors'], function (index, value) {
+              errorsHtml += '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + value + '</div>';
+              notificationScript("error", "Error Field", value);
+            });
+
+          }
+        }).done(function(){
+
+        });
+
+      });
+    // Document Ready
+    $(document).ready(function() {
+      chain1();
+      reset_input();
+    });
+  // On Change Events
+  $("#select_parameter").change(function() {
+    var id = $(this).val();
+    if (id != "" && id != null)
+    {
+      chain2(id);
+    }
+  });
+  // Button On Click
+  function reset_input() {
+    $("#form-insert-daily").trigger("reset");
+    $("select").val('').trigger('change');
+    $("#select_formulasi").html('');
+  }
+  // on Close Modal Event
+  $('#insert-new-data').on('hidden.bs.modal', function () {
+      //var element = $(this).find('form input[name = "id"]')
+      //element.remove()
+      reset_input();
+    });
+  // Refresh Charts
+  function refresh_charts() {
+    notificationScript("info", "Info", "Onprogress.");
+  }
+</script>
 @endsection
 
 @section('content')
@@ -172,7 +292,7 @@
             </form> --}}
             <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync"></i></button>
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
-              data-target="#insert-fcr"><i class="icon-pencil7"></i></button>
+              data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
           </div>
         </div>
 
@@ -200,7 +320,7 @@
             </form> --}}
             <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync"></i></button>
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
-              data-target="#insert-rasio-sales"><i class="icon-pencil7"></i></button>
+              data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
           </div>
         </div>
 
@@ -228,7 +348,7 @@
             </form> --}}
             <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync"></i></button>
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
-              data-target="#insert-ces"><i class="icon-pencil7"></i></button>
+              data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
           </div>
         </div>
 
@@ -256,7 +376,7 @@
             </form> --}}
             <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync"></i></button>
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
-              data-target="#insert-quality-layanan"><i class="icon-pencil7"></i></button>
+              data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
           </div>
         </div>
 
@@ -600,18 +720,20 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
 
-      <form action="#" class="form-horizontal">
+      <form id="form-insert-daily" class="form-horizontal">
         <div class="modal-body">
           <div class="form-group row">
             <label class="col-form-label col-sm-5">Parameter</label>
             <div class="col-sm-7">
-              <select data-placeholder="Pilih Parameter" class="form-control form-control-select2" name="parameter" id="parameter" data-fouc required>
+              <select data-placeholder="Pilih Parameter" class="form-control form-control-select2" name="select_parameter" id="select_parameter" data-fouc required>
+                {{-- 
                 <option></option>
                 <option value="service_level">Service Level</option>
                 <option value="fcr">FCR</option>
                 <option value="rasio_sales">Rasio Sales</option>
                 <option value="ces">CES (by customer)</option>
                 <option value="quality_layanan">Quality Layanan</option>
+                --}}
               </select>
             </div>
           </div>
@@ -619,10 +741,12 @@
           <div class="form-group row">
             <label class="col-form-label col-sm-5">Item</label>
             <div class="col-sm-7">
-              <select data-placeholder="Pilih Item" class="form-control form-control-select2" name="item" id="item" data-fouc required>
+              <select data-placeholder="Pilih Item" class="form-control form-control-select2" name="select_formulasi" id="select_formulasi" data-fouc required>
+                {{-- 
                 <option></option>
                 <option value="cof">COF</option>
                 <option value="call">Call</option>
+                --}}
               </select>
             </div>
           </div>
@@ -630,50 +754,6 @@
           <div class="form-group row">
             <label class="col-form-label col-sm-5">Value</label>
             <div class="col-sm-7">
-              <input type="text" class="form-control" autocomplete="off" name="value_item" id="value_item">
-            </div>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn bg-primary">Submit</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-{{-- Modal Insert Daily --}}
-<div id="insert-daily" class="modal fade" tabindex="-1">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Insert Data</h5>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-
-      <form class="form-horizontal" id="form-insert-daily">
-        @csrf
-        <div class="modal-body">
-          <div class="form-group row">
-            <label class="col-form-label col-sm-6">Parameter</label>
-            <div class="col-sm-6">
-              <select data-placeholder="Choose Parameter" class="form-control select" data-fouc id="select_parameter" name="select_parameter">
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label class="col-form-label col-sm-6">Formulasi</label>
-            <div class="col-sm-6">
-              <select data-placeholder="Choose Formulasi" class="form-control select" data-fouc id="select_formulasi" name="select_formulasi">
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label class="col-form-label col-sm-6">Value Formulasi</label>
-            <div class="col-sm-6">
               <input type="text" class="form-control" autocomplete="off" name="value_formulasi" id="value_formulasi">
             </div>
           </div>
@@ -681,122 +761,11 @@
 
         <div class="modal-footer">
           <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn bg-primary">Submit</button>
+          <button type="submit" class="btn bg-primary btn-ladda btn-ladda-spinner" data-style="expand-left" data-spinner-color="#333" data-spinner-size="20" id="saveBtn"><span class="ladda-label">Submit</span></button>
         </div>
       </form>
     </div>
   </div>
 </div>
 <!-- /horizontal form modal -->
-{{-- Javascript --}}
-<script type="text/javascript">
-  // Func Chaining
-  function chain1() {
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-    $.ajax({
-     type:"post",
-     url:'/list-parameter',
-         //data: {},
-         success: function(data){
-
-          var ahtml = '<option></option>';
-          for (var i = 0; i < data.length; i++) {
-            ahtml+="<option value='"+data[i]['id']+"'>"+data[i]['value_call_status']+"</option>"
-          }
-          $('#select_parameter').html(ahtml);
-        },
-        error : function(data) {
-
-          console.log("error chain1");
-        }
-      }).done(function(){
-
-      });
-    }
-    function chain2(id) {
-      $.ajaxSetup({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-      });
-      $.ajax({
-       type:"post",
-       url:'/list-formulasi',
-       data: {'id_parameter':id},
-       success: function(data){
-        var ahtml = '<option></option>';
-        for (var i = 0; i < data.length; i++) {
-          ahtml+="<option value='"+data[i]['id']+"'>"+data[i]['value_call_status_detail']+"</option>"
-        }
-        $('#select_formulasi').html(ahtml);
-
-      },
-      error : function(data) {
-
-        console.log("error chain2");
-
-      }
-    }).done(function(){
-
-    });
-  }
-  $('#form-insert-daily').on('submit', function(e){
-    e.preventDefault();
-    //$('#saveBtn').button('loading');
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-    $.ajax({
-     type:"post",
-     url:'/daily/save',
-     data: $( this ).serialize(),
-     success: function(data){
-      //$('#saveBtn').button('reset');
-      notificationScript("success", "Success", "Successfully submit form.");
-      reset_input();
-      activity();
-    },
-          error: function(jqXhr, json, errorThrown){// this are default for ajax errors
-            //$('#saveBtn').button('reset');
-            var errors = jqXhr.responseJSON;
-            var errorsHtml = '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Error ' + jqXhr.status + ': ' + errorThrown + '</div>';
-            notificationScript("error", "Error " + jqXhr.status, errorThrown);
-            $.each(errors['errors'], function (index, value) {
-              errorsHtml += '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + value + '</div>';
-              notificationScript("error", "Error Field", value);
-            });
-
-          }
-        }).done(function(){
-
-        });
-
-      });
-    // Document Ready
-    $(document).ready(function() {
-      chain1();
-      reset_input();
-    });
-  // On Change Events
-  $("#select_parameter").change(function() {
-    var id = $(this).val();
-    if (id != "" && id != null)
-    {
-      chain2(id);
-    }
-  });
-  // Button On Click
-  function reset_input() {
-    $("#form-insert-daily").trigger("reset");
-    $("select").val('').trigger('change');
-    $("#select_formulasi").html('');
-  }
-    </script>
-
 @endsection

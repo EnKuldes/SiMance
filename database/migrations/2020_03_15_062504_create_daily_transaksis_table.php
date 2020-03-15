@@ -23,6 +23,7 @@ class CreateDailyTransaksisTable extends Migration
             $table->string('user_input');
             # created_at sebagai tanggal nya
             $table->timestamps();
+            //$table->unique(['id_layanan', 'id_parameter', 'id_formulasi', 'tanggal'], 'unique');
         });
     }
 

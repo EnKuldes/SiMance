@@ -7,7 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class daily_transaksi extends Model
 {
 	# Model untuk setiap transaksi input daily formulasi per parameter layanan
-
+    # Fillable field for mass assigning
+    protected $fillable = [
+        'id_layanan' , 'id_parameter', 'id_formulasi' , 'tanggal' , 'nilai' , 'user_input'
+    ];
     # daily_transaksi belongsTo
     public function layanan()
     {

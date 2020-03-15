@@ -57,3 +57,7 @@ Route::get('/cc-147', 'HomeController@cc_147')->name('cc-147');
 Route::get('/digital-media', 'HomeController@digital_media')->name('digital-media');
 Route::get('/c4', 'HomeController@c4')->name('c4');
 Route::get('/myindihome', 'HomeController@myindihome')->name('myindihome');
+Route::post('/daily/save', 'HomeController@save_daily_input')->name('save_daily_input');
+// Chain
+Route::post('/list-parameter', 'HomeController@list_parameter')->name('chain');
+Route::post('/list-formulasi', 'HomeController@list_formulasi')->name('chain');
