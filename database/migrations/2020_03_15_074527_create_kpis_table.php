@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDailyTransaksisTable extends Migration
+class CreateKpisTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreateDailyTransaksisTable extends Migration
      */
     public function up()
     {
-        Schema::create('daily_transaksis', function (Blueprint $table) {
+        Schema::create('kpi', function (Blueprint $table) {
             $table->id();
             $table->tinyInteger('id_layanan');
             $table->tinyInteger('id_parameter');
-            $table->tinyInteger('id_formulasi');
-            $table->bigInteger('nilai');
+            $table->string('satuan');
+            $table->integer('target');
+            $table->integer('bobot');
             $table->date('tanggal');
-            $table->string('user_input');
-            # created_at sebagai tanggal nya
+            $table->enum('active',['old','current'])->default('current');
             $table->timestamps();
         });
     }
@@ -33,6 +33,6 @@ class CreateDailyTransaksisTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('daily_transaksis');
+        Schema::dropIfExists('kpi');
     }
 }
