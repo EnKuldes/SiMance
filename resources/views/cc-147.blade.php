@@ -40,11 +40,19 @@
     </span>
 
     <ul class="navbar-nav flex-wrap">
-      <select data-placeholder="This Month" class="form-control select" data-fouc>
+      <select data-placeholder="This Month" class="form-control select" data-fouc id="list_month">
         <option></option>
         <option value="jan">Jan</option>
         <option value="feb">Feb</option>
         <option value="mar">Mar</option>
+      </select>
+    </ul>
+
+    <ul class="navbar-nav flex-wrap">
+      <select data-placeholder="This Yeaar" class="form-control select" data-fouc id="list_year">
+        <option></option>
+        <option value="2019">2019</option>
+        <option value="2020">2020</option>
       </select>
     </ul>
   </div>
@@ -55,78 +63,78 @@
 
   <!-- Left sidebar component -->
   <div
-    class="sidebar sidebar-light bg-transparent sidebar-component sidebar-component-left wmin-300 border-0 shadow-0 sidebar-expand-md">
+  class="sidebar sidebar-light bg-transparent sidebar-component sidebar-component-left wmin-300 border-0 shadow-0 sidebar-expand-md">
 
-    <!-- Sidebar content -->
-    <div class="sidebar-content">
+  <!-- Sidebar content -->
+  <div class="sidebar-content">
 
-      <!-- Navigation -->
-      <div class="card">
-        <div class="card-body p-0">
-          <ul class="nav nav-sidebar mb-2">
-            <li class="nav-item-header">Parameter</li>
-            <li class="nav-item">
-              <a href="#service_level" class="nav-link active" data-toggle="tab">
-                <i class="icon-cog"></i>
-                Service Level
-                <span class="badge bg-info badge-pill ml-auto">29%</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#fcr" class="nav-link" data-toggle="tab">
-                <i class="icon-watch2"></i>
-                FCR
-                <span class="badge bg-info badge-pill ml-auto">21%</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#rasio_sales" class="nav-link" data-toggle="tab">
-                <i class="icon-clipboard5"></i>
-                Rasio Sales
-                <span class="badge bg-info badge-pill ml-auto">29%</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#ces" class="nav-link" data-toggle="tab">
-                <i class="icon-search4"></i>
-                CES (by customer)
-                <span class="badge bg-info badge-pill ml-auto">16%</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#quality_layanan" class="nav-link" data-toggle="tab">
-                <i class="icon-thumbs-up2"></i>
-                Quality Layanan
-                <span class="badge bg-info badge-pill ml-auto">66%</span>
-              </a>
-            </li>
-            <li class="nav-item-header">Resource</li>
-            <li class="nav-item">
-              <a href="#target_bobot_management" class="nav-link" data-toggle="tab">
-                <i class="icon-target2"></i><i class="icon-law"></i>
-                Target & Bobot Management
-              </a>
-            </li>
-          </ul>
-        </div>
+    <!-- Navigation -->
+    <div class="card">
+      <div class="card-body p-0">
+        <ul class="nav nav-sidebar mb-2">
+          <li class="nav-item-header">Parameter</li>
+          <li class="nav-item">
+            <a href="#service_level" class="nav-link active" data-toggle="tab">
+              <i class="icon-cog"></i>
+              Service Level
+              <span class="badge bg-info badge-pill ml-auto">29%</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#fcr" class="nav-link" data-toggle="tab">
+              <i class="icon-watch2"></i>
+              FCR
+              <span class="badge bg-info badge-pill ml-auto">21%</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#rasio_sales" class="nav-link" data-toggle="tab">
+              <i class="icon-clipboard5"></i>
+              Rasio Sales
+              <span class="badge bg-info badge-pill ml-auto">29%</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#ces" class="nav-link" data-toggle="tab">
+              <i class="icon-search4"></i>
+              CES (by customer)
+              <span class="badge bg-info badge-pill ml-auto">16%</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#quality_layanan" class="nav-link" data-toggle="tab">
+              <i class="icon-thumbs-up2"></i>
+              Quality Layanan
+              <span class="badge bg-info badge-pill ml-auto">66%</span>
+            </a>
+          </li>
+          <li class="nav-item-header">Resource</li>
+          <li class="nav-item">
+            <a href="#target_bobot_management" class="nav-link" data-toggle="tab">
+              <i class="icon-target2"></i><i class="icon-law"></i>
+              Target & Bobot Management
+            </a>
+          </li>
+        </ul>
       </div>
-      <!-- /navigation -->
-
     </div>
-    <!-- /sidebar content -->
+    <!-- /navigation -->
 
   </div>
-  <!-- /left sidebar component -->
+  <!-- /sidebar content -->
+
+</div>
+<!-- /left sidebar component -->
 
 
-  <!-- Right content -->
-  <div class="tab-content w-100 overflow-auto">
-    <div class="tab-pane fade active show" id="service_level">
-      <!-- Basic columns -->
-      <div class="card">
-        <div class="card-header header-elements-inline">
-          <h5 class="card-title">Service Level [<?php echo date("F - Y"); ?>]</h5>
-          <div class="header-elements">
+<!-- Right content -->
+<div class="tab-content w-100 overflow-auto">
+  <div class="tab-pane fade active show" id="service_level">
+    <!-- Basic columns -->
+    <div class="card">
+      <div class="card-header header-elements-inline">
+        <h5 class="card-title">Service Level [<?php echo date("F - Y"); ?>]</h5>
+        <div class="header-elements">
             {{-- <form action="#">
               <select class="form-control wmin-100">
                 <option value="jan">Jan</option>
@@ -767,5 +775,160 @@
     </div>
   </div>
 </div>
+{{-- Modal Insert Daily --}}
+<div id="insert-daily" class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Insert Data</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <form class="form-horizontal" id="form-insert-daily">
+        @csrf
+        <div class="modal-body">
+          <div class="form-group row">
+            <label class="col-form-label col-sm-6">Parameter</label>
+            <div class="col-sm-6">
+              <select data-placeholder="Choose Parameter" class="form-control select" data-fouc id="select_parameter" name="select_parameter">
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-sm-6">Formulasi</label>
+            <div class="col-sm-6">
+              <select data-placeholder="Choose Formulasi" class="form-control select" data-fouc id="select_formulasi" name="select_formulasi">
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-sm-6">Value Formulasi</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" autocomplete="off" name="value_formulasi" id="value_formulasi">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn bg-primary">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 <!-- /horizontal form modal -->
+{{-- Javascript --}}
+<script type="text/javascript">
+  // Func Chaining
+  function chain1() {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    $.ajax({
+     type:"post",
+     url:'/list-parameter',
+         //data: {},
+         success: function(data){
+
+          var ahtml = '<option></option>';
+          for (var i = 0; i < data.length; i++) {
+            ahtml+="<option value='"+data[i]['id']+"'>"+data[i]['value_call_status']+"</option>"
+          }
+          $('#select_parameter').html(ahtml);
+        },
+        error : function(data) {
+
+          console.log("error chain1");
+        }
+      }).done(function(){
+
+      });
+    }
+    function chain2(id) {
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+      $.ajax({
+       type:"post",
+       url:'/list-formulasi',
+       data: {'id_parameter':id},
+       success: function(data){
+        var ahtml = '<option></option>';
+        for (var i = 0; i < data.length; i++) {
+          ahtml+="<option value='"+data[i]['id']+"'>"+data[i]['value_call_status_detail']+"</option>"
+        }
+        $('#select_formulasi').html(ahtml);
+
+      },
+      error : function(data) {
+
+        console.log("error chain2");
+
+      }
+    }).done(function(){
+
+    });
+  }
+  $('#form-insert-daily').on('submit', function(e){
+    e.preventDefault();
+    //$('#saveBtn').button('loading');
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    $.ajax({
+     type:"post",
+     url:'/daily/save',
+     data: $( this ).serialize(),
+     success: function(data){
+      //$('#saveBtn').button('reset');
+      notificationScript("success", "Success", "Successfully submit form.");
+      reset_input();
+      activity();
+    },
+          error: function(jqXhr, json, errorThrown){// this are default for ajax errors
+            //$('#saveBtn').button('reset');
+            var errors = jqXhr.responseJSON;
+            var errorsHtml = '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Error ' + jqXhr.status + ': ' + errorThrown + '</div>';
+            notificationScript("error", "Error " + jqXhr.status, errorThrown);
+            $.each(errors['errors'], function (index, value) {
+              errorsHtml += '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + value + '</div>';
+              notificationScript("error", "Error Field", value);
+            });
+
+          }
+        }).done(function(){
+
+        });
+
+      });
+    // Document Ready
+    $(document).ready(function() {
+      chain1();
+      reset_input();
+    });
+  // On Change Events
+  $("#select_parameter").change(function() {
+    var id = $(this).val();
+    if (id != "" && id != null)
+    {
+      chain2(id);
+    }
+  });
+  // Button On Click
+  function reset_input() {
+    $("#form-insert-daily").trigger("reset");
+    $("select").val('').trigger('change');
+    $("#select_formulasi").html('');
+  }
+    </script>
+
 @endsection
