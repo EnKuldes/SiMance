@@ -994,10 +994,9 @@
           }
         ]*/
       };
-  // Func untuk Transform
+  // Func untuk Transform data dengan mencari key yang unique lalu
   function trans_val(data, key) {
     var resArr = [];
-    var retArr = []
     data.filter(function(item){
       var i = resArr.findIndex(x => (x[key] == item[key]));
       if(i <= -1){
@@ -1006,11 +1005,46 @@
       return null;
     });
     //console.log(resArr)
+    var retArr = []
     for (var i = 0; i < resArr.length; i++) {
       retArr.push(resArr[i][key])
     }
     return retArr;
   }
+  function list_legend(data, value_parameter) {
+    window["data_"+value_parameter] =[];
+    for (var i = 0; i < data.length; i++) {
+      if (data[i]['parameter_desc'] == value_parameter) {
+        window["data_"+value_parameter].push(data[i]['value_desc'])
+      }
+    }
+    var uniqueValueDesc = []
+    $.each(window["data_"+value_parameter], function(i, el){
+      if($.inArray(el, uniqueValueDesc) === -1) uniqueValueDesc.push(el);
+    });
+    //console.log( uniqueValueDesc )
+    return uniqueValueDesc;
+  }
+  function list_data_series(data, value_parameter, value_desc, type_chart) {
+    var tempArr = [];
+    for (var j = 0; j < value_desc.length; j++) {
+      window["data_"+value_parameter+value_desc[j]] =[];          
+      for (var i = 0; i < data.length; i++) {
+        if (data[i]['parameter_desc'] == value_parameter && data[i]['value_desc'] == value_desc[j] ) {
+          window["data_"+value_parameter+value_desc[j]].push(data[i]['value_item'])
+        }
+      }
+      console.log( window["data_"+value_parameter+value_desc[j]] )
+      tempArr.push({
+        name: value_desc[j],
+        type: type_chart,
+        data: window["data_"+value_parameter+value_desc[j]]
+      })
+    }
+    console.log(tempArr)
+    return tempArr;
+  }
+
   // Get Data Monthly
   function get_monthly_data(year, month) {
     $.ajaxSetup({
@@ -1023,9 +1057,13 @@
      url:'/get-monthly-data',
          //data: {},
          success: function(data){
-          console.log(data);
+          //console.log(data);
           // Disini harus bikin Legend.Data, xAxis.data dan Series
-          var list_parameter = trans_val(data, 'parameter_desc');
+          /*
+          nps_episode_stack_option.series = episode_series;
+          nps_episode_stack_option.xAxis[0].data = axisdata; -> Done
+          nps_episode_stack_option.legend.data = datalegend;
+          */
           var list_day = trans_val(data, 'day');
           
           columns_basic_options.xAxis[0].data = list_day;
@@ -1034,9 +1072,66 @@
           line_basic2_options.xAxis[0].data = list_day;
           line_stacked_options.xAxis[0].data = list_day;
           
+          var list_parameter = trans_val(data, 'parameter_desc');
           
-          console.log(list_parameter)
-          console.log(list_day)
+          var tempList = list_legend(data, list_parameter[0]);
+          columns_basic_options.legend.data = tempList;
+          columns_basic_options.series = list_data_series(data, list_parameter[0], tempList, 'bar');
+
+          tempList = list_legend(data, list_parameter[1]);
+          line_basic_options.legend.data = tempList;
+          line_basic_options.series = list_data_series(data, list_parameter[1], tempList, 'line');
+
+          tempList = list_legend(data, list_parameter[2]);
+          line_basic1_options.legend.data = tempList;
+          line_basic1_options.series = list_data_series(data, list_parameter[2], tempList, 'line');
+
+          tempList = list_legend(data, list_parameter[3]);
+          line_basic2_options.legend.data = tempList;
+          line_basic2_options.series = list_data_series(data, list_parameter[3], tempList, 'line');
+
+          tempList = list_legend(data, list_parameter[4]);
+          line_stacked_options.legend.data = tempList;
+          line_stacked_options.series = list_data_series(data, list_parameter[4], tempList, 'line');
+
+
+          
+          /*for (var j = 0; j < list_parameter.length; j++) {
+            window["data_"+list_parameter[j]] =[];
+            for (var i = 0; i < data.length; i++) {
+              if (data[i]['parameter_desc'] == list_parameter[j]) {
+                window["data_"+list_parameter[j]].push(data[i]['value_desc'])
+              }
+            }
+            var uniqueValueDesc = []
+            $.each(window["data_"+list_parameter[j]], function(i, el){
+                if($.inArray(el, uniqueValueDesc) === -1) uniqueValueDesc.push(el);
+            });
+            console.log( uniqueValueDesc )
+          }*/
+          
+
+          /*window["data_"+list_parameter[0]+uniqueValueDesc[0]] =[];          
+          for (var i = 0; i < data.length; i++) {
+            if (data[i]['parameter_desc'] == list_parameter[0] && data[i]['value_desc'] == uniqueValueDesc[0] ) {
+              window["data_"+list_parameter[0]+uniqueValueDesc[0]].push(data[i]['value_item'])
+            }
+          }
+          console.log( window["data_"+list_parameter[0]+uniqueValueDesc[0]] )*/
+
+          /*nps_series = [];
+          nps_list = ["detractor","passive","promotor"]
+
+
+          for(var j = 0; j < nps_list.length; j++) {
+            window["data_"+nps_list[j]] =[];
+            for(var k = 0; k < list_episode_name.length; k++) {
+              sum_nps = get_trans_val_single_sum(result, 'q_group_name', list_episode_name[k], nps_list[0])[0] + get_trans_val_single_sum(result, 'q_group_name', list_episode_name[k], nps_list[1])[0] + get_trans_val_single_sum(result, 'q_group_name', list_episode_name[k], nps_list[2])[0];
+
+              window["data_"+nps_list[j]].push(((get_trans_val_single_sum(result, 'q_group_name', list_episode_name[k], nps_list[j])[0]/sum_nps)*100).toFixed(2));
+            }
+            nps_series.push({name:nps_list[j],type:'bar',stack: '1',itemStyle : { normal: {label : {show: true, position: 'inside',textStyle: {color: 'black'}}}},data:window["data_"+nps_list[j]]});
+          };*/
 
           init_chart_element()
 
@@ -1056,7 +1151,8 @@
     }
   // Refresh Charts
   function refresh_charts() {
-    notificationScript("info", "Info", "Onprogress.");
+    f_clear_chart();
+    setTimeout(get_monthly_data( $("#list_year").val(), $('#list_month').val() ), 5000);
   }
 
   function init_chart_element() {
@@ -1207,7 +1303,7 @@
         <div class="card-header header-elements-inline">
           <h5 class="card-title">Service Level [<?php echo date("F - Y"); ?>]</h5>
           <div class="header-elements">
-            <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync"></i></button>
+            <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync" onclick="refresh_charts()"></i></button>
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
               data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
           </div>
@@ -1228,7 +1324,7 @@
         <div class="card-header header-elements-inline">
           <h5 class="card-title">FCR [<?php echo date("F - Y"); ?>]</h5>
           <div class="header-elements">
-            <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync"></i></button>
+            <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync" onclick="refresh_charts()"></i></button>
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
               data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
           </div>
@@ -1249,7 +1345,7 @@
         <div class="card-header header-elements-inline">
           <h5 class="card-title">Rasio Sales [<?php echo date("F - Y"); ?>]</h5>
           <div class="header-elements">
-            <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync"></i></button>
+            <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync" onclick="refresh_charts()"></i></button>
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
               data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
           </div>
@@ -1291,7 +1387,7 @@
         <div class="card-header header-elements-inline">
           <h5 class="card-title">Quality Layanan [<?php echo date("F - Y"); ?>]</h5>
           <div class="header-elements">
-            <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync"></i></button>
+            <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync" onclick="refresh_charts()"></i></button>
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
               data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
           </div>
