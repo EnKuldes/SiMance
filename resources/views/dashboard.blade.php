@@ -66,7 +66,8 @@
       <div class="card-header header-elements-inline">
         <h5 class="card-title font-weight-bold">CC 147</h5>
         <div class="header-elements">
-          <span class="font-weight-bold font-size-lg text-info-600 ml-2">TOTAL BOBOT | {{ round($t_bobot ?? 0) }} %</span>
+          <span class="font-weight-bold font-size-lg text-info-600 ml-2">TOTAL BOBOT | {{ round($t_bobot ?? 0) }}
+            %</span>
         </div>
       </div>
 
@@ -76,7 +77,9 @@
             <legend class="font-weight-bold font-size-lg"><i class="icon-law mr-2"></i> Target & Bobot</legend>
             <ul class="list-unstyled mb-0">
               <li class="mb-3">
-                <div class="d-flex align-items-center mb-1">Service Level <span class="text-muted ml-auto">Target {{ round($target_service_level  ?? 0) }}% | Bobot {{ round($bobot_service_level  ?? 0) }}%</span></div>
+                <div class="d-flex align-items-center mb-1">Service Level <span class="text-muted ml-auto">Target
+                    {{ round($target_service_level  ?? 0) }}% | Bobot {{ round($bobot_service_level  ?? 0) }}%</span>
+                </div>
                 <div class="progress" style="height: 1rem;">
                   <div class="progress-bar bg-info" style="width: <?=$target_service_level ?? 0?>%">
                     <span>{{ round($target_service_level  ?? 0) }}% Complete</span>
@@ -85,7 +88,8 @@
               </li>
 
               <li class="mb-3">
-                <div class="d-flex align-items-center mb-1">FCR <span class="text-muted ml-auto">Target {{ round($target_fcr ?? 0 ) }}% | Bobot {{ round($bobot_fcr ?? 0 ) }}%</span></div>
+                <div class="d-flex align-items-center mb-1">FCR <span class="text-muted ml-auto">Target
+                    {{ round($target_fcr ?? 0 ) }}% | Bobot {{ round($bobot_fcr ?? 0 ) }}%</span></div>
                 <div class="progress" style="height: 1rem;">
                   <div class="progress-bar bg-orange" style="width: <?=$target_fcr ?? 0 ?>%">
                     <span>{{ round($target_fcr ?? 0 ) }}% Complete</span>
@@ -94,7 +98,8 @@
               </li>
 
               <li class="mb-3">
-                <div class="d-flex align-items-center mb-1">Rasio Sales <span class="text-muted ml-auto">Target {{ round($target_rasio_sales ?? 0 ) }}% | Bobot {{ round($bobot_rasio_sales ?? 0 ) }}%</span></div>
+                <div class="d-flex align-items-center mb-1">Rasio Sales <span class="text-muted ml-auto">Target
+                    {{ round($target_rasio_sales ?? 0 ) }}% | Bobot {{ round($bobot_rasio_sales ?? 0 ) }}%</span></div>
                 <div class="progress" style="height: 1rem;">
                   <div class="progress-bar bg-success" style="width: <?=$target_rasio_sales ?? 0 ?>%">
                     <span>{{ round($target_rasio_sales ?? 0 ) }}% Complete</span>
@@ -103,7 +108,8 @@
               </li>
 
               <li class="mb-3">
-                <div class="d-flex align-items-center mb-1">CES (by customer) <span class="text-muted ml-auto">Target {{ round($target_ces ?? 0 ) }}% | Bobot {{ round($bobot_ces ?? 0 ) }}%</span></div>
+                <div class="d-flex align-items-center mb-1">CES (by customer) <span class="text-muted ml-auto">Target
+                    {{ round($target_ces ?? 0 ) }}% | Bobot {{ round($bobot_ces ?? 0 ) }}%</span></div>
                 <div class="progress" style="height: 1rem;">
                   <div class="progress-bar bg-pink" style="width: <?=$target_ces ?? 0 ?>%">
                     <span>{{ round($target_ces ?? 0 ) }}% Complete</span>
@@ -112,7 +118,9 @@
               </li>
 
               <li>
-                <div class="d-flex align-items-center mb-1">Quality Layanan <span class="text-muted ml-auto">Target {{ round($target_quality_layanan ?? 0 ) }}% | Bobot {{ round($bobot_quality_layanan ?? 0 ) }}%</span></div>
+                <div class="d-flex align-items-center mb-1">Quality Layanan <span class="text-muted ml-auto">Target
+                    {{ round($target_quality_layanan ?? 0 ) }}% | Bobot
+                    {{ round($bobot_quality_layanan ?? 0 ) }}%</span></div>
                 <div class="progress" style="height: 1rem;">
                   <div class="progress-bar bg-primary" style="width: <?=$target_quality_layanan ?? 0 ?>%">
                     <span>{{ round($target_quality_layanan ?? 0 ) }}% Complete</span>
@@ -138,19 +146,23 @@
                       <div class="d-flex align-items-center">
                         <div>
                           <a href="#" class="text-default font-weight-semibold letter-icon-title">Service Level</a>
-                          <div class="text-muted font-size-sm"><i class="icon-checkmark3 font-size-sm mr-1"></i> New order
+                          <div class="text-muted font-size-sm"><i class="icon-checkmark3 font-size-sm mr-1"></i> New
+                            order
                           </div>
                         </div>
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ isset($service_level) ? optional($service_level)->realisasi : 0 }} %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">
+                        {{ isset($service_level) ? optional($service_level)->realisasi : 0 }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ isset($service_level) ? optional($service_level)->achievement : 0 }} %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">
+                        {{ isset($service_level) ? optional($service_level)->achievement : 0 }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ isset($service_level) ? optional($service_level)->persetasi_bobot : 0 }} %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">
+                        {{ isset($service_level) ? optional($service_level)->persetasi_bobot : 0 }} %</p>
                     </td>
                   </tr>
 
@@ -165,13 +177,16 @@
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ isset($fcr) ? optional($fcr)->realisasi : 0 }} %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">
+                        {{ isset($fcr) ? optional($fcr)->realisasi : 0 }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ isset($fcr) ? optional($fcr)->achievement : 0 }} %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">
+                        {{ isset($fcr) ? optional($fcr)->achievement : 0 }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ isset($fcr) ? optional($fcr)->persetasi_bobot : 0 }} %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">
+                        {{ isset($fcr) ? optional($fcr)->persetasi_bobot : 0 }} %</p>
                     </td>
                   </tr>
 
@@ -186,13 +201,16 @@
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ isset($rasio_sales) ? optional($rasio_sales)->realisasi : 0 }} %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">
+                        {{ isset($rasio_sales) ? optional($rasio_sales)->realisasi : 0 }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ isset($rasio_sales) ? optional($rasio_sales)->achievement : 0 }} %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">
+                        {{ isset($rasio_sales) ? optional($rasio_sales)->achievement : 0 }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ isset($rasio_sales) ? optional($rasio_sales)->persetasi_bobot : 0 }} %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">
+                        {{ isset($rasio_sales) ? optional($rasio_sales)->persetasi_bobot : 0 }} %</p>
                     </td>
                   </tr>
 
@@ -200,20 +218,24 @@
                     <td>
                       <div class="d-flex align-items-center">
                         <div>
-                          <a href="#" class="text-default font-weight-semibold letter-icon-title">CES ( by Customer )</a>
+                          <a href="#" class="text-default font-weight-semibold letter-icon-title">CES ( by Customer
+                            )</a>
                           <div class="text-muted font-size-sm"><i class="icon-lifebuoy font-size-sm mr-1"></i> Support
                           </div>
                         </div>
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ isset($ces) ? optional($ces)->realisasi : 0 }} %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">
+                        {{ isset($ces) ? optional($ces)->realisasi : 0 }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ isset($ces) ? optional($ces)->achievement : 0 }} %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">
+                        {{ isset($ces) ? optional($ces)->achievement : 0 }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ isset($ces) ? optional($ces)->persetasi_bobot : 0 }} %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">
+                        {{ isset($ces) ? optional($ces)->persetasi_bobot : 0 }} %</p>
                     </td>
                   </tr>
 
@@ -228,13 +250,16 @@
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ isset($quality_layanan) ? optional($quality_layanan)->realisasi : 0 }} %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">
+                        {{ isset($quality_layanan) ? optional($quality_layanan)->realisasi : 0 }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ isset($quality_layanan) ? optional($quality_layanan)->achievement : 0 }} %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">
+                        {{ isset($quality_layanan) ? optional($quality_layanan)->achievement : 0 }} %</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">{{ isset($quality_layanan) ? optional($ces)->persetasi_bobot : 0 }} %</p>
+                      <p class="font-weight-semibold font-size-lg text-center mb-0">
+                        {{ isset($quality_layanan) ? optional($ces)->persetasi_bobot : 0 }} %</p>
                     </td>
                   </tr>
                 </tbody>
@@ -247,6 +272,25 @@
     </div>
     <!-- /daily sales -->
   </div>
-  <div class="col-md-3">asdf</div>
+  <div class="col-md-3">
+    <!-- Basic columns -->
+    <div class="card">
+      <div class="card-header header-elements-inline">
+        <h5 class="card-title">Basic columns</h5>
+        <div class="header-elements">
+          <div class="list-icons">
+            <a class="list-icons-item" data-action="reload"></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="chart-container">
+          <div class="chart has-fixed-height" id="columns_basic1"></div>
+        </div>
+      </div>
+    </div>
+    <!-- /basic columns -->
+  </div>
 </div>
 @endsection
