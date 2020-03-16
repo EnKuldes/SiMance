@@ -210,12 +210,51 @@ class HomeController extends Controller
         case 5:
           $dt->selectRaw('SUM(CASE WHEN id_formulasi = 14 THEN nilai ELSE 0 END)/SUM(nilai)*100 AS realisasi');
           break;
+        case 6:
+          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 14 THEN nilai ELSE 0 END)/SUM(nilai)*100 AS realisasi'); // Average beluums
+          break;
+        case 7:
+          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 22 THEN nilai ELSE 0 END)/SUM(nilai)*100 AS realisasi');
+          break;
+        case 8:
+          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 27 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 26 THEN nilai ELSE 0 END)*100 AS realisasi');
+          break;
+        case 9:
+          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 29 THEN nilai ELSE 0 END)/SUM(nilai)*100 AS realisasi');
+          break;
+        case 10:
+          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 32 THEN nilai ELSE 0 END)/SUM(nilai)*100 AS realisasi');
+          break;
+        case 11:
+          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 35 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 34 THEN nilai ELSE 0 END)*100 AS realisasi');
+          break;
+        case 12:
+          $dt->selectRaw('SUM(nilai)*100 AS realisasi');
+          break;
+        case 13:
+          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 38 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 37 THEN nilai ELSE 0 END)*100 AS realisasi');
+          break;
+        case 14:
+          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 40 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 39 THEN nilai ELSE 0 END)*100 AS realisasi');
+          break;
+        case 15:
+          $dt->selectRaw('SUM(nilai)*100 AS realisasi');
+          break;
+        case 16:
+          $dt->selectRaw('SUM(nilai)*100 AS realisasi');
+          break;
+        case 17:
+          $dt->selectRaw('SUM(nilai)*100 AS realisasi');
+          break;
+        case 18:
+          $dt->selectRaw('SUM(nilai)*100 AS realisasi');
+          break;
         
         default:
           # code...
           break;
       }
-      $dt = $dt->first();
+      $dt = $dt->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH(CURRENT_DATE()) AND YEAR(daily_transaksis.tanggal) = YEAR(CURRENT_DATE())')->first();
       $realisasi = $dt->realisasi;
       $achievement = $realisasi/$kpi_model->target;
       $persetasi_bobot = $achievement*$kpi_model->bobot;
