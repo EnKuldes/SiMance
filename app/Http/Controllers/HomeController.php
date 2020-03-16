@@ -35,32 +35,32 @@ class HomeController extends Controller
         $service_level = DB::table('log_transaksis')->where([
             ['layanan', '=', '1']
             , ['parameter', '=', '1']
-        ])->orderBy('log_date', 'desc')->first();
+        ])->orderBy('created_at', 'desc')->first();
 
         $fcr = DB::table('log_transaksis')->where([
             ['layanan', '=', '1']
             , ['parameter', '=', '2']
-            , ['log_date', '=', date('Y-m-d')]
-        ])->first();
+            //, ['log_date', '=', date('Y-m-d')]
+        ])->orderBy('created_at', 'desc')->first();
 
         $rasio_sales = DB::table('log_transaksis')->where([
             ['layanan', '=', '1']
             , ['parameter', '=', '3']
-        ])->orderBy('log_date', 'desc')->first();
+        ])->orderBy('created_at', 'desc')->first();
 
         $ces = DB::table('log_transaksis')->where([
             ['layanan', '=', '1']
             , ['parameter', '=', '4']
-        ])->orderBy('log_date', 'desc')->first();
+        ])->orderBy('created_at', 'desc')->first();
 
         $quality_layanan = DB::table('log_transaksis')->where([
             ['layanan', '=', '1']
             , ['parameter', '=', '5']
-        ])->orderBy('log_date', 'desc')->first();
+        ])->orderBy('created_at', 'desc')->first();
         
         $bobot = DB::table('log_transaksis')->where([
             ['layanan', '=', '1']
-        ])->orderBy('log_date', 'desc')->sum('persetasi_bobot');
+        ])->orderBy('created_at', 'desc')->sum('persetasi_bobot');
 
         $count_bobot = DB::table('parameters')->where('id_layanan', '1')->count();
 
@@ -104,7 +104,7 @@ class HomeController extends Controller
         }
         
         $ttl_quality_layanan_target_bobot = optional($quality_layanan)->target + optional($quality_layanan)->bobot;
-        if($ttl_quality_layanan_target_bobot != 0 && $target_quality_layanan > 0){
+        if($ttl_quality_layanan_target_bobot != 0 && $ttl_quality_layanan_target_bobot > 0){
             $target_quality_layanan = (optional($quality_layanan)->target*$percent)/$ttl_quality_layanan_target_bobot;
             $bobot_quality_layanan = $percent-$target_quality_layanan;
         }else{
@@ -175,6 +175,58 @@ class HomeController extends Controller
       if (! daily_transaksi::findOrFail($saveResult->id)) {
         abort(500, 'Error while saving value.');
       }
+
+      $lt = new log_transaksi;
+      $lt->layanan = $id_layanan;
+      $lt->parameter = $id_parameter;
+
+      $kpi_model = DB::table('kpi')->where([
+        ['id_layanan', '=', $id_layanan]
+        , ['id_parameter', '=', $id_parameter]
+        , ['active', '=', 'current']
+      ])->first();
+
+      $lt->satuan = $kpi_model->satuan;
+      $lt->target = $kpi_model->target;
+      $lt->bobot = $kpi_model->bobot;
+      
+      $dt = daily_transaksi::where([
+        ['id_layanan', '=', $id_layanan]
+        , ['id_parameter', '=', $id_parameter]
+      ]);
+      switch ($id_parameter) {
+        case 1:
+          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 2 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 1 THEN nilai ELSE 0 END)*100 AS realisasi');
+          break;
+        case 2:
+          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 4 THEN nilai ELSE 0 END)/SUM(nilai)*100 AS realisasi');
+          break;
+        case 3:
+          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 9 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 8 THEN nilai ELSE 0 END)*100 AS realisasi');
+          break;
+        case 4:
+          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 11 THEN nilai ELSE 0 END)/SUM(nilai)*100 AS realisasi');
+          break;
+        case 5:
+          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 14 THEN nilai ELSE 0 END)/SUM(nilai)*100 AS realisasi');
+          break;
+        
+        default:
+          # code...
+          break;
+      }
+      $dt = $dt->first();
+      $realisasi = $dt->realisasi;
+      $achievement = $realisasi/$kpi_model->target;
+      $persetasi_bobot = $achievement*$kpi_model->bobot;
+
+      $lt->realisasi = $realisasi; // Realisasi nyari dari data daily input per month
+
+      $lt->achievement = $achievement; // Nilai Acgievments didapat dari Realiasi / Target
+      $lt->persetasi_bobot = $persetasi_bobot; // Persentasi Bobot didapat achievemenst * bobots
+      $lt->log_date = now();
+      $lt->save();
+
       // Return hasilnya
       return response()->json(['success' => "success"], 200);
     }
