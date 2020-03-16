@@ -10,7 +10,7 @@
 @endsection
 
 @section('extra-liblary')
-{{-- 
+{{--
 <script src="assets/js/demo_pages/charts/echarts/columns_waterfalls.js"></script>
 <script src="assets/js/demo_pages/charts/echarts/lines.js"></script>
 --}}
@@ -1028,7 +1028,7 @@
   function list_data_series(data, value_parameter, value_desc, type_chart) {
     var tempArr = [];
     for (var j = 0; j < value_desc.length; j++) {
-      window["data_"+value_parameter+value_desc[j]] =[];          
+      window["data_"+value_parameter+value_desc[j]] =[];
       for (var i = 0; i < data.length; i++) {
         if (data[i]['parameter_desc'] == value_parameter && data[i]['value_desc'] == value_desc[j] ) {
           window["data_"+value_parameter+value_desc[j]].push(data[i]['value_item'])
@@ -1065,15 +1065,15 @@
           nps_episode_stack_option.legend.data = datalegend;
           */
           var list_day = trans_val(data, 'day');
-          
+
           columns_basic_options.xAxis[0].data = list_day;
           line_basic_options.xAxis[0].data = list_day;
           line_basic1_options.xAxis[0].data = list_day;
           line_basic2_options.xAxis[0].data = list_day;
           line_stacked_options.xAxis[0].data = list_day;
-          
+
           var list_parameter = trans_val(data, 'parameter_desc');
-          
+
           var tempList = list_legend(data, list_parameter[0]);
           columns_basic_options.legend.data = tempList;
           columns_basic_options.series = list_data_series(data, list_parameter[0], tempList, 'bar');
@@ -1095,7 +1095,7 @@
           line_stacked_options.series = list_data_series(data, list_parameter[4], tempList, 'line');
 
 
-          
+
           /*for (var j = 0; j < list_parameter.length; j++) {
             window["data_"+list_parameter[j]] =[];
             for (var i = 0; i < data.length; i++) {
@@ -1109,9 +1109,9 @@
             });
             console.log( uniqueValueDesc )
           }*/
-          
 
-          /*window["data_"+list_parameter[0]+uniqueValueDesc[0]] =[];          
+
+          /*window["data_"+list_parameter[0]+uniqueValueDesc[0]] =[];
           for (var i = 0; i < data.length; i++) {
             if (data[i]['parameter_desc'] == list_parameter[0] && data[i]['value_desc'] == uniqueValueDesc[0] ) {
               window["data_"+list_parameter[0]+uniqueValueDesc[0]].push(data[i]['value_item'])
@@ -1166,7 +1166,7 @@
   // On Resize
   window.onresize = function () {
     setTimeout(function (){
-    
+
       columns_basic.resize();
       line_basic.resize();
       line_basic1.resize();
@@ -1177,12 +1177,12 @@
   }
 
   // Clear Chart Area
-  function f_clear_chart(){ 
+  function f_clear_chart(){
     columns_basic.clear();
     line_basic.clear();
     line_basic1.clear();
     line_basic2.clear();
-    line_stacked.clear();    
+    line_stacked.clear();
   }
 </script>
 @endsection
@@ -1276,13 +1276,13 @@
                 <span class="badge bg-info badge-pill ml-auto">66%</span>
               </a>
             </li>
-            <li class="nav-item-header">Resource</li>
+            {{-- <li class="nav-item-header">Resource</li>
             <li class="nav-item">
               <a href="#target_bobot_management" class="nav-link" data-toggle="tab">
                 <i class="icon-target2"></i><i class="icon-law"></i>
                 Target & Bobot Management
               </a>
-            </li>
+            </li> --}}
           </ul>
         </div>
       </div>
@@ -1513,7 +1513,7 @@
             <!-- /form inputs -->
           </div>
 
-          {{-- 
+          {{--
           <div class="tab-pane fade" id="tab-fcr">
             <div class="row">
               <div class="col-md-4">
