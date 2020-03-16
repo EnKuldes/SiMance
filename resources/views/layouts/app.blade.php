@@ -1,15 +1,16 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+  <!-- CSRF Token -->
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title') | SiMance</title>
+  <title>@yield('title') | SiMance</title>
 
-    <!-- Global stylesheets -->
+  <!-- Global stylesheets -->
   {{-- <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css"> --}}
   <link href="{{ asset('assets/images/favicon.ico') }}" rel="icon">
   <link href="{{ asset('assets/css/google-style.css') }}" rel="stylesheet" type="text/css">
@@ -39,6 +40,7 @@
   @yield('extra-liblary')
   <!-- /theme JS files -->
 </head>
+
 <body @yield('sidebar')>
   <!-- Main navbar -->
   <div class="navbar navbar-expand-md navbar-dark navbar-sm bg-teal-600">
@@ -50,8 +52,7 @@
     <div class="collapse navbar-collapse" id="navbar-mobile">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a href="/dashboard"
-            class="navbar-nav-link">
+          <a href="/dashboard" class="navbar-nav-link">
             <i class="icon-meter-fast mr-2"></i>
             Dashboard
           </a>
@@ -59,8 +60,7 @@
 
         @if (Auth::user()->layanan == 1)
         <li class="nav-item">
-          <a href="/cc-147"
-            class="navbar-nav-link">
+          <a href="/cc-147" class="navbar-nav-link">
             <i class="icon-headset mr-2"></i>
             CC 147
           </a>
@@ -68,8 +68,7 @@
 
         @elseif (Auth::user()->layanan == 2)
         <li class="nav-item">
-          <a href="/digital-media"
-            class="navbar-nav-link">
+          <a href="/digital-media" class="navbar-nav-link">
             <i class="icon-presentation mr-2"></i>
             Digital Media
           </a>
@@ -77,8 +76,7 @@
 
         @elseif (Auth::user()->layanan == 3)
         <li class="nav-item">
-          <a href="/c4"
-            class="navbar-nav-link">
+          <a href="/c4" class="navbar-nav-link">
             <i class="icon-cogs mr-2"></i>
             C4
           </a>
@@ -86,8 +84,7 @@
 
         @elseif (Auth::user()->layanan == 4)
         <li class="nav-item">
-          <a href="/myindihome"
-            class="navbar-nav-link">
+          <a href="/myindihome" class="navbar-nav-link">
             <i class="icon-home5 mr-2"></i>
             myIndiHome
           </a>
@@ -104,14 +101,13 @@
           </a>
 
           <div class="dropdown-menu dropdown-menu-right">
-            <a class="dropdown-item" href="{{ route('logout') }}"
-                onclick="event.preventDefault();
+            <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                 document.getElementById('logout-form').submit();">
-                <i class="icon-switch2"></i> {{ __('Logout') }}
+              <i class="icon-switch2"></i> {{ __('Logout') }}
             </a>
 
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                @csrf
+              @csrf
             </form>
           </div>
         </li>
@@ -126,6 +122,46 @@
     <div class="content-wrapper">
       <!-- Content area -->
       <div class="content">
+
+        <div class="navbar navbar-expand-lg navbar-light navbar-component rounded">
+          <div class="text-center d-lg-none w-100">
+            <button type="button" class="navbar-toggler dropdown-toggle" data-toggle="collapse"
+              data-target="#navbar-filter">
+              <i class="icon-unfold mr-2"></i>
+              Filters
+            </button>
+          </div>
+
+          <div class="navbar-collapse collapse" id="navbar-filter">
+            <span class="navbar-text font-weight-semibold mr-3">
+              Filter:
+            </span>
+
+            <ul class="navbar-nav flex-wrap">
+            </ul>
+
+            <span class="navbar-text font-weight-semibold mr-3 ml-md-auto">
+            </span>
+
+            <ul class="navbar-nav flex-wrap mr-2">
+              <select data-placeholder="This Yeaar" class="form-control select" data-fouc id="list_year">
+                <option></option>
+                <option value="2019">2019</option>
+                <option value="2020">2020</option>
+              </select>
+            </ul>
+
+            <ul class="navbar-nav flex-wrap">
+              <select data-placeholder="This Month" class="form-control select" data-fouc id="list_month">
+                <option></option>
+                <option value="jan">Jan</option>
+                <option value="feb">Feb</option>
+                <option value="mar">Mar</option>
+              </select>
+            </ul>
+          </div>
+        </div>
+
         @yield('content')
       </div>
       <!-- /content area -->

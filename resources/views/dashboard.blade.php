@@ -20,44 +20,6 @@
 @endsection
 
 @section('content')
-<div class="navbar navbar-expand-lg navbar-light navbar-component rounded">
-  <div class="text-center d-lg-none w-100">
-    <button type="button" class="navbar-toggler dropdown-toggle" data-toggle="collapse" data-target="#navbar-filter">
-      <i class="icon-unfold mr-2"></i>
-      Filters
-    </button>
-  </div>
-
-  <div class="navbar-collapse collapse" id="navbar-filter">
-    <span class="navbar-text font-weight-semibold mr-3">
-      Filter:
-    </span>
-
-    <ul class="navbar-nav flex-wrap">
-    </ul>
-
-    <span class="navbar-text font-weight-semibold mr-3 ml-md-auto">
-    </span>
-
-    <ul class="navbar-nav flex-wrap mr-2">
-      <select data-placeholder="This Month" class="form-control select" data-fouc id="list_month">
-        <option></option>
-        <option value="jan">Jan</option>
-        <option value="feb">Feb</option>
-        <option value="mar">Mar</option>
-      </select>
-    </ul>
-
-    <ul class="navbar-nav flex-wrap">
-      <select data-placeholder="This Yeaar" class="form-control select" data-fouc id="list_year">
-        <option></option>
-        <option value="2019">2019</option>
-        <option value="2020">2020</option>
-      </select>
-    </ul>
-  </div>
-</div>
-
 <div class="row">
   <div class="col-md-9">
 
@@ -91,7 +53,7 @@
                 <div class="d-flex align-items-center mb-1">FCR <span class="text-muted ml-auto">Target
                     {{ round($target_fcr ?? 0 ) }}% | Bobot {{ round($bobot_fcr ?? 0 ) }}%</span></div>
                 <div class="progress" style="height: 1rem;">
-                  <div class="progress-bar bg-orange" style="width: <?=$target_fcr ?? 0 ?>%">
+                  <div class="progress-bar bg-info" style="width: <?=$target_fcr ?? 0 ?>%">
                     <span>{{ round($target_fcr ?? 0 ) }}% Complete</span>
                   </div>
                 </div>
@@ -101,7 +63,7 @@
                 <div class="d-flex align-items-center mb-1">Rasio Sales <span class="text-muted ml-auto">Target
                     {{ round($target_rasio_sales ?? 0 ) }}% | Bobot {{ round($bobot_rasio_sales ?? 0 ) }}%</span></div>
                 <div class="progress" style="height: 1rem;">
-                  <div class="progress-bar bg-success" style="width: <?=$target_rasio_sales ?? 0 ?>%">
+                  <div class="progress-bar bg-info" style="width: <?=$target_rasio_sales ?? 0 ?>%">
                     <span>{{ round($target_rasio_sales ?? 0 ) }}% Complete</span>
                   </div>
                 </div>
@@ -111,7 +73,7 @@
                 <div class="d-flex align-items-center mb-1">CES (by customer) <span class="text-muted ml-auto">Target
                     {{ round($target_ces ?? 0 ) }}% | Bobot {{ round($bobot_ces ?? 0 ) }}%</span></div>
                 <div class="progress" style="height: 1rem;">
-                  <div class="progress-bar bg-pink" style="width: <?=$target_ces ?? 0 ?>%">
+                  <div class="progress-bar bg-info" style="width: <?=$target_ces ?? 0 ?>%">
                     <span>{{ round($target_ces ?? 0 ) }}% Complete</span>
                   </div>
                 </div>
@@ -122,7 +84,7 @@
                     {{ round($target_quality_layanan ?? 0 ) }}% | Bobot
                     {{ round($bobot_quality_layanan ?? 0 ) }}%</span></div>
                 <div class="progress" style="height: 1rem;">
-                  <div class="progress-bar bg-primary" style="width: <?=$target_quality_layanan ?? 0 ?>%">
+                  <div class="progress-bar bg-info" style="width: <?=$target_quality_layanan ?? 0 ?>%">
                     <span>{{ round($target_quality_layanan ?? 0 ) }}% Complete</span>
                   </div>
                 </div>
@@ -146,8 +108,7 @@
                       <div class="d-flex align-items-center">
                         <div>
                           <a href="#" class="text-default font-weight-semibold letter-icon-title">Service Level</a>
-                          <div class="text-muted font-size-sm"><i class="icon-checkmark3 font-size-sm mr-1"></i> New
-                            order
+                          <div class="text-muted font-size-sm"><i class="icon-cog font-size-sm mr-1"></i> Updated Today
                           </div>
                         </div>
                       </div>
@@ -171,7 +132,7 @@
                       <div class="d-flex align-items-center">
                         <div>
                           <a href="#" class="text-default font-weight-semibold letter-icon-title">FCR</a>
-                          <div class="text-muted font-size-sm"><i class="icon-spinner11 font-size-sm mr-1"></i> Renewal
+                          <div class="text-muted font-size-sm"><i class="icon-watch2 font-size-sm mr-1"></i> Updated Today
                           </div>
                         </div>
                       </div>
@@ -195,7 +156,7 @@
                       <div class="d-flex align-items-center">
                         <div>
                           <a href="#" class="text-default font-weight-semibold letter-icon-title">Rasio Sales</a>
-                          <div class="text-muted font-size-sm"><i class="icon-lifebuoy font-size-sm mr-1"></i> Support
+                          <div class="text-muted font-size-sm"><i class="icon-clipboard5 font-size-sm mr-1"></i> Updated Today
                           </div>
                         </div>
                       </div>
@@ -220,7 +181,7 @@
                         <div>
                           <a href="#" class="text-default font-weight-semibold letter-icon-title">CES ( by Customer
                             )</a>
-                          <div class="text-muted font-size-sm"><i class="icon-lifebuoy font-size-sm mr-1"></i> Support
+                          <div class="text-muted font-size-sm"><i class="icon-search4 font-size-sm mr-1"></i> Updated Today
                           </div>
                         </div>
                       </div>
@@ -244,7 +205,7 @@
                       <div class="d-flex align-items-center">
                         <div>
                           <a href="#" class="text-default font-weight-semibold letter-icon-title">Quality Layanan</a>
-                          <div class="text-muted font-size-sm"><i class="icon-spinner11 font-size-sm mr-2"></i> Renewal
+                          <div class="text-muted font-size-sm"><i class="icon-thumbs-up2 font-size-sm mr-2"></i> Updated Today
                           </div>
                         </div>
                       </div>
@@ -276,7 +237,7 @@
     <!-- Basic columns -->
     <div class="card">
       <div class="card-header header-elements-inline">
-        <h5 class="card-title">Basic columns</h5>
+        <h5 class="card-title">Last Month Comparation</h5>
         <div class="header-elements">
           <div class="list-icons">
             <a class="list-icons-item" data-action="reload"></a>

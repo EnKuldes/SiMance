@@ -1073,7 +1073,7 @@
           line_stacked_options.xAxis[0].data = list_day;
 
           var list_parameter = trans_val(data, 'parameter_desc');
-          
+
           var tempVal =  list_parameter[0];
           var tempList = list_legend(data, tempVal);
           columns_basic_options.legend.data = tempList;
@@ -1098,7 +1098,7 @@
           tempList = list_legend(data, tempVal);
           line_basic2_options.legend.data = tempList;
           line_basic2_options.series = list_data_series(data, tempVal, tempList, 'line');
-          
+
           /*for (var j = 0; j < list_parameter.length; j++) {
             window["data_"+list_parameter[j]] =[];
             for (var i = 0; i < data.length; i++) {
@@ -1167,17 +1167,47 @@
   }
 
   // On Resize
-  window.onresize = function () {
-    setTimeout(function (){
+  // window.onresize = function () {
+  //   setTimeout(function (){
 
-      columns_basic.resize();
-      line_basic.resize();
-      line_basic1.resize();
-      line_basic2.resize();
-      line_stacked.resize();
+  //     columns_basic.resize();
+  //     line_basic.resize();
+  //     line_basic1.resize();
+  //     line_basic2.resize();
+  //     line_stacked.resize();
 
-    }, 200);
-  }
+  //   }, 200);
+  // }
+
+  // Resize function
+  var triggerChartResize = function() {
+      columns_basic && columns_basic.resize();
+      line_basic && line_basic.resize();
+      line_basic1 && line_basic1.resize();
+      line_basic2 && line_basic2.resize();
+      line_stacked && line_stacked.resize();
+    };
+
+    // On sidebar width change
+    $(document).on("click", ".sidebar-control, .navbar-toggler", function() {
+      setTimeout(function() {
+        triggerChartResize();
+      }, 0);
+    });
+
+    // On window resize
+    var resizeCharts;
+    window.onresize = function() {
+      clearTimeout(resizeCharts);
+      resizeCharts = setTimeout(function() {
+        triggerChartResize();
+      }, 200);
+    };
+
+    // Resize charts when hidden element becomes visible
+    $('.nav-link[data-toggle="tab"]').on("shown.bs.tab", function(e) {
+      triggerChartResize();
+    });
 
   // Clear Chart Area
   function f_clear_chart(){
@@ -1191,44 +1221,6 @@
 @endsection
 
 @section('content')
-<div class="navbar navbar-expand-lg navbar-light navbar-component rounded">
-  <div class="text-center d-lg-none w-100">
-    <button type="button" class="navbar-toggler dropdown-toggle" data-toggle="collapse" data-target="#navbar-filter">
-      <i class="icon-unfold mr-2"></i>
-      Filters
-    </button>
-  </div>
-
-  <div class="navbar-collapse collapse" id="navbar-filter">
-    <span class="navbar-text font-weight-semibold mr-3">
-      Filter:
-    </span>
-
-    <ul class="navbar-nav flex-wrap">
-    </ul>
-
-    <span class="navbar-text font-weight-semibold mr-3 ml-md-auto">
-    </span>
-
-    <ul class="navbar-nav flex-wrap">
-      <select data-placeholder="This Yeaar" class="form-control select" data-fouc id="list_year">
-        <option></option>
-        <option value="2019">2019</option>
-        <option value="2020">2020</option>
-      </select>
-    </ul>
-
-    <ul class="navbar-nav flex-wrap">
-      <select data-placeholder="This Month" class="form-control select" data-fouc id="list_month">
-        <option></option>
-        <option value="jan">Jan</option>
-        <option value="feb">Feb</option>
-        <option value="mar">Mar</option>
-      </select>
-    </ul>
-  </div>
-</div>
-
 <!-- Inner container -->
 <div class="d-md-flex align-items-md-start">
 
