@@ -15,9 +15,9 @@ class CreateLogTransaksisTable extends Migration
     {
         Schema::create('log_transaksis', function (Blueprint $table) {
             $table->id();
-            $table->integer('layanan')->unsigned()->change();
+            $table->integer('layanan');
             // $table->foreign('layanan')->references('id')->on('layanans')->onDelete('cascade')->onUpdate('cascade');
-            $table->integer('parameter')->unsigned()->change();
+            $table->integer('parameter');
             // $table->foreign('parameter')->references('id')->on('parameters')->onDelete('cascade')->onUpdate('cascade');
             $table->string('satuan');
             $table->integer('target');
