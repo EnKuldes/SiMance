@@ -264,11 +264,11 @@
 </script>
 <script type="text/javascript">
   // Charts
-  var columns_basic = echarts.init( document.getElementById('columns_basic') );
-  var line_basic = echarts.init( document.getElementById("line_basic") );
-  var line_basic1 = echarts.init( document.getElementById("line_basic1") );
-  var line_basic2 = echarts.init( document.getElementById("line_basic2") );
-  var line_stacked = echarts.init( document.getElementById("line_stacked") );
+  var columns_basic = echarts.init( document.getElementById('columns_basic') ); // service level
+  var line_basic = echarts.init( document.getElementById("line_basic") ); // fcr
+  var line_basic1 = echarts.init( document.getElementById("line_basic1") ); // ces
+  var line_basic2 = echarts.init( document.getElementById("line_basic2") ); // quality layanan
+  var line_stacked = echarts.init( document.getElementById("line_stacked") ); // rasio sales
 
   // Options
   // Yang perlu diisi Legend.data, xAxis.data, Series
@@ -1041,7 +1041,7 @@
         data: window["data_"+value_parameter+value_desc[j]]
       })
     }
-    console.log(tempArr)
+    //console.log(tempArr)
     return tempArr;
   }
 
@@ -1073,29 +1073,32 @@
           line_stacked_options.xAxis[0].data = list_day;
 
           var list_parameter = trans_val(data, 'parameter_desc');
-
-          var tempList = list_legend(data, list_parameter[0]);
+          
+          var tempVal =  list_parameter[0];
+          var tempList = list_legend(data, tempVal);
           columns_basic_options.legend.data = tempList;
-          columns_basic_options.series = list_data_series(data, list_parameter[0], tempList, 'bar');
+          columns_basic_options.series = list_data_series(data, tempVal, tempList, 'bar');
 
-          tempList = list_legend(data, list_parameter[1]);
+          tempVal =  list_parameter[1];
+          tempList = list_legend(data, tempVal);
           line_basic_options.legend.data = tempList;
-          line_basic_options.series = list_data_series(data, list_parameter[1], tempList, 'line');
+          line_basic_options.series = list_data_series(data, tempVal, tempList, 'line');
 
-          tempList = list_legend(data, list_parameter[2]);
-          line_basic1_options.legend.data = tempList;
-          line_basic1_options.series = list_data_series(data, list_parameter[2], tempList, 'line');
-
-          tempList = list_legend(data, list_parameter[3]);
-          line_basic2_options.legend.data = tempList;
-          line_basic2_options.series = list_data_series(data, list_parameter[3], tempList, 'line');
-
-          tempList = list_legend(data, list_parameter[4]);
+          tempVal =  list_parameter[2];
+          tempList = list_legend(data, tempVal);
           line_stacked_options.legend.data = tempList;
-          line_stacked_options.series = list_data_series(data, list_parameter[4], tempList, 'line');
+          line_stacked_options.series = list_data_series(data, tempVal, tempList, 'line');
 
+          tempVal =  list_parameter[3];
+          tempList = list_legend(data, tempVal);
+          line_basic1_options.legend.data = tempList;
+          line_basic1_options.series = list_data_series(data, tempVal, tempList, 'line');
 
-
+          tempVal =  list_parameter[4];
+          tempList = list_legend(data, tempVal);
+          line_basic2_options.legend.data = tempList;
+          line_basic2_options.series = list_data_series(data, tempVal, tempList, 'line');
+          
           /*for (var j = 0; j < list_parameter.length; j++) {
             window["data_"+list_parameter[j]] =[];
             for (var i = 0; i < data.length; i++) {

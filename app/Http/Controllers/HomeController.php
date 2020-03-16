@@ -258,21 +258,54 @@ class HomeController extends Controller
     # Get Monthly Data
     public function get_monthly_data(Request $request)
     {
-      $datas = DB::table('daily_transaksis')
-      ->leftJoin('formulasis', 'daily_transaksis.id_formulasi', '=', 'formulasis.id')
+      /*$datas = DB::table('daily_transaksis')
+      ->rightJoin('formulasis', 'daily_transaksis.id_formulasi', '=', 'formulasis.id')
       ->leftJoin('parameters', 'parameters.id', '=', 'formulasis.id_parameter')
       ->where([
         ['parameters.id_layanan', '=', auth()->user()->layanan]
       ])
       ->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH(CURRENT_DATE()) AND YEAR(daily_transaksis.tanggal) = YEAR(CURRENT_DATE())')
       ->selectRaw(
-        'DAY(daily_transaksis.tanggal) AS `day`
-        , DATE_FORMAT(daily_transaksis.tanggal, "%Y-%m") AS `date`
+        'DAY(daily_transaksis.tanggal) AS day
+        , DATE_FORMAT(daily_transaksis.tanggal, "%Y-%m") AS date
         , daily_transaksis.nilai AS value_item
         , formulasis.formulasi_desc AS value_desc
         , parameters.parameter_desc AS parameter_desc'
       )
+      ->orderBy('formulasis.id', 'asc')
+      ->get();*/
+      $datasToJoin = DB::table('daily_transaksis')
+      ->where([
+        ['daily_transaksis.id_layanan', '=', auth()->user()->layanan]
+      ])
+      ->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH(CURRENT_DATE()) AND YEAR(daily_transaksis.tanggal) = YEAR(CURRENT_DATE())')
+      ->selectRaw(
+        'DAY(daily_transaksis.tanggal) AS day
+        , DATE_FORMAT(daily_transaksis.tanggal, "%Y-%m") AS date
+        , daily_transaksis.nilai AS value_item
+        , daily_transaksis.id_formulasi AS id_formulasi'
+      );
+
+      $datas = DB::table('formulasis')
+      ->leftJoin('parameters', 'parameters.id', '=', 'formulasis.id_parameter')
+      ->leftJoinSub($datasToJoin, 'res', function ($join) {
+          $join->on('res.id_formulasi', '=', 'formulasis.id');
+      })
+      ->where([
+        ['parameters.id_layanan', '=', auth()->user()->layanan]
+      ])
+      ->selectRaw('
+        parameters.parameter_desc AS parameter_desc
+        , formulasis.formulasi_desc AS value_desc
+        , IFNULL(res.day, DAY(CURDATE()))  AS `day`
+        , res.date AS date
+        , res.value_item AS value_item
+      ')
+      ->orderBy('parameters.id')
+      ->orderBy('res.id_formulasi')
+      ->orderBy('res.day')
       ->get();
+
       return response()->json($datas);
     }
 
@@ -311,10 +344,10 @@ class HomeController extends Controller
       ]);
       if ( request()->ajax() ) {
         if (!empty($request->select_year)) {
-          $datas->whereYear('tanggal', '=', $request->select_year)->select(DB::raw('MONTH(`tanggal`) as `month`'))->distinct()->orderBy('month', 'asc');
+          $datas->whereYear('tanggal', '=', $request->select_year)->select(DB::raw('MONTH(tanggal) as month'))->distinct()->orderBy('month', 'asc');
         }
         else {
-          $datas->select(DB::raw('YEAR(`tanggal`) as `year`'))->distinct()->orderBy('year', 'desc');
+          $datas->select(DB::raw('YEAR(tanggal) as year'))->distinct()->orderBy('year', 'desc');
         }
       }
       $datas = $datas->get();
