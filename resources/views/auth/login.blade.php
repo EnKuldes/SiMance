@@ -52,15 +52,13 @@
           <div class="card mb-0">
             <div class="card-body">
               <div class="text-center mb-3">
-                <i
-                  class="icon-stats-bars icon-2x text-warning-400 border-warning-400 border-3 rounded-round p-3 mb-3 mt-1"></i>
-                <h5 class="mb-0">SiMance</h5>
+                <img class="img-fluid rounded-circle" src="assets/images/logo.png" width="170" height="170" alt="">
                 <span class="d-block text-muted">System Integration Performance</span>
               </div>
 
               <div class="form-group form-group-feedback form-group-feedback-left">
                 <input type="text" class="form-control" placeholder="Username" name="username" id="username" autocomplete="off">
-                
+
                 {{-- Perlu div buat nampilin error, sementara ini begini saja dulu --}}
                 @error('username')
                 <span class="invalid-feedback" role="alert">
