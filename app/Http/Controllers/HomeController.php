@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use DB;
 use App\daily_transaksi;
 use App\log_transaksi;
+use App\kpi;
 
 class HomeController extends Controller
 {
@@ -58,11 +59,25 @@ class HomeController extends Controller
             , ['parameter', '=', '5']
         ])->orderBy('created_at', 'desc')->first();
         
-        /*$bobot = DB::table('log_transaksis')->where([
-            ['layanan', '=', '1']
-        ])->orderBy('created_at', 'desc')->sum('persetasi_bobot');
-
-        $count_bobot = DB::table('parameters')->where('id_layanan', '1')->count();*/
+        $kpi = DB::table('kpi')->where([
+          ['id_layanan', '=', 1]
+          , ['active', '=', 'current']
+        ]);
+        $parameter = DB::table('parameters')
+        ->leftJoinSub($kpi, 'kpi', function ($join) {
+            $join->on('kpi.id_parameter', '=', 'parameters.id');
+        })
+        ->selectRaw('
+          parameters.`id`
+          , parameters.`parameter_desc`
+          , IFNULL(CONCAT(ROUND(kpi.`target`), kpi.`satuan`), "Undefined") AS target
+          , IFNULL(CONCAT(kpi.`bobot`, "%"), "Undefined") AS bobot
+          ')
+        ->where([
+          ['parameters.is_enabled', '=', '1']
+          , ['parameters.id_layanan', '=', 1]
+        ])
+        ->orderBy('parameters.id')->get();
 
         $t_bobot = $service_level->persetasi_bobot+$fcr->persetasi_bobot+$rasio_sales->persetasi_bobot+$ces->persetasi_bobot+$quality_layanan->persetasi_bobot;
 
@@ -129,7 +144,9 @@ class HomeController extends Controller
             'target_ces' => $target_ces,
             'bobot_ces' => $bobot_ces,
             'target_quality_layanan' => $target_quality_layanan,
-            'bobot_quality_layanan' => $bobot_quality_layanan
+            'bobot_quality_layanan' => $bobot_quality_layanan,
+
+            'kpiObject' => $parameter
         ]);
     }
     public function cc_147()
