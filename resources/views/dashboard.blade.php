@@ -20,121 +20,231 @@
 
 @section('script')
 <script type="text/javascript">
-  // Define elements
-  var columns_basic_element1 = document.getElementById("columns_basic1");
-  // Initialize chart
-  var columns_basic1 = echarts.init(columns_basic_element1);
+  var EchartsColumnsWaterfalls = (function() {
+  //
+  // Setup module components
+  //
 
-  // Chart config
-  // Options
-  columns_basic1.setOption({
-    // Define colors
-    color: ["#2ec7c9", "#b6a2de", "#5ab1ef", "#ffb980", "#d87a80"],
-
-    // Global text styles
-    textStyle: {
-      fontFamily: "Roboto, Arial, Verdana, sans-serif",
-      fontSize: 13
-    },
-
-    // Chart animation duration
-    animationDuration: 750,
-
-    // Setup grid
-    grid: {
-      left: 0,
-      right: 40,
-      top: 35,
-      bottom: 0,
-      containLabel: true
-    },
-
-    // Add legend
-    legend: {
-      data: ["Bobot"],
-      itemHeight: 8,
-      itemGap: 20,
-      textStyle: {
-        padding: [0, 5]
-      }
-    },
-
-    // Add tooltip
-    tooltip: {
-      trigger: "axis",
-      backgroundColor: "rgba(0,0,0,0.75)",
-      padding: [10, 15],
-      textStyle: {
-        fontSize: 13,
-        fontFamily: "Roboto, sans-serif"
-      }
-    },
-
-    // Horizontal axis
-    xAxis: [
-    {
-      type: "category",
-      data: ["Last Month", "This Month"],
-      axisLabel: {
-        color: "#333"
-      },
-      axisLine: {
-        lineStyle: {
-          color: "#999"
-        }
-      }
+  // Column and waterfall charts
+  var _columnsWaterfallsExamples = function() {
+    if (typeof echarts == "undefined") {
+      console.warn("Warning - echarts.min.js is not loaded.");
+      return;
     }
-    ],
 
-    // Vertical axis
-    yAxis: [
-    {
-      type: "value",
-      axisLabel: {
-        color: "#333"
-      },
-      axisLine: {
-        lineStyle: {
-          color: "#999"
-        }
-      },
-      splitLine: {
-        lineStyle: {
-          color: ["#eee"]
-        }
-      },
-      splitArea: {
-        show: true,
-        areaStyle: {
-          color: ["rgba(250,250,250,0.1)", "rgba(0,0,0,0.01)"]
-        }
-      }
-    }
-    ],
+    // Define elements
+    var columns_basic_element1 = document.getElementById("columns_basic1");
 
-    // Add series
-    series: [
-    {
-      name: "Last Month",
-      type: "bar",
-      data: [
-      {value: 120, itemStyle: {color: '#2ec7c9'},}
-      ,{value: 200, itemStyle: {color: '#b6a2de'},}
-      ],
-      itemStyle: {
-        normal: {
-          label: {
-            show: true,
-            position: "top",
-            textStyle: {
-              fontWeight: 500
+    //
+    // Charts configuration
+    //
+
+    // Basic columns chart
+    if (columns_basic_element1) {
+      // Initialize chart
+      var columns_basic1 = echarts.init(columns_basic_element1);
+
+      //
+      // Chart config
+      //
+
+      // Options
+      columns_basic1.setOption({
+        // Define colors
+        color: ["#2ec7c9", "#b6a2de", "#5ab1ef", "#ffb980", "#d87a80"],
+
+        // Global text styles
+        textStyle: {
+          fontFamily: "Roboto, Arial, Verdana, sans-serif",
+          fontSize: 13
+        },
+
+        // Chart animation duration
+        animationDuration: 750,
+
+        // Setup grid
+        grid: {
+          left: 0,
+          right: 40,
+          top: 35,
+          bottom: 0,
+          containLabel: true
+        },
+
+        // Add legend
+        legend: {
+          data: ["Bobot"],
+          itemHeight: 8,
+          itemGap: 20,
+          textStyle: {
+            padding: [0, 5]
+          }
+        },
+
+        // Add tooltip
+        tooltip: {
+          trigger: "axis",
+          backgroundColor: "rgba(0,0,0,0.75)",
+          padding: [10, 15],
+          textStyle: {
+            fontSize: 13,
+            fontFamily: "Roboto, sans-serif"
+          }
+        },
+
+        // Horizontal axis
+        xAxis: [
+          {
+            type: "category",
+            data: ["Feb - 2020", "Mar - 2020"],
+            axisLabel: {
+              color: "#333"
+            },
+            axisLine: {
+              lineStyle: {
+                color: "#999"
+              }
             }
           }
-        }
-      }
+        ],
+
+        // Vertical axis
+        yAxis: [
+          {
+            type: "value",
+            axisLabel: {
+              color: "#333"
+            },
+            axisLine: {
+              lineStyle: {
+                color: "#999"
+              }
+            },
+            splitLine: {
+              lineStyle: {
+                color: ["#eee"]
+              }
+            },
+            splitArea: {
+              show: true,
+              areaStyle: {
+                color: ["rgba(250,250,250,0.1)", "rgba(0,0,0,0.01)"]
+              }
+            }
+          }
+        ],
+
+        // Add series
+        series: [
+          {
+            type: "bar",
+            markLine: {
+                 data: [{
+                   name: 'target',
+                   yAxis: 150,
+                   itemStyle: {
+                    color: '#d87a80'
+                  }
+                  }],
+            },
+            data: [
+              {
+                value: 152,
+                itemStyle: {
+                  color: '#2ec7c9'
+                }
+              }
+              ,{
+                value: 200,
+                itemStyle: {
+                  color: '#b6a2de'
+                }
+              }
+            ],
+            itemStyle: {
+              normal: {
+                label: {
+                  show: true,
+                  formatter: '{c}%',
+                  position: "top",
+                  textStyle: {
+                    fontWeight: 500
+                  }
+                }
+              }
+            }
+          }
+            /*,
+          {
+            name: "This Month",
+            type: "bar",
+            data: [
+              80
+            ],
+            itemStyle: {
+              normal: {
+                label: {
+                  show: true,
+                  position: "top",
+                  textStyle: {
+                    fontWeight: 500
+                  }
+                }
+              }
+            }
+          }*/
+        ]
+      });
     }
-    ] 
+
+    //
+    // Resize charts
+    //
+
+    // Resize function
+    var triggerChartResize = function() {
+      columns_basic_element1 && columns_basic1.resize();
+    };
+
+    // On sidebar width change
+    $(document).on("click", ".sidebar-control, .navbar-toggler", function() {
+      setTimeout(function() {
+        triggerChartResize();
+      }, 0);
     });
+
+    // On window resize
+    var resizeCharts;
+    window.onresize = function() {
+      clearTimeout(resizeCharts);
+      resizeCharts = setTimeout(function() {
+        triggerChartResize();
+      }, 200);
+    };
+
+    // Resize charts when hidden element becomes visible
+    $('.nav-link[data-toggle="tab"]').on("shown.bs.tab", function(e) {
+      triggerChartResize();
+    });
+  };
+
+  //
+  // Return objects assigned to module
+  //
+
+  return {
+    init: function() {
+      _columnsWaterfallsExamples();
+    }
+  };
+})();
+
+// Initialize module
+// ------------------------------
+
+document.addEventListener("DOMContentLoaded", function() {
+  EchartsColumnsWaterfalls.init();
+});
 
 </script>
 @endsection
@@ -156,52 +266,52 @@
           <div class="col-md-4">
             <legend class="font-weight-bold font-size-lg"><i class="icon-law mr-2"></i> Target & Bobot</legend>
             <ul class="list-unstyled mb-0">
-              <li class="mb-3">
+              <li class="mt-4 mb-4">
                 <div class="d-flex align-items-center mb-1">Service Level <span class="text-muted ml-auto">Target
                     {{ $kpiObject[0]->target  ?? 0}} | Bobot {{ $kpiObject[0]->bobot  ?? 0}}</span>
                 </div>
-                <div class="progress" style="height: 1rem;">
+                <div class="progress" style="height: 1.5rem;">
                   <div class="progress-bar bg-{{ round($target_service_level  ?? 0) > 50 ? "info" : "danger" }}" style="width: <?=$target_service_level ?? 0?>%">
                     <span>{{ round($target_service_level  ?? 0) }}% Complete</span>
                   </div>
                 </div>
               </li>
 
-              <li class="mb-3">
+              <li class="mt-4">
                 <div class="d-flex align-items-center mb-1">FCR <span class="text-muted ml-auto">Target
                     {{ $kpiObject[1]->target ?? 0 }} | Bobot {{ $kpiObject[1]->bobot ?? 0 }}</span></div>
-                <div class="progress" style="height: 1rem;">
+                <div class="progress" style="height: 1.5rem;">
                   <div class="progress-bar bg-{{ round($target_fcr  ?? 0) > 50 ? "info" : "danger" }}" style="width: <?=$target_fcr ?? 0 ?>%">
                     <span>{{ round($target_fcr ?? 0 ) }}% Complete</span>
                   </div>
                 </div>
               </li>
 
-              <li class="mb-3">
+              <li class="mt-5">
                 <div class="d-flex align-items-center mb-1">Rasio Sales <span class="text-muted ml-auto">Target
                     {{ $kpiObject[2]->target ?? 0 }} | Bobot {{ $kpiObject[2]->bobot ?? 0 }}</span></div>
-                <div class="progress" style="height: 1rem;">
+                <div class="progress" style="height: 1.5rem;">
                   <div class="progress-bar bg-{{ round($target_rasio_sales  ?? 0) > 50 ? "info" : "danger" }}" style="width: <?=$target_rasio_sales ?? 0 ?>%">
                     <span>{{ round($target_rasio_sales ?? 0 ) }}% Complete</span>
                   </div>
                 </div>
               </li>
 
-              <li class="mb-3">
+              <li class="mt-4">
                 <div class="d-flex align-items-center mb-1">CES (by customer) <span class="text-muted ml-auto">Target
                     {{ $kpiObject[3]->target ?? 0 }} | Bobot {{ $kpiObject[3]->bobot ?? 0 }}</span></div>
-                <div class="progress" style="height: 1rem;">
+                <div class="progress" style="height: 1.5rem;">
                   <div class="progress-bar bg-{{ round($target_ces  ?? 0) > 50 ? "info" : "danger" }}" style="width: <?=$target_ces ?? 0 ?>%">
                     <span>{{ round($target_ces ?? 0 ) }}% Complete</span>
                   </div>
                 </div>
               </li>
 
-              <li>
+              <li class="mt-4">
                 <div class="d-flex align-items-center mb-1">Quality Layanan <span class="text-muted ml-auto">Target
                     {{ $kpiObject[4]->target ?? 0 }} | Bobot
                     {{ $kpiObject[4]->bobot ?? 0 }}</span></div>
-                <div class="progress" style="height: 1rem;">
+                <div class="progress" style="height: 1.5rem;">
                   <div class="progress-bar bg-{{ round($target_quality_layanan  ?? 0) > 50 ? "info" : "danger" }}" style="width: <?=$target_quality_layanan ?? 0 ?>%">
                     <span>{{ round($target_quality_layanan ?? 0 ) }}% Complete</span>
                   </div>
@@ -228,14 +338,19 @@
                       <div class="d-flex align-items-center">
                         <div>
                           <a href="#" class="text-default font-weight-semibold letter-icon-title">Service Level</a>
-                          <div class="text-muted font-size-sm"><i class="icon-cog font-size-sm mr-1"></i> Updated Today
+                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> FCR
+                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Call
                           </div>
                         </div>
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-bold font-size-lg text-center mb-0 text-success">
-                        {{ isset($input_per_formulasi) ? $input_per_formulasi[0]->total+$input_per_formulasi[1]->total : 0 }}</p>
+                      <p class="font-weight-bold font-size-sm text-center mb-0 mt-3 text-success">
+                        {{ isset($input_per_formulasi) ? number_format($input_per_formulasi[0]->total) : 0 }}
+                      </p>
+                      <p class="font-weight-bold font-size-sm text-center mb-0 text-success">
+                        {{ isset($input_per_formulasi) ? number_format($input_per_formulasi[1]->total) : 0 }}
+                      </p>
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0">
@@ -260,14 +375,19 @@
                       <div class="d-flex align-items-center">
                         <div>
                           <a href="#" class="text-default font-weight-semibold letter-icon-title">FCR</a>
-                          <div class="text-muted font-size-sm"><i class="icon-watch2 font-size-sm mr-1"></i> Updated Today
+                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Closed by Frontliner
+                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Tiket Logic
                           </div>
                         </div>
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-bold font-size-lg text-center mb-0 text-success">
-                        {{ isset($input_per_formulasi) ? $input_per_formulasi[2]->total+$input_per_formulasi[3]->total : 0 }}</p>
+                      <p class="font-weight-bold font-size-sm text-center mb-0 mt-3 text-success">
+                        {{ isset($input_per_formulasi) ? number_format($input_per_formulasi[2]->total) : 0 }}
+                      </p>
+                      <p class="font-weight-bold font-size-sm text-center mb-0 text-success">
+                        {{ isset($input_per_formulasi) ? number_format($input_per_formulasi[3]->total) : 0 }}
+                      </p>
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0">
@@ -292,14 +412,23 @@
                       <div class="d-flex align-items-center">
                         <div>
                           <a href="#" class="text-default font-weight-semibold letter-icon-title">Rasio Sales</a>
-                          <div class="text-muted font-size-sm"><i class="icon-clipboard5 font-size-sm mr-1"></i> Updated Today
+                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Transaksi Add On
+                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Transaksi PSB
+                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> CWC REGIS
                           </div>
                         </div>
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-bold font-size-lg text-center mb-0 text-success">
-                        {{ isset($input_per_formulasi) ? $input_per_formulasi[4]->total+$input_per_formulasi[5]->total+$input_per_formulasi[6]->total : 0 }}</p>
+                      <p class="font-weight-bold font-size-sm text-center mb-0 mt-3 text-success">
+                        {{ isset($input_per_formulasi) ? number_format($input_per_formulasi[4]->total) : 0 }}
+                      </p>
+                      <p class="font-weight-bold font-size-sm text-center mb-0 text-success">
+                        {{ isset($input_per_formulasi) ? number_format($input_per_formulasi[5]->total) : 0 }}
+                      </p>
+                      <p class="font-weight-bold font-size-sm text-center mb-0 text-success">
+                        {{ isset($input_per_formulasi) ? number_format($input_per_formulasi[6]->total) : 0 }}
+                      </p>
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0">
@@ -323,16 +452,19 @@
                     <td>
                       <div class="d-flex align-items-center">
                         <div>
-                          <a href="#" class="text-default font-weight-semibold letter-icon-title">CES ( by Customer
-                            )</a>
-                          <div class="text-muted font-size-sm"><i class="icon-search4 font-size-sm mr-1"></i> Updated Today
-                          </div>
-                        </div>
+                          <a href="#" class="text-default font-weight-semibold letter-icon-title">CES (by Customer)</a>
+                            <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Puas
+                            <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Tidak Puas
+                        </Tidak div>
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-bold font-size-lg text-center mb-0 text-success">
-                        {{ isset($input_per_formulasi) ? $input_per_formulasi[7]->total+$input_per_formulasi[8]->total : 0 }}</p>
+                      <p class="font-weight-bold font-size-sm text-center mb-0 mt-3 text-success">
+                        {{ isset($input_per_formulasi) ? number_format($input_per_formulasi[7]->total) : 0 }}
+                      </p>
+                      <p class="font-weight-bold font-size-sm text-center mb-0 text-success">
+                        {{ isset($input_per_formulasi) ? number_format($input_per_formulasi[8]->total) : 0 }}
+                      </p>
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0">
@@ -357,14 +489,19 @@
                       <div class="d-flex align-items-center">
                         <div>
                           <a href="#" class="text-default font-weight-semibold letter-icon-title">Quality Layanan</a>
-                          <div class="text-muted font-size-sm"><i class="icon-thumbs-up2 font-size-sm mr-2"></i> Updated Today
+                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Agent OK
+                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Agent NOK
                           </div>
                         </div>
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-bold font-size-lg text-center mb-0 text-success">
-                        {{ isset($input_per_formulasi) ? $input_per_formulasi[9]->total+$input_per_formulasi[10]->total : 0 }}</p>
+                      <p class="font-weight-bold font-size-sm text-center mb-0 mt-3 text-success">
+                        {{ isset($input_per_formulasi) ? number_format($input_per_formulasi[9]->total) : 0 }}
+                      </p>
+                      <p class="font-weight-bold font-size-sm text-center mb-0 text-success">
+                        {{ isset($input_per_formulasi) ? number_format($input_per_formulasi[10]->total) : 0 }}
+                      </p>
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0">
@@ -397,7 +534,7 @@
     <!-- Basic columns -->
     <div class="card">
       <div class="card-header header-elements-inline">
-        <h5 class="card-title">Last Month Comparation</h5>
+        <h5 class="card-title">Performance Comparation</h5>
         <div class="header-elements">
           <div class="list-icons">
             <a class="list-icons-item" data-action="reload"></a>
@@ -408,7 +545,7 @@
 
       <div class="card-body">
         <div class="chart-container">
-          <div class="chart has-fixed-height" id="columns_basic1"></div>
+          <div class="chart has-fixed-height" id="columns_basic1" style="min-height:470px;"></div>
         </div>
       </div>
     </div>

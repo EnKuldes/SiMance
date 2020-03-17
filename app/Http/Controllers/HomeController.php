@@ -58,7 +58,7 @@ class HomeController extends Controller
             ['layanan', '=', '1']
             , ['parameter', '=', '5']
         ])->orderBy('created_at', 'desc')->first();
-        
+
         // Bobot dan Target Resources
         $kpi = DB::table('kpi')->where([
           ['id_layanan', '=', 1]
@@ -84,7 +84,7 @@ class HomeController extends Controller
         $total_input = DB::table('daily_transaksis')->selectRaw('
           id_formulasi
           , SUM(nilai) AS total
-          ')->whereRaw('tanggal = CURDATE()-1 AND id_layanan = 1')
+          ')->whereRaw('MONTH(tanggal) = MONTH(CURDATE()) AND YEAR(tanggal) = YEAR(CURDATE()) AND id_layanan = 1')
         ->groupBy('id_formulasi');
         $total_input_per_formulasi = DB::table('formulasis')
         ->selectRaw('
@@ -103,7 +103,7 @@ class HomeController extends Controller
 
 
 
-        $t_bobot = $service_level->persetasi_bobot+$fcr->persetasi_bobot+$rasio_sales->persetasi_bobot+$ces->persetasi_bobot+$quality_layanan->persetasi_bobot;
+        $t_bobot = optional($service_level)->persetasi_bobot+optional($fcr)->persetasi_bobot+optional($rasio_sales)->persetasi_bobot+optional($ces)->persetasi_bobot+optional($quality_layanan)->persetasi_bobot;
 
         $percent = 100;
         $ttl_service_level_target_bobot = optional($service_level)->target + optional($service_level)->bobot;
@@ -114,7 +114,7 @@ class HomeController extends Controller
             $target_service_level= 0;
             $bobot_service_level= 0;
         }
-        
+
         $ttl_fcr_target_bobot = optional($fcr)->target + optional($fcr)->bobot;
         if($ttl_fcr_target_bobot != 0 && $ttl_fcr_target_bobot > 0){
             $target_fcr = (optional($fcr)->target*$percent)/$ttl_fcr_target_bobot;
@@ -123,7 +123,7 @@ class HomeController extends Controller
             $target_fcr= 0;
             $bobot_fcr= 0;
         }
-        
+
         $ttl_rasio_sales_target_bobot = optional($rasio_sales)->target + optional($rasio_sales)->bobot;
         if($ttl_rasio_sales_target_bobot != 0 && $ttl_rasio_sales_target_bobot > 0){
             $target_rasio_sales = (optional($rasio_sales)->target*$percent)/$ttl_rasio_sales_target_bobot;
@@ -132,7 +132,7 @@ class HomeController extends Controller
             $target_rasio_sales= 0;
             $bobot_rasio_sales= 0;
         }
-        
+
         $ttl_ces_target_bobot = optional($ces)->target + optional($ces)->bobot;
         if($ttl_ces_target_bobot != 0 && $ttl_ces_target_bobot > 0){
             $target_ces = (optional($ces)->target*$percent)/$ttl_ces_target_bobot;
@@ -141,7 +141,7 @@ class HomeController extends Controller
             $target_ces= 0;
             $bobot_ces= 0;
         }
-        
+
         $ttl_quality_layanan_target_bobot = optional($quality_layanan)->target + optional($quality_layanan)->bobot;
         if($ttl_quality_layanan_target_bobot != 0 && $ttl_quality_layanan_target_bobot > 0){
             $target_quality_layanan = (optional($quality_layanan)->target*$percent)/$ttl_quality_layanan_target_bobot;
@@ -150,7 +150,7 @@ class HomeController extends Controller
             $target_quality_layanan= 0;
             $bobot_quality_layanan= 0;
         }
-            
+
         return view('dashboard',[
             'service_level' => $service_level,
             'fcr' => $fcr,
@@ -247,7 +247,7 @@ class HomeController extends Controller
       $lt->satuan = $kpi_model->satuan;
       $lt->target = $kpi_model->target;
       $lt->bobot = $kpi_model->bobot;
-      
+
       $dt = daily_transaksi::where([
         ['id_layanan', '=', $id_layanan]
         , ['id_parameter', '=', $id_parameter]
@@ -264,7 +264,7 @@ class HomeController extends Controller
           $param_compare = '>=';
           break;
         case 3:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 8 OR id_formulasi = 7 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 9 THEN nilai ELSE 0 END)*100'; 
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 8 OR id_formulasi = 7 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 9 THEN nilai ELSE 0 END)*100';
           $param_compare = '>=';
           break;
         case 4:
@@ -272,7 +272,7 @@ class HomeController extends Controller
           $param_compare = '>=';
           break;
         case 5:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 15 THEN nilai ELSE 0 END)/SUM(nilai)*100'; 
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 15 THEN nilai ELSE 0 END)/SUM(nilai)*100';
           $param_compare = '<=';
           break;
         // Digital Media
@@ -330,7 +330,7 @@ class HomeController extends Controller
           $qWhere .= 'SUM(nilai)*100';
           $param_compare = '';
           break;
-        
+
         default:
           abort(500, 'Error, Parameter not found');
           break;
@@ -346,7 +346,7 @@ class HomeController extends Controller
         case 5:
           $achievement = (100-$realisasi)/(100-$kpi_model->target)*100;
           break;
-        
+
         default:
           # do nothing
           break;
@@ -394,7 +394,7 @@ class HomeController extends Controller
         case '<=':
           return $val1 <= $val2;
           break;
-        
+
         default:
           return null;
           break;
