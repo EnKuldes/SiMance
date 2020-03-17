@@ -194,80 +194,153 @@ class HomeController extends Controller
         ['id_layanan', '=', $id_layanan]
         , ['id_parameter', '=', $id_parameter]
       ]);
+      $qWhere = "IFNULL(";
       switch ($id_parameter) {
+        // 147
         case 1:
-          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 2 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 1 THEN nilai ELSE 0 END)*100 AS realisasi');
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 2 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 1 THEN nilai ELSE 0 END)*100';
+          $param_compare = '>=';
           break;
         case 2:
-          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 4 THEN nilai ELSE 0 END)/SUM(nilai)*100 AS realisasi');
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 4 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+          $param_compare = '>=';
           break;
         case 3:
-          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 9 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 8 THEN nilai ELSE 0 END)*100 AS realisasi');
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 8 OR id_formulasi = 7 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 9 THEN nilai ELSE 0 END)*100'; 
+          $param_compare = '>=';
           break;
         case 4:
-          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 11 THEN nilai ELSE 0 END)/SUM(nilai)*100 AS realisasi');
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 11 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+          $param_compare = '>=';
           break;
         case 5:
-          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 14 THEN nilai ELSE 0 END)/SUM(nilai)*100 AS realisasi');
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 15 THEN nilai ELSE 0 END)/SUM(nilai)*100'; 
+          $param_compare = '<=';
           break;
+        // Digital Media
         case 6:
-          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 14 THEN nilai ELSE 0 END)/SUM(nilai)*100 AS realisasi'); // Average beluums
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 14 THEN nilai ELSE 0 END)/SUM(nilai)*100'; // Average beluus
+          $param_compare = '';
           break;
         case 7:
-          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 22 THEN nilai ELSE 0 END)/SUM(nilai)*100 AS realisasi');
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 22 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+          $param_compare = '';
           break;
         case 8:
-          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 27 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 26 THEN nilai ELSE 0 END)*100 AS realisasi');
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 27 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 26 THEN nilai ELSE 0 END)*100';
+          $param_compare = '';
           break;
         case 9:
-          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 29 THEN nilai ELSE 0 END)/SUM(nilai)*100 AS realisasi');
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 29 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+          $param_compare = '';
           break;
         case 10:
-          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 32 THEN nilai ELSE 0 END)/SUM(nilai)*100 AS realisasi');
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 32 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+          $param_compare = '';
           break;
+        // C4
         case 11:
-          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 35 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 34 THEN nilai ELSE 0 END)*100 AS realisasi');
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 35 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 34 THEN nilai ELSE 0 END)*100';
+          $param_compare = '';
           break;
         case 12:
-          $dt->selectRaw('SUM(nilai)*100 AS realisasi');
+          $qWhere .= 'SUM(nilai)*100';
+          $param_compare = '';
           break;
         case 13:
-          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 38 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 37 THEN nilai ELSE 0 END)*100 AS realisasi');
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 38 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 37 THEN nilai ELSE 0 END)*100';
+          $param_compare = '';
           break;
         case 14:
-          $dt->selectRaw('SUM(CASE WHEN id_formulasi = 40 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 39 THEN nilai ELSE 0 END)*100 AS realisasi');
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 40 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 39 THEN nilai ELSE 0 END)*100';
+          $param_compare = '';
           break;
+        // MyIndihome
         case 15:
-          $dt->selectRaw('SUM(nilai)*100 AS realisasi');
+          $qWhere .= 'SUM(nilai)*100';
+          $param_compare = '';
           break;
         case 16:
-          $dt->selectRaw('SUM(nilai)*100 AS realisasi');
+          $qWhere .= 'SUM(nilai)*100';
+          $param_compare = '';
           break;
         case 17:
-          $dt->selectRaw('SUM(nilai)*100 AS realisasi');
+          $qWhere .= 'SUM(nilai)*100';
+          $param_compare = '';
           break;
         case 18:
-          $dt->selectRaw('SUM(nilai)*100 AS realisasi');
+          $qWhere .= 'SUM(nilai)*100';
+          $param_compare = '';
           break;
         
         default:
-          # code...
+          abort(500, 'Error, Parameter not found');
           break;
       }
+      $qWhere .= ", 0) as realisasi";
+      $dt->selectRaw($qWhere);
       $dt = $dt->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH(CURRENT_DATE()) AND YEAR(daily_transaksis.tanggal) = YEAR(CURRENT_DATE())')->first();
       $realisasi = $dt->realisasi;
-      $achievement = $realisasi/$kpi_model->target;
-      $persetasi_bobot = $achievement*$kpi_model->bobot;
+      $achievement = ($realisasi/$kpi_model->target)*100;
+      // Ada yang berbeda perhiyungannya dari yg umum, dilakuka disini aja perubahannya
+      // Contoh Untuk Parameter Quality Layanan (ID Parameter 5) dari Layanan 147 (ID Layanan 1)
+      switch ($id_parameter) {
+        case 5:
+          $achievement = (100-$realisasi)/(100-$kpi_model->target)*100;
+          break;
+        
+        default:
+          # do nothing
+          break;
+      }
+      
+      $perfomance = ($achievement*$kpi_model->bobot)/100; // berubah nama jadi perfomance
+      // Buat nentuin nilai persentasi bobot
+      if ( $this->compare_two_value($realisasi, $kpi_model->target, $param_compare) ) {
+        $persetasi_bobot = $kpi_model->bobot;
+      }
+      else{
+        $persetasi_bobot = ($kpi_model->bobot*$achievement)/100;
+      }
 
       $lt->realisasi = $realisasi; // Realisasi nyari dari data daily input per month
-
       $lt->achievement = $achievement; // Nilai Acgievments didapat dari Realiasi / Target
-      $lt->persetasi_bobot = $persetasi_bobot; // Persentasi Bobot didapat achievemenst * bobots
+      $lt->perfomance = $perfomance; // perfomance  didapat achievemenst * bobots
+      $lt->persetasi_bobot = $persetasi_bobot;
       $lt->log_date = now();
       $lt->save();
 
       // Return hasilnya
       return response()->json(['success' => "success"], 200);
+    }
+
+    # Func untuk comparison
+    protected function compare_two_value($val1, $val2, $operator)
+    {
+      switch ($operator) {
+        case '==':
+          return $val1 == $val2;
+          break;
+        case '<':
+          return $val1 < $val2;
+          break;
+        case '>':
+          return $val1 > $val2;
+          break;
+        case '!=':
+          return $val1 != $val2;
+          break;
+        case '>=':
+          return $val1 >= $val2;
+          break;
+        case '<=':
+          return $val1 <= $val2;
+          break;
+        
+        default:
+          return null;
+          break;
+      }
     }
 
     # Save KPI/target dan Bobot
@@ -297,22 +370,6 @@ class HomeController extends Controller
     # Get Monthly Data
     public function get_monthly_data(Request $request)
     {
-      /*$datas = DB::table('daily_transaksis')
-      ->rightJoin('formulasis', 'daily_transaksis.id_formulasi', '=', 'formulasis.id')
-      ->leftJoin('parameters', 'parameters.id', '=', 'formulasis.id_parameter')
-      ->where([
-        ['parameters.id_layanan', '=', auth()->user()->layanan]
-      ])
-      ->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH(CURRENT_DATE()) AND YEAR(daily_transaksis.tanggal) = YEAR(CURRENT_DATE())')
-      ->selectRaw(
-        'DAY(daily_transaksis.tanggal) AS day
-        , DATE_FORMAT(daily_transaksis.tanggal, "%Y-%m") AS date
-        , daily_transaksis.nilai AS value_item
-        , formulasis.formulasi_desc AS value_desc
-        , parameters.parameter_desc AS parameter_desc'
-      )
-      ->orderBy('formulasis.id', 'asc')
-      ->get();*/
       $datasToJoin = DB::table('daily_transaksis')
       ->where([
         ['daily_transaksis.id_layanan', '=', auth()->user()->layanan]
