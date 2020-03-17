@@ -125,7 +125,7 @@
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0">
-                        {{ isset($service_level) ? optional($service_level)->persetasi_bobot : 0 }}%</p>
+                        {{ isset($service_level) ? optional($service_level)->perfomance : 0 }}%</p>
                         <p class="font-weight-semibold text-orange font-size-lg text-center mb-0">232</p>
                     </td>
                     <td>
@@ -157,7 +157,7 @@
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0">
-                        {{ isset($fcr) ? optional($fcr)->persetasi_bobot : 0 }}%</p>
+                        {{ isset($fcr) ? optional($fcr)->perfomance : 0 }}%</p>
                         <p class="font-weight-semibold text-orange font-size-lg text-center mb-0">232</p>
                     </td>
                     <td>
@@ -189,7 +189,7 @@
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0">
-                        {{ isset($rasio_sales) ? optional($rasio_sales)->persetasi_bobot : 0 }}%</p>
+                        {{ isset($rasio_sales) ? optional($rasio_sales)->perfomance : 0 }}%</p>
                         <p class="font-weight-semibold text-orange font-size-lg text-center mb-0">232</p>
                     </td>
                     <td>
@@ -222,7 +222,7 @@
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0">
-                        {{ isset($ces) ? optional($ces)->persetasi_bobot : 0 }}%</p>
+                        {{ isset($ces) ? optional($ces)->perfomance : 0 }}%</p>
                         <p class="font-weight-semibold text-orange font-size-lg text-center mb-0">232</p>
                     </td>
                     <td>
@@ -254,12 +254,12 @@
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0">
-                        {{ isset($quality_layanan) ? optional($ces)->persetasi_bobot : 0 }}%</p>
+                        {{ isset($quality_layanan) ? optional($quality_layanan)->perfomance : 0 }}%</p>
                         <p class="font-weight-semibold text-orange font-size-lg text-center mb-0">232</p>
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0">
-                        {{ isset($quality_layanan) ? optional($ces)->persetasi_bobot : 0 }}%</p>
+                        {{ isset($quality_layanan) ? optional($quality_layanan)->persetasi_bobot : 0 }}%</p>
                         <p class="font-weight-semibold text-violet font-size-lg text-center mb-0">232</p>
                     </td>
                   </tr>
