@@ -20,232 +20,227 @@
 
 @section('script')
 <script type="text/javascript">
-  var EchartsColumnsWaterfalls = (function() {
-  //
-  // Setup module components
-  //
-
-  // Column and waterfall charts
-  var _columnsWaterfallsExamples = function() {
-    if (typeof echarts == "undefined") {
-      console.warn("Warning - echarts.min.js is not loaded.");
-      return;
+  function trans_val(data, key) {
+    var resArr = [];
+    data.filter(function(item){
+      var i = resArr.findIndex(x => (x[key] == item[key]));
+      if(i <= -1){
+            resArr.push(item);
+      }
+      return null;
+    });
+    //console.log(resArr)
+    var retArr = []
+    for (var i = 0; i < resArr.length; i++) {
+      retArr.push(resArr[i][key])
     }
+    return retArr;
+  }
+    $(document).ready(function() {
+      get_perfomance_comparison();
+    });
+</script>
+<script type="text/javascript">
+  // Define elements
+  var columns_basic_element1 = document.getElementById("columns_basic1");
+  // Charts configuration
+  // Initialize chart
+  var columns_basic1 = echarts.init(columns_basic_element1);
+  // Chart config
+  // Options
+  var columns_basic1_option = {
+    // Define colors
+    color: ["#2ec7c9", "#b6a2de", "#5ab1ef", "#ffb980", "#d87a80"],
 
-    // Define elements
-    var columns_basic_element1 = document.getElementById("columns_basic1");
+    // Global text styles
+    textStyle: {
+      fontFamily: "Roboto, Arial, Verdana, sans-serif",
+      fontSize: 13
+    },
 
-    //
-    // Charts configuration
-    //
+    // Chart animation duration
+    animationDuration: 750,
 
-    // Basic columns chart
-    if (columns_basic_element1) {
-      // Initialize chart
-      var columns_basic1 = echarts.init(columns_basic_element1);
+    // Setup grid
+    grid: {
+      left: 0,
+      right: 40,
+      top: 35,
+      bottom: 0,
+      containLabel: true
+    },
 
-      //
-      // Chart config
-      //
+    // Add legend
+    legend: {
+      data: ["Bobot"],
+      itemHeight: 8,
+      itemGap: 20,
+      textStyle: {
+        padding: [0, 5]
+      }
+    },
 
-      // Options
-      columns_basic1.setOption({
-        // Define colors
-        color: ["#2ec7c9", "#b6a2de", "#5ab1ef", "#ffb980", "#d87a80"],
+    // Add tooltip
+    tooltip: {
+      trigger: "axis",
+      backgroundColor: "rgba(0,0,0,0.75)",
+      padding: [10, 15],
+      textStyle: {
+        fontSize: 13,
+        fontFamily: "Roboto, sans-serif"
+      }
+    },
 
-        // Global text styles
-        textStyle: {
-          fontFamily: "Roboto, Arial, Verdana, sans-serif",
-          fontSize: 13
+    // Horizontal axis
+    xAxis: [
+      {
+        type: "category",
+        //data: ["Feb - 2020", "Mar - 2020"],
+        axisLabel: {
+          color: "#333"
         },
+        axisLine: {
+          lineStyle: {
+            color: "#999"
+          }
+        }
+      }
+    ],
 
-        // Chart animation duration
-        animationDuration: 750,
-
-        // Setup grid
-        grid: {
-          left: 0,
-          right: 40,
-          top: 35,
-          bottom: 0,
-          containLabel: true
+    // Vertical axis
+    yAxis: [
+      {
+        type: "value",
+        axisLabel: {
+          color: "#333"
         },
-
-        // Add legend
-        legend: {
-          data: ["Bobot"],
-          itemHeight: 8,
-          itemGap: 20,
-          textStyle: {
-            padding: [0, 5]
+        axisLine: {
+          lineStyle: {
+            color: "#999"
           }
         },
-
-        // Add tooltip
-        tooltip: {
-          trigger: "axis",
-          backgroundColor: "rgba(0,0,0,0.75)",
-          padding: [10, 15],
-          textStyle: {
-            fontSize: 13,
-            fontFamily: "Roboto, sans-serif"
+        splitLine: {
+          lineStyle: {
+            color: ["#eee"]
           }
         },
+        splitArea: {
+          show: true,
+          areaStyle: {
+            color: ["rgba(250,250,250,0.1)", "rgba(0,0,0,0.01)"]
+          }
+        }
+      }
+    ],
 
-        // Horizontal axis
-        xAxis: [
-          {
-            type: "category",
-            data: ["Feb - 2020", "Mar - 2020"],
-            axisLabel: {
-              color: "#333"
-            },
-            axisLine: {
-              lineStyle: {
-                color: "#999"
+    // Add series
+    series: [
+      {
+        type: "bar",
+        /*markLine: {
+             data: [{
+               name: 'target',
+               yAxis: 150,
+               itemStyle: {
+                color: '#d87a80'
               }
+              }],
+        },
+        data: [
+          {
+            value: 152,
+            itemStyle: {
+              color: '#2ec7c9'
             }
           }
-        ],
-
-        // Vertical axis
-        yAxis: [
-          {
-            type: "value",
-            axisLabel: {
-              color: "#333"
-            },
-            axisLine: {
-              lineStyle: {
-                color: "#999"
-              }
-            },
-            splitLine: {
-              lineStyle: {
-                color: ["#eee"]
-              }
-            },
-            splitArea: {
+          ,{
+            value: 200,
+            itemStyle: {
+              color: '#b6a2de'
+            }
+          }
+        ],*/
+        itemStyle: {
+          normal: {
+            label: {
               show: true,
-              areaStyle: {
-                color: ["rgba(250,250,250,0.1)", "rgba(0,0,0,0.01)"]
+              formatter: '{c}%',
+              position: "top",
+              textStyle: {
+                fontWeight: 500
               }
             }
           }
-        ],
+        }
+      }
+    ]
+  }
+  
 
-        // Add series
-        series: [
-          {
-            type: "bar",
-            markLine: {
-                 data: [{
-                   name: 'target',
-                   yAxis: 150,
-                   itemStyle: {
-                    color: '#d87a80'
-                  }
-                  }],
-            },
-            data: [
-              {
-                value: 152,
-                itemStyle: {
-                  color: '#2ec7c9'
-                }
-              }
-              ,{
-                value: 200,
-                itemStyle: {
-                  color: '#b6a2de'
-                }
-              }
-            ],
-            itemStyle: {
-              normal: {
-                label: {
-                  show: true,
-                  formatter: '{c}%',
-                  position: "top",
-                  textStyle: {
-                    fontWeight: 500
-                  }
-                }
-              }
-            }
+  function get_perfomance_comparison() {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    $.ajax({
+     type:"post",
+     url:'/get-perfomance-comparison',
+         //data: {year: year_value, month: month_value, id_parameter: parameter_value},
+         success: function(data){
+          var list_xAxis = trans_val(data, 'desc');
+          columns_basic1_option.xAxis[0].data = list_xAxis
+          var list_perfomance = trans_val(data, 'total_perfomance');
+          var tempArr = [];
+          var colors = ['#b6a2de', '#2ec7c9']
+          for (var i = 0; i < list_perfomance.length; i++) {
+            tempArr.push({
+              itemStyle: {
+                color: colors[i]
+              },
+              value: list_perfomance[i]
+            })
           }
-            /*,
-          {
-            name: "This Month",
-            type: "bar",
-            data: [
-              80
-            ],
-            itemStyle: {
-              normal: {
-                label: {
-                  show: true,
-                  position: "top",
-                  textStyle: {
-                    fontWeight: 500
-                  }
-                }
-              }
-            }
-          }*/
-        ]
+          columns_basic1_option.series[0].data = list_perfomance
+          columns_basic1.setOption(columns_basic1_option, true);
+        },
+        error: function(jqXhr, json, errorThrown){// this are default for ajax errors
+          var errors = jqXhr.responseJSON;
+          var errorsHtml = '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Error ' + jqXhr.status + ': ' + errorThrown + '</div>';
+          notificationScript("error", "Error " + jqXhr.status, errorThrown);
+          $.each(errors['errors'], function (index, value) {
+            errorsHtml += '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + value + '</div>';
+            notificationScript("error", "Error Field", value);
+          });
+        }
+      }).done(function(){
+
       });
     }
 
-    //
-    // Resize charts
-    //
-
-    // Resize function
-    var triggerChartResize = function() {
-      columns_basic_element1 && columns_basic1.resize();
-    };
-
-    // On sidebar width change
-    $(document).on("click", ".sidebar-control, .navbar-toggler", function() {
-      setTimeout(function() {
-        triggerChartResize();
-      }, 0);
-    });
-
-    // On window resize
-    var resizeCharts;
-    window.onresize = function() {
-      clearTimeout(resizeCharts);
-      resizeCharts = setTimeout(function() {
-        triggerChartResize();
-      }, 200);
-    };
-
-    // Resize charts when hidden element becomes visible
-    $('.nav-link[data-toggle="tab"]').on("shown.bs.tab", function(e) {
+  // Resize charts
+  // Resize function
+  var triggerChartResize = function() {
+    columns_basic_element1 && columns_basic1.resize();
+  };
+  // On sidebar width change
+  $(document).on("click", ".sidebar-control, .navbar-toggler", function() {
+    setTimeout(function() {
       triggerChartResize();
-    });
+    }, 0);
+  });
+  // On window resize
+  var resizeCharts;
+  window.onresize = function() {
+    clearTimeout(resizeCharts);
+    resizeCharts = setTimeout(function() {
+      triggerChartResize();
+    }, 200);
   };
-
-  //
-  // Return objects assigned to module
-  //
-
-  return {
-    init: function() {
-      _columnsWaterfallsExamples();
-    }
-  };
-})();
-
-// Initialize module
-// ------------------------------
-
-document.addEventListener("DOMContentLoaded", function() {
-  EchartsColumnsWaterfalls.init();
-});
-
+  // Resize charts when hidden element becomes visible
+  $('.nav-link[data-toggle="tab"]').on("shown.bs.tab", function(e) {
+    triggerChartResize();
+  });
 </script>
 @endsection
 

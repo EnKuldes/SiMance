@@ -473,6 +473,66 @@ class HomeController extends Controller
       return response()->json($datas);
     }
 
+    # Perfomance Comparation Monthly
+    public function get_perfomance_comparation(Request $request)
+    {
+      $list_parameter = DB::table('parameters')->where([
+        ['id_layanan', '=', auth()->user()->layanan]
+        , ['is_enabled', '=', '1']
+      ])->get();
+      $total_perfomance = [];
+      $qWhere = ['MONTH(log_transaksis.log_date) = MONTH(CURRENT_DATE() - INTERVAL 1 MONTH) AND YEAR(log_transaksis.log_date) = YEAR(CURRENT_DATE() - INTERVAL 1 MONTH)', 'MONTH(log_transaksis.log_date) = MONTH(CURRENT_DATE()) AND YEAR(log_transaksis.log_date) = YEAR(CURRENT_DATE())'];
+      $name_desc = ['Last Month', 'This Month'];
+      for ($i=0; $i < count($qWhere) ; $i++) { 
+        $tempArr = [];
+        $tempVal = 0;
+        foreach ($list_parameter as $key) {
+          $tempArr[] = DB::table('log_transaksis')->where([
+            ['layanan', '=', $key->id_layanan]
+            , ['parameter', '=', $key->id]
+          ])
+          ->whereRaw($qWhere[$i])
+          ->orderBy('created_at', 'desc')->first();
+        }
+        for ($j=0; $j < count($tempArr); $j++) { 
+          $tempVal += optional($tempArr[$j])->perfomance;
+        }
+        $total_perfomance[] = (object) ["desc"=>$name_desc[$i], "total_perfomance"=>$tempVal];
+      }
+      
+      return response()->json($total_perfomance);
+    }
+    public function get_realisasi_monthly(Request $request)
+    {
+      $list_parameter = DB::table('parameters')->where([
+        ['id_layanan', '=', auth()->user()->layanan]
+        , ['is_enabled', '=', '1']
+      ])->get();
+      $list_realisasi = [];
+      $qWhere = ['MONTH(log_transaksis.log_date) = MONTH(CURRENT_DATE()) AND YEAR(log_transaksis.log_date) = YEAR(CURRENT_DATE())'];
+      $name_desc = ['This Month'];
+      for ($i=0; $i < count($qWhere) ; $i++) { 
+        $tempArr = [];
+        $tempVal = 0;
+        foreach ($list_parameter as $key) {
+          $tempArr[] = DB::table('log_transaksis')->where([
+            ['layanan', '=', $key->id_layanan]
+            , ['parameter', '=', $key->id]
+          ])
+          ->whereRaw($qWhere[$i])
+          ->orderBy('created_at', 'desc')->first();
+        }
+        for ($j=0; $j < count($tempArr); $j++) { 
+          $list_realisasi[] = [
+            "realisasi"=>optional($tempArr[$j])->realisasi
+          ];
+        }
+        $list_realisasi = (object) $list_realisasi;
+      }
+      
+      return response()->json($list_realisasi);
+    }
+
     # Chaining
     public function list_parameter(Request $request)
     {

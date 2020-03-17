@@ -188,6 +188,39 @@
     });
   }
 
+  function get_realisasi_monthly() {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    $.ajax({
+     type:"post",
+     url:'/get-realisasi-monthly',
+         //data: {year: year_value, month: month_value, id_parameter: parameter_value},
+         success: function(data){
+          var labelTitles = ['sl_val', 'fcr_val', 'rs_val', 'ces_val', 'ql_val']
+          console.log(data)
+          for (var i = 0; i < labelTitles.length; i++) {
+            if (data[i]['realisasi'] != null) {realisasi = data[i]['realisasi']}
+            else{realisasi = 0}
+            $('#'+labelTitles[i]).html( realisasi+"%" )
+          }
+        },
+        error: function(jqXhr, json, errorThrown){// this are default for ajax errors
+          var errors = jqXhr.responseJSON;
+          var errorsHtml = '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Error ' + jqXhr.status + ': ' + errorThrown + '</div>';
+          notificationScript("error", "Error " + jqXhr.status, errorThrown);
+          $.each(errors['errors'], function (index, value) {
+            errorsHtml += '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + value + '</div>';
+            notificationScript("error", "Error Field", value);
+          });
+        }
+      }).done(function(){
+
+      });
+    }
+
   // Form On Submit
   $('#form-insert-daily').on('submit', function(e){
     e.preventDefault();
@@ -229,6 +262,7 @@
       chain3();
       reset_input();
       init_chart_element();
+      get_realisasi_monthly()
       $('#input_date').pickadate({format: 'yyyy-mm-dd'});
     });
   // On Change Events
@@ -1038,7 +1072,7 @@
           window["data_"+value_parameter+value_desc[j]].push(data[i]['value_item'])
         }
       }
-      console.log( window["data_"+value_parameter+value_desc[j]] )
+      //console.log( window["data_"+value_parameter+value_desc[j]] )
       tempArr.push({
         name: value_desc[j],
         type: type_chart,
@@ -1221,35 +1255,35 @@
               <a href="#service_level" class="nav-link active" data-toggle="tab">
                 <i class="icon-cog"></i>
                 Service Level
-                <span class="badge bg-info badge-pill ml-auto">29%</span>
+                <span class="badge bg-info badge-pill ml-auto" id="sl_val">0%</span>
               </a>
             </li>
             <li class="nav-item">
               <a href="#fcr" class="nav-link" data-toggle="tab">
                 <i class="icon-watch2"></i>
                 FCR
-                <span class="badge bg-info badge-pill ml-auto">21%</span>
+                <span class="badge bg-info badge-pill ml-auto" id="fcr_val">0%</span>
               </a>
             </li>
             <li class="nav-item">
               <a href="#rasio_sales" class="nav-link" data-toggle="tab">
                 <i class="icon-clipboard5"></i>
                 Rasio Sales
-                <span class="badge bg-info badge-pill ml-auto">29%</span>
+                <span class="badge bg-info badge-pill ml-auto" id="rs_val">0%</span>
               </a>
             </li>
             <li class="nav-item">
               <a href="#ces" class="nav-link" data-toggle="tab">
                 <i class="icon-search4"></i>
                 CES (by customer)
-                <span class="badge bg-info badge-pill ml-auto">16%</span>
+                <span class="badge bg-info badge-pill ml-auto" id="ces_val">0%</span>
               </a>
             </li>
             <li class="nav-item">
               <a href="#quality_layanan" class="nav-link" data-toggle="tab">
                 <i class="icon-thumbs-up2"></i>
                 Quality Layanan
-                <span class="badge bg-info badge-pill ml-auto">66%</span>
+                <span class="badge bg-info badge-pill ml-auto" id="ql_val">0%</span>
               </a>
             </li>
             {{-- <li class="nav-item-header">Resource</li>
