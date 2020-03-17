@@ -59,6 +59,7 @@ class HomeController extends Controller
             , ['parameter', '=', '5']
         ])->orderBy('created_at', 'desc')->first();
         
+        // Bobot dan Target Resources
         $kpi = DB::table('kpi')->where([
           ['id_layanan', '=', 1]
           , ['active', '=', 'current']
@@ -78,6 +79,29 @@ class HomeController extends Controller
           , ['parameters.id_layanan', '=', 1]
         ])
         ->orderBy('parameters.id')->get();
+
+        // Total Input Daily per Formulasi berdasarkan Parameter
+        $total_input = DB::table('daily_transaksis')->selectRaw('
+          id_formulasi
+          , SUM(nilai) AS total
+          ')->whereRaw('tanggal = CURDATE()-1 AND id_layanan = 1')
+        ->groupBy('id_formulasi');
+        $total_input_per_formulasi = DB::table('formulasis')
+        ->selectRaw('
+          formulasis.id_parameter,
+          formulasis.id,
+          formulasis.formulasi_desc,
+          res.total
+          ')
+        ->leftJoinSub($total_input, 'res', function ($join) {
+              $join->on('res.id_formulasi', '=', 'formulasis.id');
+          })
+        ->whereRaw("
+          formulasis.is_enabled = '1' AND formulasis.id_parameter IN (SELECT id FROM parameters WHERE id_layanan = 1 AND is_enabled = '1')
+          ")
+        ->get();
+
+
 
         $t_bobot = $service_level->persetasi_bobot+$fcr->persetasi_bobot+$rasio_sales->persetasi_bobot+$ces->persetasi_bobot+$quality_layanan->persetasi_bobot;
 
@@ -146,7 +170,8 @@ class HomeController extends Controller
             'target_quality_layanan' => $target_quality_layanan,
             'bobot_quality_layanan' => $bobot_quality_layanan,
 
-            'kpiObject' => $parameter
+            'kpiObject' => $parameter,
+            'input_per_formulasi' => $total_input_per_formulasi,
         ]);
     }
     public function cc_147()

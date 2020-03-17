@@ -235,7 +235,7 @@
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0 text-success">
-                        {{ isset($service_level) ? optional($service_level)->realisasi : 0 }}%</p>
+                        {{ isset($input_per_formulasi) ? $input_per_formulasi[0]->total+$input_per_formulasi[1]->total : 0 }}</p>
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0">
@@ -267,7 +267,7 @@
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0 text-success">
-                        {{ isset($fcr) ? optional($fcr)->realisasi : 0 }}%</p>
+                        {{ isset($input_per_formulasi) ? $input_per_formulasi[2]->total+$input_per_formulasi[3]->total : 0 }}</p>
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0">
@@ -299,7 +299,7 @@
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0 text-success">
-                        {{ isset($rasio_sales) ? optional($rasio_sales)->realisasi : 0 }}%</p>
+                        {{ isset($input_per_formulasi) ? $input_per_formulasi[4]->total+$input_per_formulasi[5]->total+$input_per_formulasi[6]->total : 0 }}</p>
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0">
@@ -332,7 +332,7 @@
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0 text-success">
-                        {{ isset($ces) ? optional($ces)->realisasi : 0 }}%</p>
+                        {{ isset($input_per_formulasi) ? $input_per_formulasi[7]->total+$input_per_formulasi[8]->total : 0 }}</p>
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0">
@@ -364,7 +364,7 @@
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0 text-success">
-                        {{ isset($quality_layanan) ? optional($quality_layanan)->realisasi : 0 }}%</p>
+                        {{ isset($input_per_formulasi) ? $input_per_formulasi[9]->total+$input_per_formulasi[10]->total : 0 }}</p>
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-lg text-center mb-0">
