@@ -142,7 +142,6 @@
 @section('content')
 <div class="row">
   <div class="col-md-9">
-
     <!-- Daily sales -->
     <div class="card">
       <div class="card-header header-elements-inline">
@@ -159,10 +158,10 @@
             <ul class="list-unstyled mb-0">
               <li class="mb-3">
                 <div class="d-flex align-items-center mb-1">Service Level <span class="text-muted ml-auto">Target
-                    {{ round($target_service_level  ?? 0) }}% | Bobot {{ round($bobot_service_level  ?? 0) }}%</span>
+                    {{ $kpiObject[0]->target  ?? 0}} | Bobot {{ $kpiObject[0]->bobot  ?? 0}}</span>
                 </div>
                 <div class="progress" style="height: 1rem;">
-                  <div class="progress-bar bg-info" style="width: <?=$target_service_level ?? 0?>%">
+                  <div class="progress-bar bg-{{ round($target_service_level  ?? 0) > 50 ? "info" : "danger" }}" style="width: <?=$target_service_level ?? 0?>%">
                     <span>{{ round($target_service_level  ?? 0) }}% Complete</span>
                   </div>
                 </div>
@@ -170,9 +169,9 @@
 
               <li class="mb-3">
                 <div class="d-flex align-items-center mb-1">FCR <span class="text-muted ml-auto">Target
-                    {{ round($target_fcr ?? 0 ) }}% | Bobot {{ round($bobot_fcr ?? 0 ) }}%</span></div>
+                    {{ $kpiObject[1]->target ?? 0 }} | Bobot {{ $kpiObject[1]->bobot ?? 0 }}</span></div>
                 <div class="progress" style="height: 1rem;">
-                  <div class="progress-bar bg-info" style="width: <?=$target_fcr ?? 0 ?>%">
+                  <div class="progress-bar bg-{{ round($target_fcr  ?? 0) > 50 ? "info" : "danger" }}" style="width: <?=$target_fcr ?? 0 ?>%">
                     <span>{{ round($target_fcr ?? 0 ) }}% Complete</span>
                   </div>
                 </div>
@@ -180,9 +179,9 @@
 
               <li class="mb-3">
                 <div class="d-flex align-items-center mb-1">Rasio Sales <span class="text-muted ml-auto">Target
-                    {{ round($target_rasio_sales ?? 0 ) }}% | Bobot {{ round($bobot_rasio_sales ?? 0 ) }}%</span></div>
+                    {{ $kpiObject[2]->target ?? 0 }} | Bobot {{ $kpiObject[2]->bobot ?? 0 }}</span></div>
                 <div class="progress" style="height: 1rem;">
-                  <div class="progress-bar bg-info" style="width: <?=$target_rasio_sales ?? 0 ?>%">
+                  <div class="progress-bar bg-{{ round($target_rasio_sales  ?? 0) > 50 ? "info" : "danger" }}" style="width: <?=$target_rasio_sales ?? 0 ?>%">
                     <span>{{ round($target_rasio_sales ?? 0 ) }}% Complete</span>
                   </div>
                 </div>
@@ -190,9 +189,9 @@
 
               <li class="mb-3">
                 <div class="d-flex align-items-center mb-1">CES (by customer) <span class="text-muted ml-auto">Target
-                    {{ round($target_ces ?? 0 ) }}% | Bobot {{ round($bobot_ces ?? 0 ) }}%</span></div>
+                    {{ $kpiObject[3]->target ?? 0 }} | Bobot {{ $kpiObject[3]->bobot ?? 0 }}</span></div>
                 <div class="progress" style="height: 1rem;">
-                  <div class="progress-bar bg-info" style="width: <?=$target_ces ?? 0 ?>%">
+                  <div class="progress-bar bg-{{ round($target_ces  ?? 0) > 50 ? "info" : "danger" }}" style="width: <?=$target_ces ?? 0 ?>%">
                     <span>{{ round($target_ces ?? 0 ) }}% Complete</span>
                   </div>
                 </div>
@@ -200,10 +199,10 @@
 
               <li>
                 <div class="d-flex align-items-center mb-1">Quality Layanan <span class="text-muted ml-auto">Target
-                    {{ round($target_quality_layanan ?? 0 ) }}% | Bobot
-                    {{ round($bobot_quality_layanan ?? 0 ) }}%</span></div>
+                    {{ $kpiObject[4]->target ?? 0 }} | Bobot
+                    {{ $kpiObject[4]->bobot ?? 0 }}</span></div>
                 <div class="progress" style="height: 1rem;">
-                  <div class="progress-bar bg-info" style="width: <?=$target_quality_layanan ?? 0 ?>%">
+                  <div class="progress-bar bg-{{ round($target_quality_layanan  ?? 0) > 50 ? "info" : "danger" }}" style="width: <?=$target_quality_layanan ?? 0 ?>%">
                     <span>{{ round($target_quality_layanan ?? 0 ) }}% Complete</span>
                   </div>
                 </div>
