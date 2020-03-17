@@ -334,7 +334,8 @@ var EchartsColumnsWaterfalls = (function() {
             name: "Last Month",
             type: "bar",
             data: [
-              77
+              {value: 120, itemStyle: {color: '#2ec7c9'},}
+              ,{value: 200, itemStyle: {color: '#b6a2de'},}
             ],
             itemStyle: {
               normal: {
@@ -347,7 +348,7 @@ var EchartsColumnsWaterfalls = (function() {
                 }
               }
             }
-          },
+          }/*,
           {
             name: "This Month",
             type: "bar",
@@ -365,7 +366,7 @@ var EchartsColumnsWaterfalls = (function() {
                 }
               }
             }
-          }
+          }*/
         ]
       });
     }
