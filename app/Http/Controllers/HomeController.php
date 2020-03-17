@@ -198,16 +198,32 @@ class HomeController extends Controller
     # Save Target, Bobot dan Satuan
     public function save_daily_input(Request $request)
     {
+      $todayDate = date('Y-m-d');
+      # Error messages validation
+      $messages = [
+        'select_parameter.required' => "You haven't choose parameter yet.",
+        'select_formulasi.required'  => "You haven't choose item yet.",
+        'input_date.required'  => "You haven't input a date yet.",
+        'input_date.before_or_equal'  => "You input a date greater than today date.",
+      ];
+      # Rules Validation
+      $validation = $this->validate($request, [
+        'select_parameter' => 'required',
+        'select_formulasi' => 'required',
+        'input_date' => 'required|before_or_equal:'.$todayDate,
+      ], $messages);
+
       $id_layanan = auth()->user()->layanan;
       $id_parameter = $request->select_parameter;
       $id_formulasi = $request->select_formulasi;
+      $input_date = $request->input_date;
 
       $saveResult = daily_transaksi::updateOrCreate(
         [
           'id_layanan' => auth()->user()->layanan
           , 'id_parameter' => $request->select_parameter
           , 'id_formulasi' => $request->select_formulasi
-          , 'tanggal' => now()->subDays(1)->format('Y-m-d')
+          , 'tanggal' => $input_date//now()->subDays(1)->format('Y-m-d')
         ],
         [
           'nilai' => $request->value_formulasi
@@ -349,7 +365,7 @@ class HomeController extends Controller
       $lt->achievement = $achievement; // Nilai Acgievments didapat dari Realiasi / Target
       $lt->perfomance = $perfomance; // perfomance  didapat achievemenst * bobots
       $lt->persetasi_bobot = $persetasi_bobot;
-      $lt->log_date = now()->subDays(1);
+      $lt->log_date = $input_date;//now()->subDays(1);
       $lt->save();
 
       // Return hasilnya
@@ -415,8 +431,10 @@ class HomeController extends Controller
       $datasToJoin = DB::table('daily_transaksis')
       ->where([
         ['daily_transaksis.id_layanan', '=', auth()->user()->layanan]
+        , ['daily_transaksis.id_parameter', '=', $request->id_parameter]
       ])
-      ->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH(CURRENT_DATE()) AND YEAR(daily_transaksis.tanggal) = YEAR(CURRENT_DATE())')
+      //->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH(CURRENT_DATE()) AND YEAR(daily_transaksis.tanggal) = YEAR(CURRENT_DATE())')
+      ->whereRaw('MONTH(daily_transaksis.tanggal) = '.$request->month.' AND YEAR(daily_transaksis.tanggal) = '.$request->year)
       ->selectRaw(
         'DAY(daily_transaksis.tanggal) AS day
         , DATE_FORMAT(daily_transaksis.tanggal, "%Y-%m") AS date
@@ -431,14 +449,22 @@ class HomeController extends Controller
       })
       ->where([
         ['parameters.id_layanan', '=', auth()->user()->layanan]
+        , ['parameters.id', '=', $request->id_parameter]
       ])
       ->selectRaw('
         parameters.parameter_desc AS parameter_desc
         , formulasis.formulasi_desc AS value_desc
-        , IFNULL(res.day, DAY(CURDATE()-1))  AS `day`
+        , IFNULL(res.day, DAY(CURDATE()))  AS `day`
         , res.date AS date
         , res.value_item AS value_item
       ')
+      /*->selectRaw('
+        parameters.parameter_desc AS parameter_desc
+        , formulasis.formulasi_desc AS value_desc
+        , res.day AS `day`
+        , res.date AS date
+        , res.value_item AS value_item
+      ')*/
       ->orderBy('parameters.id')
       ->orderBy('res.id_formulasi')
       ->orderBy('res.day')

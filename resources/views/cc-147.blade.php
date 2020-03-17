@@ -16,6 +16,9 @@
 --}}
 <script src="assets/js/demo_pages/form_select2.js"></script>
 <script src="assets/js/demo_pages/form_layouts.js"></script>
+<script src="assets/js/plugins/ui/moment/moment.min.js"></script>
+<script src="assets/js/plugins/pickers/pickadate/picker.js"></script>
+<script src="assets/js/plugins/pickers/pickadate/picker.date.js"></script>
 @endsection
 
 @section('script')
@@ -106,7 +109,7 @@
        url:'/list-date',
        //data: {'id_parameter':id},
        success: function(data){
-        var ahtml = '<option></option>';
+        var ahtml = ''//'<option></option>';
         for (var i = 0; i < data.length; i++) {
           ahtml+="<option value='"+data[i]['year']+"'>"+data[i]['year']+"</option>"
           if (i == 0) { tempYear = data[i]['year']; }
@@ -135,7 +138,7 @@
        url:'/list-date',
        data: {'select_year':id},
        success: function(data){
-        var ahtml = '<option></option>';
+        var ahtml = ''//'<option></option>';
         for (var i = 0; i < data.length; i++) {
           ahtml+="<option value='"+data[i]['month']+"'>"+data[i]['month']+"</option>"
           if (i == 0) { tempMonth = data[i]['month']; }
@@ -226,6 +229,7 @@
       chain3();
       reset_input();
       init_chart_element();
+      $('#input_date').pickadate({format: 'yyyy-mm-dd'});
     });
   // On Change Events
   $("#select_parameter").change(function() {
@@ -246,13 +250,13 @@
     var id = $(this).val();
     if (id != "" && id != null)
     {
-      get_monthly_data( $("#list_year").val(), $(this).val() );
+      init_chart_value( $("#list_year").val(), $(this).val() );
     }
   });
   // Button On Click
   function reset_input() {
     $("#form-insert-daily").trigger("reset");
-    $("select").val('').trigger('change');
+    //$("select").val('').trigger('change');
     $("#select_formulasi").html('');
   }
   // on Close Modal Event
@@ -1045,8 +1049,19 @@
     return tempArr;
   }
 
+  // mencari value
+  function init_chart_value(year_value, month_value){
+    var list_option_charts = [columns_basic_options, line_basic_options, line_stacked_options, line_basic1_options, line_basic2_options]
+    var list_type_charts = ['bar', 'line', 'line', 'line', 'line']
+    var charts = [columns_basic, line_basic, line_stacked, line_basic1, line_basic2];
+    for (var i = 0; i < list_option_charts.length; i++) {
+      get_monthly_data( $("#list_year").val(), $('#list_month').val(), i+1, charts[i], list_option_charts[i], list_type_charts[i])
+    }
+    //get_monthly_data( $("#list_year").val(), $('#list_month').val(), 1, charts[0], list_option_charts[0], list_type_charts[0])
+  }
+  
   // Get Data Monthly
-  function get_monthly_data(year, month) {
+  function get_monthly_data(year_value, month_value, parameter_value, chart_element, chart_option, chart_type) {
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1055,18 +1070,21 @@
     $.ajax({
      type:"post",
      url:'/get-monthly-data',
-         //data: {},
+         data: {year: year_value, month: month_value, id_parameter: parameter_value},
          success: function(data){
-          //console.log(data);
-          // Disini harus bikin Legend.Data, xAxis.data dan Series
-          /*
-          nps_episode_stack_option.series = episode_series;
-          nps_episode_stack_option.xAxis[0].data = axisdata; -> Done
-          nps_episode_stack_option.legend.data = datalegend;
-          */
           var list_day = trans_val(data, 'day');
-
-          columns_basic_options.xAxis[0].data = list_day;
+          list_day.sort()
+          list_day = list_day.filter(function (el) {
+            return el != null;
+          });
+          chart_option.xAxis[0].data = list_day;
+          var list_parameter = trans_val(data, 'parameter_desc');
+          var tempVal =  list_parameter;
+          var tempList = list_legend(data, tempVal);
+          chart_option.legend.data = tempList;
+          chart_option.series = list_data_series(data, tempVal, tempList, chart_type);
+          chart_element.setOption(chart_option, true);
+          /*columns_basic_options.xAxis[0].data = list_day;
           line_basic_options.xAxis[0].data = list_day;
           line_basic1_options.xAxis[0].data = list_day;
           line_basic2_options.xAxis[0].data = list_day;
@@ -1099,44 +1117,7 @@
           line_basic2_options.legend.data = tempList;
           line_basic2_options.series = list_data_series(data, tempVal, tempList, 'line');
 
-          /*for (var j = 0; j < list_parameter.length; j++) {
-            window["data_"+list_parameter[j]] =[];
-            for (var i = 0; i < data.length; i++) {
-              if (data[i]['parameter_desc'] == list_parameter[j]) {
-                window["data_"+list_parameter[j]].push(data[i]['value_desc'])
-              }
-            }
-            var uniqueValueDesc = []
-            $.each(window["data_"+list_parameter[j]], function(i, el){
-                if($.inArray(el, uniqueValueDesc) === -1) uniqueValueDesc.push(el);
-            });
-            console.log( uniqueValueDesc )
-          }*/
-
-
-          /*window["data_"+list_parameter[0]+uniqueValueDesc[0]] =[];
-          for (var i = 0; i < data.length; i++) {
-            if (data[i]['parameter_desc'] == list_parameter[0] && data[i]['value_desc'] == uniqueValueDesc[0] ) {
-              window["data_"+list_parameter[0]+uniqueValueDesc[0]].push(data[i]['value_item'])
-            }
-          }
-          console.log( window["data_"+list_parameter[0]+uniqueValueDesc[0]] )*/
-
-          /*nps_series = [];
-          nps_list = ["detractor","passive","promotor"]
-
-
-          for(var j = 0; j < nps_list.length; j++) {
-            window["data_"+nps_list[j]] =[];
-            for(var k = 0; k < list_episode_name.length; k++) {
-              sum_nps = get_trans_val_single_sum(result, 'q_group_name', list_episode_name[k], nps_list[0])[0] + get_trans_val_single_sum(result, 'q_group_name', list_episode_name[k], nps_list[1])[0] + get_trans_val_single_sum(result, 'q_group_name', list_episode_name[k], nps_list[2])[0];
-
-              window["data_"+nps_list[j]].push(((get_trans_val_single_sum(result, 'q_group_name', list_episode_name[k], nps_list[j])[0]/sum_nps)*100).toFixed(2));
-            }
-            nps_series.push({name:nps_list[j],type:'bar',stack: '1',itemStyle : { normal: {label : {show: true, position: 'inside',textStyle: {color: 'black'}}}},data:window["data_"+nps_list[j]]});
-          };*/
-
-          init_chart_element()
+          init_chart_element()*/
 
         },
         error: function(jqXhr, json, errorThrown){// this are default for ajax errors
@@ -1155,7 +1136,7 @@
   // Refresh Charts
   function refresh_charts() {
     f_clear_chart();
-    setTimeout(get_monthly_data( $("#list_year").val(), $('#list_month').val() ), 5000);
+    setTimeout(init_chart_value( $("#list_year").val(), $('#list_month').val() ), 5000);
   }
 
   function init_chart_element() {
@@ -1635,6 +1616,13 @@
 
       <form id="form-insert-daily" class="form-horizontal">
         <div class="modal-body">
+          <div class="form-group row">
+            <label class="col-form-label col-sm-5">Date</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" autocomplete="off" name="input_date" id="input_date" required>
+            </div>
+          </div>
+
           <div class="form-group row">
             <label class="col-form-label col-sm-5">Parameter</label>
             <div class="col-sm-7">
