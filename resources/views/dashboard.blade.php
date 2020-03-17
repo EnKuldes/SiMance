@@ -28,8 +28,7 @@
       <div class="card-header header-elements-inline">
         <h5 class="card-title font-weight-bold">CC 147</h5>
         <div class="header-elements">
-          <span class="font-weight-bold font-size-lg text-info-600 ml-2">TOTAL BOBOT | {{ round($t_bobot ?? 0) }}
-            %</span>
+          <span class="font-weight-bold font-size-lg text-info-600 ml-2">TOTAL BOBOT | 123.234 / {{ round($t_bobot ?? 0) }}%</span>
         </div>
       </div>
 
@@ -97,8 +96,9 @@
                 <thead>
                   <tr>
                     <th class="w-100">Parameter</th>
-                    <th>Realisasi</th>
-                    <th>Achievement</th>
+                    <th>Real</th>
+                    <th>Achv</th>
+                    <th>Perf</th>
                     <th>Bobot</th>
                   </tr>
                 </thead>
@@ -114,16 +114,24 @@
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">
-                        {{ isset($service_level) ? optional($service_level)->realisasi : 0 }} %</p>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($service_level) ? optional($service_level)->realisasi : 0 }}%</p>
+                        <p class="font-weight-semibold text-info font-size-lg text-center mb-0">232</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">
-                        {{ isset($service_level) ? optional($service_level)->achievement : 0 }} %</p>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($service_level) ? optional($service_level)->achievement : 0 }}%</p>
+                        <p class="font-weight-semibold text-success font-size-lg text-center mb-0">232</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">
-                        {{ isset($service_level) ? optional($service_level)->persetasi_bobot : 0 }} %</p>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($service_level) ? optional($service_level)->persetasi_bobot : 0 }}%</p>
+                        <p class="font-weight-semibold text-orange font-size-lg text-center mb-0">232</p>
+                    </td>
+                    <td>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($service_level) ? optional($service_level)->persetasi_bobot : 0 }}%</p>
+                        <p class="font-weight-semibold text-violet font-size-lg text-center mb-0">232</p>
                     </td>
                   </tr>
 
@@ -138,16 +146,24 @@
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">
-                        {{ isset($fcr) ? optional($fcr)->realisasi : 0 }} %</p>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($fcr) ? optional($fcr)->realisasi : 0 }}%</p>
+                        <p class="font-weight-semibold text-info font-size-lg text-center mb-0">232</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">
-                        {{ isset($fcr) ? optional($fcr)->achievement : 0 }} %</p>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($fcr) ? optional($fcr)->achievement : 0 }}%</p>
+                        <p class="font-weight-semibold text-success font-size-lg text-center mb-0">232</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">
-                        {{ isset($fcr) ? optional($fcr)->persetasi_bobot : 0 }} %</p>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($fcr) ? optional($fcr)->persetasi_bobot : 0 }}%</p>
+                        <p class="font-weight-semibold text-orange font-size-lg text-center mb-0">232</p>
+                    </td>
+                    <td>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($fcr) ? optional($fcr)->persetasi_bobot : 0 }}%</p>
+                        <p class="font-weight-semibold text-violet font-size-lg text-center mb-0">232</p>
                     </td>
                   </tr>
 
@@ -162,16 +178,24 @@
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">
-                        {{ isset($rasio_sales) ? optional($rasio_sales)->realisasi : 0 }} %</p>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($rasio_sales) ? optional($rasio_sales)->realisasi : 0 }}%</p>
+                        <p class="font-weight-semibold text-info font-size-lg text-center mb-0">232</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">
-                        {{ isset($rasio_sales) ? optional($rasio_sales)->achievement : 0 }} %</p>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($rasio_sales) ? optional($rasio_sales)->achievement : 0 }}%</p>
+                        <p class="font-weight-semibold text-success font-size-lg text-center mb-0">232</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">
-                        {{ isset($rasio_sales) ? optional($rasio_sales)->persetasi_bobot : 0 }} %</p>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($rasio_sales) ? optional($rasio_sales)->persetasi_bobot : 0 }}%</p>
+                        <p class="font-weight-semibold text-orange font-size-lg text-center mb-0">232</p>
+                    </td>
+                    <td>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($rasio_sales) ? optional($rasio_sales)->persetasi_bobot : 0 }}%</p>
+                        <p class="font-weight-semibold text-violet font-size-lg text-center mb-0">232</p>
                     </td>
                   </tr>
 
@@ -187,16 +211,24 @@
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">
-                        {{ isset($ces) ? optional($ces)->realisasi : 0 }} %</p>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($ces) ? optional($ces)->realisasi : 0 }}%</p>
+                        <p class="font-weight-semibold text-info font-size-lg text-center mb-0">232</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">
-                        {{ isset($ces) ? optional($ces)->achievement : 0 }} %</p>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($ces) ? optional($ces)->achievement : 0 }}%</p>
+                        <p class="font-weight-semibold text-success font-size-lg text-center mb-0">232</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">
-                        {{ isset($ces) ? optional($ces)->persetasi_bobot : 0 }} %</p>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($ces) ? optional($ces)->persetasi_bobot : 0 }}%</p>
+                        <p class="font-weight-semibold text-orange font-size-lg text-center mb-0">232</p>
+                    </td>
+                    <td>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($ces) ? optional($ces)->persetasi_bobot : 0 }}%</p>
+                        <p class="font-weight-semibold text-violet font-size-lg text-center mb-0">232</p>
                     </td>
                   </tr>
 
@@ -211,16 +243,24 @@
                       </div>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">
-                        {{ isset($quality_layanan) ? optional($quality_layanan)->realisasi : 0 }} %</p>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($quality_layanan) ? optional($quality_layanan)->realisasi : 0 }}%</p>
+                        <p class="font-weight-semibold text-info font-size-lg text-center mb-0">232</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">
-                        {{ isset($quality_layanan) ? optional($quality_layanan)->achievement : 0 }} %</p>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($quality_layanan) ? optional($quality_layanan)->achievement : 0 }}%</p>
+                        <p class="font-weight-semibold text-success font-size-lg text-center mb-0">232</p>
                     </td>
                     <td>
-                      <p class="font-weight-semibold font-size-lg text-center mb-0">
-                        {{ isset($quality_layanan) ? optional($ces)->persetasi_bobot : 0 }} %</p>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($quality_layanan) ? optional($ces)->persetasi_bobot : 0 }}%</p>
+                        <p class="font-weight-semibold text-orange font-size-lg text-center mb-0">232</p>
+                    </td>
+                    <td>
+                      <p class="font-weight-bold font-size-lg text-center mb-0">
+                        {{ isset($quality_layanan) ? optional($ces)->persetasi_bobot : 0 }}%</p>
+                        <p class="font-weight-semibold text-violet font-size-lg text-center mb-0">232</p>
                     </td>
                   </tr>
                 </tbody>
