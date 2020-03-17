@@ -58,13 +58,13 @@ class HomeController extends Controller
             , ['parameter', '=', '5']
         ])->orderBy('created_at', 'desc')->first();
         
-        $bobot = DB::table('log_transaksis')->where([
+        /*$bobot = DB::table('log_transaksis')->where([
             ['layanan', '=', '1']
         ])->orderBy('created_at', 'desc')->sum('persetasi_bobot');
 
-        $count_bobot = DB::table('parameters')->where('id_layanan', '1')->count();
+        $count_bobot = DB::table('parameters')->where('id_layanan', '1')->count();*/
 
-        $t_bobot = $bobot/$count_bobot;
+        $t_bobot = $service_level->persetasi_bobot+$fcr->persetasi_bobot+$rasio_sales->persetasi_bobot+$ces->persetasi_bobot+$quality_layanan->persetasi_bobot;
 
         $percent = 100;
         $ttl_service_level_target_bobot = optional($service_level)->target + optional($service_level)->bobot;

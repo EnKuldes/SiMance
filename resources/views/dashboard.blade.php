@@ -10,13 +10,133 @@
 @endsection
 
 @section('extra-liblary')
+{{--
 <script src="assets/js/demo_pages/charts/echarts/columns_waterfalls.js"></script>
 <script src="assets/js/demo_pages/charts/echarts/lines.js"></script>
+--}}
 <script src="assets/js/demo_pages/form_select2.js"></script>
 <script src="assets/js/demo_pages/form_layouts.js"></script>
 @endsection
 
 @section('script')
+<script type="text/javascript">
+  // Define elements
+  var columns_basic_element1 = document.getElementById("columns_basic1");
+  // Initialize chart
+  var columns_basic1 = echarts.init(columns_basic_element1);
+
+  // Chart config
+  // Options
+  columns_basic1.setOption({
+    // Define colors
+    color: ["#2ec7c9", "#b6a2de", "#5ab1ef", "#ffb980", "#d87a80"],
+
+    // Global text styles
+    textStyle: {
+      fontFamily: "Roboto, Arial, Verdana, sans-serif",
+      fontSize: 13
+    },
+
+    // Chart animation duration
+    animationDuration: 750,
+
+    // Setup grid
+    grid: {
+      left: 0,
+      right: 40,
+      top: 35,
+      bottom: 0,
+      containLabel: true
+    },
+
+    // Add legend
+    legend: {
+      data: ["Bobot"],
+      itemHeight: 8,
+      itemGap: 20,
+      textStyle: {
+        padding: [0, 5]
+      }
+    },
+
+    // Add tooltip
+    tooltip: {
+      trigger: "axis",
+      backgroundColor: "rgba(0,0,0,0.75)",
+      padding: [10, 15],
+      textStyle: {
+        fontSize: 13,
+        fontFamily: "Roboto, sans-serif"
+      }
+    },
+
+    // Horizontal axis
+    xAxis: [
+    {
+      type: "category",
+      data: ["Last Month", "This Month"],
+      axisLabel: {
+        color: "#333"
+      },
+      axisLine: {
+        lineStyle: {
+          color: "#999"
+        }
+      }
+    }
+    ],
+
+    // Vertical axis
+    yAxis: [
+    {
+      type: "value",
+      axisLabel: {
+        color: "#333"
+      },
+      axisLine: {
+        lineStyle: {
+          color: "#999"
+        }
+      },
+      splitLine: {
+        lineStyle: {
+          color: ["#eee"]
+        }
+      },
+      splitArea: {
+        show: true,
+        areaStyle: {
+          color: ["rgba(250,250,250,0.1)", "rgba(0,0,0,0.01)"]
+        }
+      }
+    }
+    ],
+
+    // Add series
+    series: [
+    {
+      name: "Last Month",
+      type: "bar",
+      data: [
+      {value: 120, itemStyle: {color: '#2ec7c9'},}
+      ,{value: 200, itemStyle: {color: '#b6a2de'},}
+      ],
+      itemStyle: {
+        normal: {
+          label: {
+            show: true,
+            position: "top",
+            textStyle: {
+              fontWeight: 500
+            }
+          }
+        }
+      }
+    }
+    ] 
+    });
+
+</script>
 @endsection
 
 @section('content')
@@ -28,7 +148,7 @@
       <div class="card-header header-elements-inline">
         <h5 class="card-title font-weight-bold">CC 147</h5>
         <div class="header-elements">
-          <span class="font-weight-bold font-size-lg text-info-600 ml-2">TOTAL BOBOT | 123.234 / {{ round($t_bobot ?? 0) }}%</span>
+          <span class="font-weight-bold font-size-lg text-info-600 ml-2">TOTAL BOBOT | {{ round($t_bobot ?? 0) }}%</span>
         </div>
       </div>
 
