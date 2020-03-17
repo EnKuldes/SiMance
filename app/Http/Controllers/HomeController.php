@@ -165,7 +165,7 @@ class HomeController extends Controller
           'id_layanan' => auth()->user()->layanan
           , 'id_parameter' => $request->select_parameter
           , 'id_formulasi' => $request->select_formulasi
-          , 'tanggal' => now()->format('Y-m-d')
+          , 'tanggal' => now()->subDays(1)->format('Y-m-d')
         ],
         [
           'nilai' => $request->value_formulasi
@@ -293,7 +293,7 @@ class HomeController extends Controller
           # do nothing
           break;
       }
-      
+
       $perfomance = ($achievement*$kpi_model->bobot)/100; // berubah nama jadi perfomance
       // Buat nentuin nilai persentasi bobot
       if ( $this->compare_two_value($realisasi, $kpi_model->target, $param_compare) ) {
@@ -307,7 +307,7 @@ class HomeController extends Controller
       $lt->achievement = $achievement; // Nilai Acgievments didapat dari Realiasi / Target
       $lt->perfomance = $perfomance; // perfomance  didapat achievemenst * bobots
       $lt->persetasi_bobot = $persetasi_bobot;
-      $lt->log_date = now();
+      $lt->log_date = now()->subDays(1);
       $lt->save();
 
       // Return hasilnya
@@ -393,7 +393,7 @@ class HomeController extends Controller
       ->selectRaw('
         parameters.parameter_desc AS parameter_desc
         , formulasis.formulasi_desc AS value_desc
-        , IFNULL(res.day, DAY(CURDATE()))  AS `day`
+        , IFNULL(res.day, DAY(CURDATE()-1))  AS `day`
         , res.date AS date
         , res.value_item AS value_item
       ')

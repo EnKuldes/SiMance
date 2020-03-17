@@ -1629,7 +1629,7 @@
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Insert Data [ <?php echo date("d - M, Y"); ?> ]</h5>
+        <h5 class="modal-title">Insert Data [ <?php $date = date("d - M, Y"); echo date('d - M, Y',(strtotime ( '-1 day' , strtotime ( $date) ) )); ?> ]</h5>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
 
