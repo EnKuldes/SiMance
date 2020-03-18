@@ -36,28 +36,38 @@ class HomeController extends Controller
         $service_level = DB::table('log_transaksis')->where([
             ['layanan', '=', '1']
             , ['parameter', '=', '1']
-        ])->orderBy('created_at', 'desc')->first();
+        ])
+        ->whereRaw('MONTH(log_date) = MONTH(CURDATE()) AND YEAR(log_date) = YEAR(CURDATE())')
+        ->orderBy('created_at', 'desc')->first();
 
         $fcr = DB::table('log_transaksis')->where([
             ['layanan', '=', '1']
             , ['parameter', '=', '2']
             //, ['log_date', '=', date('Y-m-d')]
-        ])->orderBy('created_at', 'desc')->first();
+        ])
+        ->whereRaw('MONTH(log_date) = MONTH(CURDATE()) AND YEAR(log_date) = YEAR(CURDATE())')
+        ->orderBy('created_at', 'desc')->first();
 
         $rasio_sales = DB::table('log_transaksis')->where([
             ['layanan', '=', '1']
             , ['parameter', '=', '3']
-        ])->orderBy('created_at', 'desc')->first();
+        ])
+        ->whereRaw('MONTH(log_date) = MONTH(CURDATE()) AND YEAR(log_date) = YEAR(CURDATE())')
+        ->orderBy('created_at', 'desc')->first();
 
         $ces = DB::table('log_transaksis')->where([
             ['layanan', '=', '1']
             , ['parameter', '=', '4']
-        ])->orderBy('created_at', 'desc')->first();
+        ])
+        ->whereRaw('MONTH(log_date) = MONTH(CURDATE()) AND YEAR(log_date) = YEAR(CURDATE())')
+        ->orderBy('created_at', 'desc')->first();
 
         $quality_layanan = DB::table('log_transaksis')->where([
             ['layanan', '=', '1']
             , ['parameter', '=', '5']
-        ])->orderBy('created_at', 'desc')->first();
+        ])
+        ->whereRaw('MONTH(log_date) = MONTH(CURDATE()) AND YEAR(log_date) = YEAR(CURDATE())')
+        ->orderBy('created_at', 'desc')->first();
 
         // Bobot dan Target Resources
         $kpi = DB::table('kpi')->where([
