@@ -125,7 +125,7 @@
       }
     }).done(function(){
       $('#list_year').val(tempYear).trigger('change');
-      console.log(tempYear)
+      //console.log(tempYear)
 
     });
   }
@@ -156,7 +156,7 @@
       }
     }).done(function(){
       $('#list_month').val(tempMonth).trigger('change');
-      console.log(tempMonth)
+      //console.log(tempMonth)
 
     });
   }
@@ -261,15 +261,6 @@
         });
 
       });
-    // Document Ready
-    $(document).ready(function() {
-      chain1();
-      chain3();
-      reset_input();
-      init_chart_element();
-      //get_realisasi_monthly()
-      $('#input_date').pickadate({format: 'yyyy-mm-dd'});
-    });
   // On Change Events
   $("#select_parameter").change(function() {
     var id = $(this).val();
@@ -310,14 +301,16 @@
       //element.remove()
       reset_input();
     });
-</script>
-<script type="text/javascript">
+
   // Charts
   var columns_basic = echarts.init( document.getElementById('columns_basic') ); // service level
   var line_basic = echarts.init( document.getElementById("line_basic") ); // fcr
   var line_basic1 = echarts.init( document.getElementById("line_basic1") ); // ces
   var line_basic2 = echarts.init( document.getElementById("line_basic2") ); // quality layanan
   var line_stacked = echarts.init( document.getElementById("line_stacked") ); // rasio sales
+
+  // Variable penampung html tables
+  var list_tables = ["summary_table_sl", "summary_table_fcr", "summary_table_rs", "summary_table_ces", "summary_table_ql"]
 
   // Options
   // Yang perlu diisi Legend.data, xAxis.data, Series
@@ -1100,13 +1093,13 @@
     var list_type_charts = ['bar', 'line', 'line', 'line', 'line']
     var charts = [columns_basic, line_basic, line_stacked, line_basic1, line_basic2];
     for (var i = 0; i < list_option_charts.length; i++) {
-      get_monthly_data( $("#list_year").val(), $('#list_month').val(), i+1, charts[i], list_option_charts[i], list_type_charts[i])
+      get_monthly_data( $("#list_year").val(), $('#list_month').val(), i+1, charts[i], list_option_charts[i], list_type_charts[i], list_tables[i])
     }
-    //get_monthly_data( $("#list_year").val(), $('#list_month').val(), 1, charts[0], list_option_charts[0], list_type_charts[0])
+    //get_monthly_data( $("#list_year").val(), $('#list_month').val(), 1, charts[0], list_option_charts[0], list_type_charts[0], list_tables[0])
   }
 
   // Get Data Monthly
-  function get_monthly_data(year_value, month_value, parameter_value, chart_element, chart_option, chart_type) {
+  function get_monthly_data(year_value, month_value, parameter_value, chart_element, chart_option, chart_type, table_element) {
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1125,6 +1118,10 @@
           chart_option.legend.data = tempList;
           chart_option.series = list_data_series(data, tempVal, tempList, chart_type);
           chart_element.setOption(chart_option, true);
+
+          // Init Populate Tabe Data
+          $('#'+table_element).html(populate_table(data, list_day, tempVal, tempList))
+
           /*columns_basic_options.xAxis[0].data = list_day;
           line_basic_options.xAxis[0].data = list_day;
           line_basic1_options.xAxis[0].data = list_day;
@@ -1241,6 +1238,73 @@
     line_basic2.clear();
     line_stacked.clear();
   }
+
+  // Populate Tabel Summary Data
+  function populate_table(data, list_day, parameter_value, list_value) { // data, list_day, parameter, list formulasi
+    var thead_html = '<tr><td align="center" rowspan="2">Formulasi</td>';
+    thead_html += '<td align="center"  colspan="'+ list_day.length +'">Date</td>';
+    thead_html += '<td align="center" rowspan="2">Total</td></tr>';
+    thead_html += '<tr>'
+    for (var i = 0; i < list_day.length; i++) {
+      thead_html += '<td align="center">'+ list_day[i] +'</td>'
+    }
+    thead_html += '</tr>'
+
+    var tbody_html = '';
+    for (var i = 0; i < list_value.length; i++) {
+      window["data_total"+list_value[i]] = [];
+      tbody_html += '<tr><td align="left">'+ list_value[i] +'</td>';
+      for (var j = 0; j < data.length; j++) {
+        if (data[j]['parameter_desc'] == parameter_value && data[j]['value_desc'] == list_value[i] ) {
+          var value_item = 0;
+          if ( data[j]['value_item'] != "" && data[j]['value_item'] != null ) { value_item = parseInt(data[j]['value_item']) }
+          window["data_total"+list_value[i]].push(value_item)
+          tbody_html += '<td align="center">'+ value_item +'</td>';
+        }
+      }
+      window["counting_total"+list_value[i]] = window["data_total"+list_value[i]].reduce((a, b) => a + b, 0);
+      tbody_html += '<td align="center">'+ window["counting_total"+list_value[i]] +'</td></tr>'; // reduce untuk iterasi dari value array
+    }
+    // looping untuk ngisi tabel total
+    var data_total = [];
+    for (var i = 0; i < list_value.length; i++) {
+      for (var j = 0; j < data.length; j++) {
+        for (var k = 0; k < list_day.length; k++) {
+          if ( data[j]['parameter_desc'] == parameter_value && data[j]['value_desc'] == list_value[i] && data[j]['day'] == list_day[k] ) {
+            var value_item = 0;
+            if ( data[j]['value_item'] != "" && data[j]['value_item'] != null ) { value_item = parseInt(data[j]['value_item']) }
+            if ( data_total[k] == null ) { data_total[k] = value_item }
+            else{ data_total[k] += value_item }
+          }
+        }
+      }
+    }
+    tbody_html += '<tr><td align="left">Total</td>';
+    for (var i = 0; i < data_total.length; i++) {
+      tbody_html += '<td align="center">'+ data_total[i] +'</td>';
+    }
+    tbody_html += '<td align="center">'+ data_total.reduce((a, b) => a + b, 0) +'</td></tr>';
+
+    return thead_html + tbody_html;
+  }
+
+  function change_table_data(table_id) {
+    for (var i = 0; i < list_tables.length; i++) {
+      if (table_id != list_tables[i]) { $('#'+list_tables[i]).hide() }
+      else { $('#'+list_tables[i]).show() }
+    }
+  }
+
+  // Document Ready
+    $(document).ready(function() {
+      chain1();
+      chain3();
+      reset_input();
+      init_chart_element();
+      change_table_data("summary_table_sl");
+      //get_realisasi_monthly()
+      $('#input_date').pickadate({format: 'yyyy-mm-dd'});
+    });
 </script>
 @endsection
 
@@ -1261,35 +1325,35 @@
           <ul class="nav nav-sidebar mb-2">
             <li class="nav-item-header">Parameter</li>
             <li class="nav-item">
-              <a href="#service_level" class="nav-link active" data-toggle="tab">
+              <a href="#service_level" class="nav-link active" data-toggle="tab" onclick="change_table_data('summary_table_sl')">
                 <i class="icon-cog"></i>
                 Service Level
                 <span class="badge bg-info badge-pill ml-auto" id="sl_val">0%</span>
               </a>
             </li>
             <li class="nav-item">
-              <a href="#fcr" class="nav-link" data-toggle="tab">
+              <a href="#fcr" class="nav-link" data-toggle="tab" onclick="change_table_data('summary_table_fcr')">
                 <i class="icon-watch2"></i>
                 FCR
                 <span class="badge bg-info badge-pill ml-auto" id="fcr_val">0%</span>
               </a>
             </li>
             <li class="nav-item">
-              <a href="#rasio_sales" class="nav-link" data-toggle="tab">
+              <a href="#rasio_sales" class="nav-link" data-toggle="tab" onclick="change_table_data('summary_table_rs')">
                 <i class="icon-clipboard5"></i>
                 Rasio Sales
                 <span class="badge bg-info badge-pill ml-auto" id="rs_val">0%</span>
               </a>
             </li>
             <li class="nav-item">
-              <a href="#ces" class="nav-link" data-toggle="tab">
+              <a href="#ces" class="nav-link" data-toggle="tab" onclick="change_table_data('summary_table_ces')">
                 <i class="icon-search4"></i>
                 CES (by customer)
                 <span class="badge bg-info badge-pill ml-auto" id="ces_val">0%</span>
               </a>
             </li>
             <li class="nav-item">
-              <a href="#quality_layanan" class="nav-link" data-toggle="tab">
+              <a href="#quality_layanan" class="nav-link" data-toggle="tab" onclick="change_table_data('summary_table_ql')">
                 <i class="icon-thumbs-up2"></i>
                 Quality Layanan
                 <span class="badge bg-info badge-pill ml-auto" id="ql_val">0%</span>
@@ -1518,111 +1582,6 @@
             <!-- /form inputs -->
           </div>
 
-          {{--
-          <div class="tab-pane fade" id="tab-fcr">
-            <div class="row">
-              <div class="col-md-4">
-                <div class="card-body text-center">
-                  <div class="media">
-                    <div class="mr-3 align-self-center">
-                      <i class="icon-target2 icon-3x text-success-400"></i>
-                    </div>
-
-                    <div class="media-body text-right">
-                      <h3 class="font-weight-semibold mb-0">95%</h3>
-                      <span class="text-uppercase font-size-sm text-muted">Current Target</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card-body text-center">
-                  <div class="media">
-                    <div class="mr-3 align-self-center">
-                      <i class="icon-law icon-3x text-info-400"></i>
-                    </div>
-
-                    <div class="media-body text-right">
-                      <h3 class="font-weight-semibold mb-0">25%</h3>
-                      <span class="text-uppercase font-size-sm text-muted">Current Bobot</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-8">
-                <form action="#">
-                  <fieldset>
-                    <legend class="font-weight-semibold p-0">
-                      <span class="float-left pt-2">
-                        <i class="icon-cog mr-2"></i> Setting Target & Bobot FCR
-                      </span>
-
-
-                      <div class="float-right pb-1">
-                        <button type="submit" class="btn btn-primary btn-sm">Submit <i
-                            class="icon-paperplane"></i></button>
-                      </div>
-                    </legend>
-
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label>Target</label>
-                          <input type="text" class="form-control" autocomplete="off" name="target" id="target">
-                        </div>
-                      </div>
-
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label>Satuan</label>
-                          <select data-placeholder="Pilih Satuan" class="form-control form-control-select2" data-fouc
-                            required>
-                            <option></option>
-                            <option value="percent">Percent (%)</option>
-                            <option value="satuan">Satuan</option>
-                            <option value="minutes">minutes</option>
-                            <option value="mio">Mio</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label>Bobot</label>
-                          <input type="text" class="form-control" autocomplete="off" name="bobot" id="bobot">
-                        </div>
-                      </div>
-
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label>Satuan</label>
-                          <select data-placeholder="Pilih Satuan" class="form-control form-control-select2" data-fouc
-                            required>
-                            <option value="percent">Percent (%)</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                  </fieldset>
-                </form>
-              </div>
-            </div>
-            <!-- /form inputs -->
-          </div>
-
-          <div class="tab-pane fade" id="tab-rasio_sales">
-            DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg whatever.
-          </div>
-
-          <div class="tab-pane fade" id="tab-ces">
-            DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg whatever.
-          </div>
-
-          <div class="tab-pane fade" id="tab-quality_layanan">
-            DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg whatever.
-          </div>
-          --}}
         </div>
       </div>
     </div>
@@ -1633,154 +1592,15 @@
 
 <div class="card">
   <div class="table-responsive">
-    <table class="table table-xs table-bordered">
-      <thead>
-        <tr>
-          <td align="center" rowspan="2">Formulasi</td>
-          <td align="center"  colspan="31">Date</td>
-          <td align="center" rowspan="2">Total</td>
-        </tr>
-        <tr>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>COF</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">total</td>
-        </tr>
-        <tr>
-          <td>Call</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">total</td>
-        </tr>
-        <tr>
-          <td>Total</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">1</td>
-          <td align="center">total</td>
-        </tr>
-      </tbody>
+    <table class="table table-xs table-bordered" id="summary_table_sl">
+    </table>
+    <table class="table table-xs table-bordered" id="summary_table_fcr">
+    </table>
+    <table class="table table-xs table-bordered" id="summary_table_rs">
+    </table>
+    <table class="table table-xs table-bordered" id="summary_table_ces">
+    </table>
+    <table class="table table-xs table-bordered" id="summary_table_ql">
     </table>
   </div>
 </div>
