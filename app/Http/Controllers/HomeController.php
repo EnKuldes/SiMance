@@ -108,7 +108,8 @@ class HomeController extends Controller
         $percent = 100;
         $ttl_service_level_target_bobot = optional($service_level)->target + optional($service_level)->bobot;
         if($ttl_service_level_target_bobot != 0 && $ttl_service_level_target_bobot > 0){
-            $target_service_level = (optional($service_level)->target/$ttl_service_level_target_bobot)*$percent;
+            //$target_service_level = (optional($service_level)->target/$ttl_service_level_target_bobot)*$percent;
+            $target_service_level = (optional($service_level)->realisasi;
             $bobot_service_level = $percent-$target_service_level;
         }else{
             $target_service_level= 0;
@@ -117,7 +118,8 @@ class HomeController extends Controller
 
         $ttl_fcr_target_bobot = optional($fcr)->target + optional($fcr)->bobot;
         if($ttl_fcr_target_bobot != 0 && $ttl_fcr_target_bobot > 0){
-            $target_fcr = (optional($fcr)->target*$percent)/$ttl_fcr_target_bobot;
+            //$target_fcr = (optional($fcr)->target*$percent)/$ttl_fcr_target_bobot;
+            $target_fcr = (optional($fcr)->realisasi;
             $bobot_fcr = $percent-$target_fcr;
         }else{
             $target_fcr= 0;
@@ -126,7 +128,8 @@ class HomeController extends Controller
 
         $ttl_rasio_sales_target_bobot = optional($rasio_sales)->target + optional($rasio_sales)->bobot;
         if($ttl_rasio_sales_target_bobot != 0 && $ttl_rasio_sales_target_bobot > 0){
-            $target_rasio_sales = (optional($rasio_sales)->target*$percent)/$ttl_rasio_sales_target_bobot;
+            //$target_rasio_sales = (optional($rasio_sales)->target*$percent)/$ttl_rasio_sales_target_bobot;
+            $target_rasio_sales = (optional($rasio_sales)->realisasi;
             $bobot_rasio_sales = $percent-$target_rasio_sales;
         }else{
             $target_rasio_sales= 0;
@@ -135,7 +138,8 @@ class HomeController extends Controller
 
         $ttl_ces_target_bobot = optional($ces)->target + optional($ces)->bobot;
         if($ttl_ces_target_bobot != 0 && $ttl_ces_target_bobot > 0){
-            $target_ces = (optional($ces)->target*$percent)/$ttl_ces_target_bobot;
+            //$target_ces = (optional($ces)->target*$percent)/$ttl_ces_target_bobot;
+            $target_ces = (optional($ces)->realisasi;
             $bobot_ces = $percent-$target_ces;
         }else{
             $target_ces= 0;
@@ -144,7 +148,8 @@ class HomeController extends Controller
 
         $ttl_quality_layanan_target_bobot = optional($quality_layanan)->target + optional($quality_layanan)->bobot;
         if($ttl_quality_layanan_target_bobot != 0 && $ttl_quality_layanan_target_bobot > 0){
-            $target_quality_layanan = (optional($quality_layanan)->target*$percent)/$ttl_quality_layanan_target_bobot;
+            //$target_quality_layanan = (optional($quality_layanan)->target*$percent)/$ttl_quality_layanan_target_bobot;
+            $target_quality_layanan = (optional($quality_layanan)->realisasi;
             $bobot_quality_layanan = $percent-$target_quality_layanan;
         }else{
             $target_quality_layanan= 0;
