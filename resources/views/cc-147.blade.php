@@ -24,13 +24,16 @@
 @section('script')
 {{-- Javascript --}}
 <script type="text/javascript">
+  var tempYear = 0;
+  var tempMonth = 0;
+  
   function numbersonly(e){
     var unicode=e.charCode? e.charCode : e.keyCode
     if (unicode!=8){ //if the key isn't the backspace key (which we should allow)
         if (unicode<48||unicode>57) //if not a number
             return false //disable key press
     }
-}
+  }
 
   $('.equipCatValidation').on('keyup keydown', function(e){
     console.log($(this).val() > 100)
@@ -98,7 +101,6 @@
     });
   }
   function chain3() {
-      var tempYear = 0;
       $.ajaxSetup({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -112,7 +114,7 @@
         var ahtml = ''//'<option></option>';
         for (var i = 0; i < data.length; i++) {
           ahtml+="<option value='"+data[i]['year']+"'>"+data[i]['year']+"</option>"
-          if (i == 0) { tempYear = data[i]['year']; }
+          if (i == 0 && tempYear == 0) { tempYear = data[i]['year']; }
         }
         $('#list_year').html(ahtml);
       },
@@ -123,11 +125,11 @@
       }
     }).done(function(){
       $('#list_year').val(tempYear).trigger('change');
+      console.log(tempYear)
 
     });
   }
   function chain4(id) {
-      var tempMonth = 0;
       $.ajaxSetup({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -140,8 +142,9 @@
        success: function(data){
         var ahtml = ''//'<option></option>';
         for (var i = 0; i < data.length; i++) {
-          ahtml+="<option value='"+data[i]['month']+"'>"+data[i]['month']+"</option>"
-          if (i == 0) { tempMonth = data[i]['month']; }
+          var d = new Date(id, data[i]['month']-1, 1);
+          ahtml+="<option value='"+data[i]['month']+"'>"+moment(d).format('MMMM')+"</option>"
+          if (i == 0 && tempMonth == 0) { tempMonth = data[i]['month']; }
         }
         $('#list_month').html(ahtml);
 
@@ -153,6 +156,7 @@
       }
     }).done(function(){
       $('#list_month').val(tempMonth).trigger('change');
+      console.log(tempMonth)
 
     });
   }
@@ -188,7 +192,7 @@
     });
   }
 
-  function get_realisasi_monthly() {
+  function get_realisasi_monthly(year_value, month_value) {
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -197,10 +201,10 @@
     $.ajax({
      type:"post",
      url:'/get-realisasi-monthly',
-         //data: {year: year_value, month: month_value, id_parameter: parameter_value},
+         data: {year: year_value, month: month_value},
          success: function(data){
           var labelTitles = ['sl_val', 'fcr_val', 'rs_val', 'ces_val', 'ql_val']
-          console.log(data)
+          //console.log(data)
           for (var i = 0; i < labelTitles.length; i++) {
             if (data[i]['realisasi'] != null) {realisasi = data[i]['realisasi']}
             else{realisasi = 0}
@@ -238,6 +242,7 @@
       $('#saveBtn').button('reset');
       notificationScript("success", "Success", "Successfully submit form.");
       refresh_charts();
+      //get_realisasi_monthly();
       $('#insert-new-data').modal('hide');
     },
           error: function(jqXhr, json, errorThrown){// this are default for ajax errors
@@ -262,7 +267,7 @@
       chain3();
       reset_input();
       init_chart_element();
-      get_realisasi_monthly()
+      //get_realisasi_monthly()
       $('#input_date').pickadate({format: 'yyyy-mm-dd'});
     });
   // On Change Events
@@ -284,13 +289,17 @@
     var id = $(this).val();
     if (id != "" && id != null)
     {
-      init_chart_value( $("#list_year").val(), $(this).val() );
+      get_realisasi_monthly( $("#list_year").val(), $(this).val() )
+      $('.date_label').html( moment(new Date($("#list_year").val(), id-1, 1)).format("MMMM - YYYY") )
+      //init_chart_value( $("#list_year").val(), $(this).val() );
+      setTimeout(init_chart_value( $("#list_year").val(), $(this).val() ), 5000);
     }
   });
   // Button On Click
   function reset_input() {
     $("#form-insert-daily").trigger("reset");
     //$("select").val('').trigger('change');
+    $("#select_parameter").val('').trigger('change');
     $("#select_formulasi").html('');
   }
   // on Close Modal Event
@@ -1166,7 +1175,9 @@
   // Refresh Charts
   function refresh_charts() {
     f_clear_chart();
-    setTimeout(init_chart_value( $("#list_year").val(), $('#list_month').val() ), 5000);
+    chain3();
+    //get_realisasi_monthly();
+    //setTimeout(init_chart_value( $("#list_year").val(), $('#list_month').val() ), 5000);
   }
 
   function init_chart_element() {
@@ -1307,7 +1318,7 @@
       <!-- Basic columns -->
       <div class="card">
         <div class="card-header header-elements-inline">
-          <h5 class="card-title">Service Level [<?php echo date("F - Y"); ?>]</h5>
+          <h5 class="card-title">Service Level [<span class="date_label"></span>]</h5>
           <div class="header-elements">
             <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync" onclick="refresh_charts()"></i></button>
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
@@ -1328,7 +1339,7 @@
       <!-- Basic line -->
       <div class="card">
         <div class="card-header header-elements-inline">
-          <h5 class="card-title">FCR [<?php echo date("F - Y"); ?>]</h5>
+          <h5 class="card-title">FCR [<span class="date_label"></span>]</h5>
           <div class="header-elements">
             <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync" onclick="refresh_charts()"></i></button>
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
@@ -1349,7 +1360,7 @@
       <!-- Stacked lines -->
       <div class="card">
         <div class="card-header header-elements-inline">
-          <h5 class="card-title">Rasio Sales [<?php echo date("F - Y"); ?>]</h5>
+          <h5 class="card-title">Rasio Sales [<span class="date_label"></span>]</h5>
           <div class="header-elements">
             <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync" onclick="refresh_charts()"></i></button>
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
@@ -1370,7 +1381,7 @@
       <!-- Basic line -->
       <div class="card">
         <div class="card-header header-elements-inline">
-          <h5 class="card-title">CES (by customer) [<?php echo date("F - Y"); ?>]</h5>
+          <h5 class="card-title">CES (by customer) [<span class="date_label"></span>]</h5>
           <div class="header-elements">
             <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync"></i></button>
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
@@ -1391,7 +1402,7 @@
       <!-- Basic line -->
       <div class="card">
         <div class="card-header header-elements-inline">
-          <h5 class="card-title">Quality Layanan [<?php echo date("F - Y"); ?>]</h5>
+          <h5 class="card-title">Quality Layanan [<span class="date_label"></span>]</h5>
           <div class="header-elements">
             <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync" onclick="refresh_charts()"></i></button>
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"

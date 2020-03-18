@@ -201,7 +201,7 @@
               value: list_perfomance[i]
             })
           }
-          columns_basic1_option.series[0].data = list_perfomance
+          columns_basic1_option.series[0].data = tempArr
           columns_basic1.setOption(columns_basic1_option, true);
         },
         error: function(jqXhr, json, errorThrown){// this are default for ajax errors

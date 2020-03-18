@@ -337,7 +337,7 @@ class HomeController extends Controller
       }
       $qWhere .= ", 0) as realisasi";
       $dt->selectRaw($qWhere);
-      $dt = $dt->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH(CURRENT_DATE()) AND YEAR(daily_transaksis.tanggal) = YEAR(CURRENT_DATE())')->first();
+      $dt = $dt->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH("'.$request->input_date.'") AND YEAR(daily_transaksis.tanggal) = YEAR("'.$request->input_date.'")')->first();
       $realisasi = $dt->realisasi;
       $achievement = ($realisasi/$kpi_model->target)*100;
       // Ada yang berbeda perhiyungannya dari yg umum, dilakuka disini aja perubahannya
@@ -428,49 +428,61 @@ class HomeController extends Controller
     # Get Monthly Data
     public function get_monthly_data(Request $request)
     {
-      $datasToJoin = DB::table('daily_transaksis')
-      ->where([
-        ['daily_transaksis.id_layanan', '=', auth()->user()->layanan]
-        , ['daily_transaksis.id_parameter', '=', $request->id_parameter]
+      $list_date = DB::table('daily_transaksis')->where([
+        ['daily_transaksis.id_parameter', '=', $request->id_parameter]
       ])
-      //->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH(CURRENT_DATE()) AND YEAR(daily_transaksis.tanggal) = YEAR(CURRENT_DATE())')
       ->whereRaw('MONTH(daily_transaksis.tanggal) = '.$request->month.' AND YEAR(daily_transaksis.tanggal) = '.$request->year)
-      ->selectRaw(
-        'DAY(daily_transaksis.tanggal) AS day
-        , DATE_FORMAT(daily_transaksis.tanggal, "%Y-%m") AS date
-        , daily_transaksis.nilai AS value_item
-        , daily_transaksis.id_formulasi AS id_formulasi'
-      );
-
-      $datas = DB::table('formulasis')
-      ->leftJoin('parameters', 'parameters.id', '=', 'formulasis.id_parameter')
-      ->leftJoinSub($datasToJoin, 'res', function ($join) {
-          $join->on('res.id_formulasi', '=', 'formulasis.id');
-      })
-      ->where([
-        ['parameters.id_layanan', '=', auth()->user()->layanan]
-        , ['parameters.id', '=', $request->id_parameter]
-      ])
       ->selectRaw('
-        parameters.parameter_desc AS parameter_desc
-        , formulasis.formulasi_desc AS value_desc
-        , IFNULL(res.day, DAY(CURDATE()))  AS `day`
-        , res.date AS date
-        , res.value_item AS value_item
+        DAY(daily_transaksis.tanggal) AS day
+        , daily_transaksis.tanggal AS date
       ')
-      /*->selectRaw('
-        parameters.parameter_desc AS parameter_desc
-        , formulasis.formulasi_desc AS value_desc
-        , res.day AS `day`
-        , res.date AS date
-        , res.value_item AS value_item
-      ')*/
-      ->orderBy('parameters.id')
-      ->orderBy('res.id_formulasi')
-      ->orderBy('res.day')
-      ->get();
+      ->orderBy('day')
+      ->distinct()->get();
+      $datas = [];
+      foreach ($list_date as $date_value) {
+        $dataToJoin = DB::table('daily_transaksis')
+        ->where([
+          ['daily_transaksis.id_layanan', '=', auth()->user()->layanan]
+          , ['daily_transaksis.id_parameter', '=', $request->id_parameter]
+        ])
+        //->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH(CURRENT_DATE()) AND YEAR(daily_transaksis.tanggal) = YEAR(CURRENT_DATE())')
+        //->whereRaw('MONTH(daily_transaksis.tanggal) = '.$request->month.' AND YEAR(daily_transaksis.tanggal) = '.$request->year)
+        ->whereRaw('daily_transaksis.tanggal = "'.$date_value->date.'"')
+        ->selectRaw(
+          'DAY(daily_transaksis.tanggal) AS DAY
+          , DATE_FORMAT(daily_transaksis.tanggal, "%Y-%m") AS DATE
+          , daily_transaksis.nilai AS value_item
+          , daily_transaksis.id_formulasi AS id_formulasi'
+        );
 
-      return response()->json($datas);
+        $data = DB::table('formulasis')
+        ->leftJoin('parameters', 'parameters.id', '=', 'formulasis.id_parameter')
+        ->leftJoinSub($dataToJoin, 'res', function ($join) {
+            $join->on('res.id_formulasi', '=', 'formulasis.id');
+        })
+        ->where([
+          ['parameters.id_layanan', '=', auth()->user()->layanan]
+          , ['parameters.id', '=', $request->id_parameter]
+        ])
+        ->selectRaw('
+          parameters.parameter_desc AS parameter_desc
+          , formulasis.formulasi_desc AS value_desc
+          , IFNULL(res.day, DAY("'.$date_value->date.'"))  AS `day`
+          , IFNULL(res.date, "'.$date_value->date.'") AS `date`
+          , IFNULL(res.value_item, "") AS value_item
+        ')
+        ->orderBy('parameters.id')
+        ->orderBy('res.id_formulasi')
+        ->orderBy('res.day')
+        ->get();
+        
+        foreach ($data as $detailed_data) {
+          $datas[] = $detailed_data;
+        }
+      }
+
+
+      return response()->json( $datas );
     }
 
     # Perfomance Comparation Monthly
@@ -509,7 +521,8 @@ class HomeController extends Controller
         , ['is_enabled', '=', '1']
       ])->get();
       $list_realisasi = [];
-      $qWhere = ['MONTH(log_transaksis.log_date) = MONTH(CURRENT_DATE()) AND YEAR(log_transaksis.log_date) = YEAR(CURRENT_DATE())'];
+      //$qWhere = ['MONTH(log_transaksis.log_date) = MONTH(CURRENT_DATE()) AND YEAR(log_transaksis.log_date) = YEAR(CURRENT_DATE())'];
+      $qWhere = ['MONTH(log_transaksis.log_date) = "'.$request->month.'" AND YEAR(log_transaksis.log_date) = "'.$request->year.'"'];
       $name_desc = ['This Month'];
       for ($i=0; $i < count($qWhere) ; $i++) { 
         $tempArr = [];
