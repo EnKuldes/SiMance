@@ -111,9 +111,11 @@ class HomeController extends Controller
             //$target_service_level = (optional($service_level)->target/$ttl_service_level_target_bobot)*$percent;
             $target_service_level = (optional($service_level)->realisasi;
             $bobot_service_level = $percent-$target_service_level;
+            $width_progressbar_sl = round(($target_service_level/$service_level->target)*$percent);
         }else{
             $target_service_level= 0;
             $bobot_service_level= 0;
+            $width_progressbar_sl = 0;
         }
 
         $ttl_fcr_target_bobot = optional($fcr)->target + optional($fcr)->bobot;
@@ -121,9 +123,11 @@ class HomeController extends Controller
             //$target_fcr = (optional($fcr)->target*$percent)/$ttl_fcr_target_bobot;
             $target_fcr = (optional($fcr)->realisasi;
             $bobot_fcr = $percent-$target_fcr;
+            $width_progressbar_fcr = round(($target_fcr/$fcr->target)*$percent);
         }else{
             $target_fcr= 0;
             $bobot_fcr= 0;
+            $width_progressbar_fcr = 0;
         }
 
         $ttl_rasio_sales_target_bobot = optional($rasio_sales)->target + optional($rasio_sales)->bobot;
@@ -131,9 +135,11 @@ class HomeController extends Controller
             //$target_rasio_sales = (optional($rasio_sales)->target*$percent)/$ttl_rasio_sales_target_bobot;
             $target_rasio_sales = (optional($rasio_sales)->realisasi;
             $bobot_rasio_sales = $percent-$target_rasio_sales;
+            $width_progressbar_rs = round(($target_rasio_sales/$rasio_sales->target)*$percent);
         }else{
             $target_rasio_sales= 0;
             $bobot_rasio_sales= 0;
+            $width_progressbar_rs = 0;
         }
 
         $ttl_ces_target_bobot = optional($ces)->target + optional($ces)->bobot;
@@ -141,9 +147,11 @@ class HomeController extends Controller
             //$target_ces = (optional($ces)->target*$percent)/$ttl_ces_target_bobot;
             $target_ces = (optional($ces)->realisasi;
             $bobot_ces = $percent-$target_ces;
+            $width_progressbar_ces = round(($target_ces/$ces->target)*$percent);
         }else{
             $target_ces= 0;
             $bobot_ces= 0;
+            $width_progressbar_ces = 0;
         }
 
         $ttl_quality_layanan_target_bobot = optional($quality_layanan)->target + optional($quality_layanan)->bobot;
@@ -151,9 +159,13 @@ class HomeController extends Controller
             //$target_quality_layanan = (optional($quality_layanan)->target*$percent)/$ttl_quality_layanan_target_bobot;
             $target_quality_layanan = (optional($quality_layanan)->realisasi;
             $bobot_quality_layanan = $percent-$target_quality_layanan;
+            $width_progressbar_ql = round(($target_quality_layanan/$quality_layanan->target)*$percent);
+            $revert_target = 100 - $quality_layanan->target;
         }else{
             $target_quality_layanan= 0;
             $bobot_quality_layanan= 0;
+            $width_progressbar_ql = 0;
+            $revert_target = 0;
         }
 
         return view('dashboard',[
@@ -165,7 +177,13 @@ class HomeController extends Controller
             't_bobot' => $t_bobot,
 
             'target_service_level' => $target_service_level,
+            'width_progressbar_sl' => $width_progressbar_sl,
+            'width_progressbar_fcr' => $width_progressbar_fcr,
+            'width_progressbar_rs' => $width_progressbar_rs,
+            'width_progressbar_ces' => $width_progressbar_ces,
+            'width_progressbar_ql' => $width_progressbar_ql,
             'bobot_service_level' => $bobot_service_level,
+            'revert_target' => $revert_target,
             'target_fcr' => $target_fcr,
             'bobot_fcr' => $bobot_fcr,
             'target_rasio_sales' => $target_rasio_sales,
@@ -500,7 +518,7 @@ class HomeController extends Controller
       $total_perfomance = [];
       $qWhere = ['MONTH(log_transaksis.log_date) = MONTH(CURRENT_DATE() - INTERVAL 1 MONTH) AND YEAR(log_transaksis.log_date) = YEAR(CURRENT_DATE() - INTERVAL 1 MONTH)', 'MONTH(log_transaksis.log_date) = MONTH(CURRENT_DATE()) AND YEAR(log_transaksis.log_date) = YEAR(CURRENT_DATE())'];
       $name_desc = ['Last Month', 'This Month'];
-      for ($i=0; $i < count($qWhere) ; $i++) { 
+      for ($i=0; $i < count($qWhere) ; $i++) {
         $tempArr = [];
         $tempVal = 0;
         foreach ($list_parameter as $key) {
@@ -511,12 +529,12 @@ class HomeController extends Controller
           ->whereRaw($qWhere[$i])
           ->orderBy('created_at', 'desc')->first();
         }
-        for ($j=0; $j < count($tempArr); $j++) { 
+        for ($j=0; $j < count($tempArr); $j++) {
           $tempVal += optional($tempArr[$j])->perfomance;
         }
         $total_perfomance[] = (object) ["desc"=>$name_desc[$i], "total_perfomance"=>$tempVal];
       }
-      
+
       return response()->json($total_perfomance);
     }
     public function get_realisasi_monthly(Request $request)
@@ -529,7 +547,7 @@ class HomeController extends Controller
       //$qWhere = ['MONTH(log_transaksis.log_date) = MONTH(CURRENT_DATE()) AND YEAR(log_transaksis.log_date) = YEAR(CURRENT_DATE())'];
       $qWhere = ['MONTH(log_transaksis.log_date) = "'.$request->month.'" AND YEAR(log_transaksis.log_date) = "'.$request->year.'"'];
       $name_desc = ['This Month'];
-      for ($i=0; $i < count($qWhere) ; $i++) { 
+      for ($i=0; $i < count($qWhere) ; $i++) {
         $tempArr = [];
         $tempVal = 0;
         foreach ($list_parameter as $key) {
@@ -540,14 +558,14 @@ class HomeController extends Controller
           ->whereRaw($qWhere[$i])
           ->orderBy('created_at', 'desc')->first();
         }
-        for ($j=0; $j < count($tempArr); $j++) { 
+        for ($j=0; $j < count($tempArr); $j++) {
           $list_realisasi[] = [
             "realisasi"=>optional($tempArr[$j])->realisasi
           ];
         }
         $list_realisasi = (object) $list_realisasi;
       }
-      
+
       return response()->json($list_realisasi);
     }
 
