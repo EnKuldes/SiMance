@@ -1073,14 +1073,26 @@
       window["data_"+value_parameter+value_desc[j]] =[];
       for (var i = 0; i < data.length; i++) {
         if (data[i]['parameter_desc'] == value_parameter && data[i]['value_desc'] == value_desc[j] ) {
-          window["data_"+value_parameter+value_desc[j]].push(data[i]['value_item'])
+          window["data_"+value_parameter+value_desc[j]].push( ((data[i]['value_item']/data[i]['total_item'])*100).toFixed(2) )
         }
       }
       //console.log( window["data_"+value_parameter+value_desc[j]] )
       tempArr.push({
         name: value_desc[j],
         type: type_chart,
-        data: window["data_"+value_parameter+value_desc[j]]
+        data: window["data_"+value_parameter+value_desc[j]],
+        itemStyle: {
+          normal: {
+            label: {
+              show: true,
+              formatter: '{c}%',
+              position: "top",
+              textStyle: {
+                fontWeight: 500
+              }
+            }
+          }
+        }
       })
     }
     //console.log(tempArr)

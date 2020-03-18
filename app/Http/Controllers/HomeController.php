@@ -508,8 +508,24 @@ class HomeController extends Controller
         ->orderBy('res.id_formulasi')
         ->orderBy('res.day')
         ->get();
+
+        // Penambahan buat ngambil nilai total per harinya
+        $total_data_daily = DB::table('daily_transaksis')
+        ->where([
+          ['daily_transaksis.id_layanan', '=', auth()->user()->layanan]
+          , ['daily_transaksis.id_parameter', '=', $request->id_parameter]
+        ])
+        //->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH(CURRENT_DATE()) AND YEAR(daily_transaksis.tanggal) = YEAR(CURRENT_DATE())')
+        //->whereRaw('MONTH(daily_transaksis.tanggal) = '.$request->month.' AND YEAR(daily_transaksis.tanggal) = '.$request->year)
+        ->whereRaw('daily_transaksis.tanggal = "'.$date_value->date.'"')
+        ->selectRaw(
+          'IFNULL(daily_transaksis.tanggal, DAY("'.$date_value->date.'"))  AS day
+          , IFNULL(daily_transaksis.tanggal, "'.$date_value->date.'") AS date
+          , IFNULL(SUM(daily_transaksis.nilai), "") AS total_item'
+        )->groupBy('daily_transaksis.tanggal')->first();
         
         foreach ($data as $detailed_data) {
+          $detailed_data->total_item = $total_data_daily->total_item;
           $datas[] = $detailed_data;
         }
       }
