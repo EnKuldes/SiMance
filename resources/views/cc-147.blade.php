@@ -1107,10 +1107,6 @@
          data: {year: year_value, month: month_value, id_parameter: parameter_value},
          success: function(data){
           var list_day = trans_val(data, 'day');
-          list_day.sort()
-          list_day = list_day.filter(function (el) {
-            return el != null;
-          });
           chart_option.xAxis[0].data = list_day;
           var list_parameter = trans_val(data, 'parameter_desc');
           var tempVal =  list_parameter;
