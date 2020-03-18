@@ -26,7 +26,7 @@
 <script type="text/javascript">
   var tempYear = 0;
   var tempMonth = 0;
-  
+
   function numbersonly(e){
     var unicode=e.charCode? e.charCode : e.keyCode
     if (unicode!=8){ //if the key isn't the backspace key (which we should allow)
@@ -1104,7 +1104,7 @@
     }
     //get_monthly_data( $("#list_year").val(), $('#list_month').val(), 1, charts[0], list_option_charts[0], list_type_charts[0])
   }
-  
+
   // Get Data Monthly
   function get_monthly_data(year_value, month_value, parameter_value, chart_element, chart_option, chart_type) {
     $.ajaxSetup({
@@ -1295,13 +1295,6 @@
                 <span class="badge bg-info badge-pill ml-auto" id="ql_val">0%</span>
               </a>
             </li>
-            {{-- <li class="nav-item-header">Resource</li>
-            <li class="nav-item">
-              <a href="#target_bobot_management" class="nav-link" data-toggle="tab">
-                <i class="icon-target2"></i><i class="icon-law"></i>
-                Target & Bobot Management
-              </a>
-            </li> --}}
           </ul>
         </div>
       </div>
@@ -1323,14 +1316,14 @@
           <h5 class="card-title">Service Level [<span class="date_label"></span>]</h5>
           <div class="header-elements">
             {{-- <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync" onclick="refresh_charts()"></i></button> --}}
-            <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
+            <button type="button" class="btn bg-info btn-icon ml-3 legitRipple" data-toggle="modal"
               data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
           </div>
         </div>
 
         <div class="card-body">
           <div class="chart-container">
-            <div class="chart has-fixed-height" id="columns_basic"></div>
+            <div class="chart" id="columns_basic" style="height: 300px;"></div>
           </div>
         </div>
       </div>
@@ -1351,7 +1344,7 @@
 
         <div class="card-body">
           <div class="chart-container">
-            <div class="chart has-fixed-height" id="line_basic"></div>
+            <div class="chart" id="line_basic" style="height: 300px;"></div>
           </div>
         </div>
       </div>
@@ -1372,7 +1365,7 @@
 
         <div class="card-body">
           <div class="chart-container">
-            <div class="chart has-fixed-height" id="line_stacked"></div>
+            <div class="chart" id="line_stacked" style="height: 300px;"></div>
           </div>
         </div>
       </div>
@@ -1393,7 +1386,7 @@
 
         <div class="card-body">
           <div class="chart-container">
-            <div class="chart has-fixed-height" id="line_basic1"></div>
+            <div class="chart" id="line_basic1" style="height: 300px;"></div>
           </div>
         </div>
       </div>
@@ -1414,7 +1407,7 @@
 
         <div class="card-body">
           <div class="chart-container">
-            <div class="chart has-fixed-height" id="line_basic2"></div>
+            <div class="chart" id="line_basic2" style="height: 300px;"></div>
           </div>
         </div>
       </div>
@@ -1425,17 +1418,10 @@
       <div class="card">
         <ul class="nav nav-tabs nav-tabs-bottom nav-justified mb-0">
           @foreach ($data['parameters_tab'] as $record)
-            <li class="nav-item"><a href="#tab-target-bobot-management" class="nav-link" data-toggle="tab" onclick="tab_for_parameter({{ $record->id }})">{{ $record->parameter_desc }}</a>
-            </li>
+          <li class="nav-item"><a href="#tab-target-bobot-management" class="nav-link" data-toggle="tab"
+              onclick="tab_for_parameter({{ $record->id }})">{{ $record->parameter_desc }}</a>
+          </li>
           @endforeach
-          {{--
-          <li class="nav-item"><a href="#tab-fcr" class="nav-link" data-toggle="tab">FCR</a></li>
-          <li class="nav-item"><a href="#tab-rasio_sales" class="nav-link" data-toggle="tab">Rasio Sales</a>
-          </li>
-          <li class="nav-item"><a href="#tab-ces" class="nav-link" data-toggle="tab">CES (by customer)</a></li>
-          <li class="nav-item"><a href="#tab-quality_layanan" class="nav-link" data-toggle="tab">Quality Layanan</a>
-          </li>
-          --}}
         </ul>
 
         <div class="tab-content card-body border-top-0 rounded-top-0 mb-0">
@@ -1642,11 +1628,162 @@
     </div>
   </div>
 </div>
-</div>
 <!-- /right content -->
-
-</div>
 <!-- /inner container -->
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-xs table-bordered">
+      <thead>
+        <tr>
+          <td align="center" rowspan="2">Formulasi</td>
+          <td align="center"  colspan="31">Date</td>
+          <td align="center" rowspan="2">Total</td>
+        </tr>
+        <tr>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>COF</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">total</td>
+        </tr>
+        <tr>
+          <td>Call</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">total</td>
+        </tr>
+        <tr>
+          <td>Total</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">1</td>
+          <td align="center">total</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
 <!-- Horizontal form modal -->
 <div id="insert-new-data" class="modal fade" tabindex="-1">
@@ -1687,7 +1824,8 @@
           <div class="form-group row">
             <label class="col-form-label col-sm-5">Value</label>
             <div class="col-sm-7">
-              <input type="text" class="form-control" autocomplete="off" name="value_formulasi" id="value_formulasi" onkeypress="return numbersonly(event)">
+              <input type="text" class="form-control" autocomplete="off" name="value_formulasi" id="value_formulasi"
+                onkeypress="return numbersonly(event)">
             </div>
           </div>
         </div>

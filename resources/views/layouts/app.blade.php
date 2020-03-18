@@ -42,14 +42,16 @@
 </head>
 
 <body @yield('sidebar')>
-  <!-- Main navbar -->
-  <div class="navbar navbar-expand-md navbar-dark navbar-sm bg-teal-600">
-    <div class="d-md-none">
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-mobile">
-        <i class="icon-tree5"></i>
+
+  <div class="navbar navbar-sm navbar-expand-xl navbar-dark navbar-component navbar-sm bg-info-600 mb-0">
+    <div class="text-left d-xl-none w-100">
+      <button type="button" class="navbar-toggler dropdown-toggle" data-toggle="collapse"
+        data-target="#navbar-demo1-mobile">
+        <img src="assets/images/logo.png" class="rounded-circle mr-2" height="34" alt="">
       </button>
     </div>
-    <div class="collapse navbar-collapse" id="navbar-mobile">
+
+    <div class="navbar-collapse collapse" id="navbar-demo1-mobile">
       <ul class="navbar-nav">
         <li class="nav-item">
           <a href="/dashboard" class="navbar-nav-link">
@@ -93,7 +95,35 @@
         @endif
 
       </ul>
-      <ul class="navbar-nav ml-auto">
+
+      <div class="navbar-collapse collapse" id="navbar-form-select2">
+        <form class="mb-3 mb-xl-0 ml-xl-auto" action="#">
+          <div class="wmin-xl-250">
+            <div class="row">
+              <div class="col-md-6">
+                <select class="form-control form-control-select2 bg-transparent" data-placeholder="This Yeaar"
+                  data-container-css-class="text-black" data-fouc id="list_year" style="width:100%">
+                  <option></option>
+                  <option value="2019">2019</option>
+                  <option value="2020">2020</option>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <select class="form-control form-control-select2 bg-transparent" data-placeholder="This Yeaar"
+                  data-container-css-class="text-black" data-fouc id="list_month" style="width:100%">
+                  <option></option>
+                  <option value="jan">January</option>
+                  <option value="feb">February</option>
+                  <option value="mar">March</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <ul class="navbar-nav ml-xl-3">
         <li class="nav-item dropdown dropdown-user">
           <a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">
             <img src="{{ asset('assets/images/image.png') }}" class="rounded-circle" alt="">
@@ -114,7 +144,7 @@
       </ul>
     </div>
   </div>
-  <!-- /main navbar -->
+  <!-- /dark navbar demo -->
 
   <!-- Page content -->
   <div class="page-content">
@@ -122,46 +152,6 @@
     <div class="content-wrapper">
       <!-- Content area -->
       <div class="content">
-
-        <div class="navbar navbar-expand-lg navbar-light navbar-component rounded">
-          <div class="text-center d-lg-none w-100">
-            <button type="button" class="navbar-toggler dropdown-toggle" data-toggle="collapse"
-              data-target="#navbar-filter">
-              <i class="icon-unfold mr-2"></i>
-              Filters
-            </button>
-          </div>
-
-          <div class="navbar-collapse collapse" id="navbar-filter">
-            <span class="navbar-text font-weight-semibold mr-3">
-              Filter:
-            </span>
-
-            <ul class="navbar-nav flex-wrap">
-            </ul>
-
-            <span class="navbar-text font-weight-semibold mr-3 ml-md-auto">
-            </span>
-
-            <ul class="navbar-nav flex-wrap mr-2">
-              <select data-placeholder="This Yeaar" class="form-control select" data-fouc id="list_year">
-                <option></option>
-                <option value="2019">2019</option>
-                <option value="2020">2020</option>
-              </select>
-            </ul>
-
-            <ul class="navbar-nav flex-wrap">
-              <select data-placeholder="This Month" class="form-control select" data-fouc id="list_month">
-                <option></option>
-                <option value="jan">Jan</option>
-                <option value="feb">Feb</option>
-                <option value="mar">Mar</option>
-              </select>
-            </ul>
-          </div>
-        </div>
-
         @yield('content')
       </div>
       <!-- /content area -->
