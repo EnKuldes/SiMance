@@ -307,7 +307,7 @@
                     {{ $kpiObject[4]->target ?? 0 }} | Bobot
                     {{ $kpiObject[4]->bobot ?? 0 }}</span></div>
                 <div class="progress" style="height: 1.5rem;">
-                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round(100-$target_quality_layanan  ?? 0) < $revert_target ? "info" : "info" }}" style="width: <?= (100-$target_quality_layanan) ?? 0 ?>%">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round(100-$target_quality_layanan  ?? 0) < $revert_target ? "info" : "info" }}" style="width: <?= ((100-$target_quality_layanan) ?? 0) == 100 ? 0 : 100-$target_quality_layanan; ?>%">
                     <span>{{ round(100 - $target_quality_layanan ?? 0 ) }}% OK</span>
                   </div>
 

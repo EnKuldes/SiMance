@@ -114,7 +114,7 @@
         var ahtml = ''//'<option></option>';
         for (var i = 0; i < data.length; i++) {
           ahtml+="<option value='"+data[i]['year']+"'>"+data[i]['year']+"</option>"
-          if (i == 0 && tempYear == 0) { tempYear = data[i]['year']; }
+          tempYear = data[i]['year'];
         }
         $('#list_year').html(ahtml);
       },
@@ -144,7 +144,7 @@
         for (var i = 0; i < data.length; i++) {
           var d = new Date(id, data[i]['month']-1, 1);
           ahtml+="<option value='"+data[i]['month']+"'>"+moment(d).format('MMMM')+"</option>"
-          if (i == 0 && tempMonth == 0) { tempMonth = data[i]['month']; }
+          tempMonth = data[i]['month'];
         }
         $('#list_month').html(ahtml);
 
@@ -280,6 +280,7 @@
   });
   $("#list_year").change(function() {
     var id = $(this).val();
+    tempYear = id;
     if (id != "" && id != null)
     {
       chain4(id);
@@ -287,6 +288,7 @@
   });
   $("#list_month").change(function() {
     var id = $(this).val();
+    tempMonth = id;
     if (id != "" && id != null)
     {
       get_realisasi_monthly( $("#list_year").val(), $(this).val() )
@@ -1320,7 +1322,7 @@
         <div class="card-header header-elements-inline">
           <h5 class="card-title">Service Level [<span class="date_label"></span>]</h5>
           <div class="header-elements">
-            <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync" onclick="refresh_charts()"></i></button>
+            {{-- <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync" onclick="refresh_charts()"></i></button> --}}
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
               data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
           </div>
@@ -1341,7 +1343,7 @@
         <div class="card-header header-elements-inline">
           <h5 class="card-title">FCR [<span class="date_label"></span>]</h5>
           <div class="header-elements">
-            <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync" onclick="refresh_charts()"></i></button>
+            {{-- <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync" onclick="refresh_charts()"></i></button> --}}
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
               data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
           </div>
@@ -1362,7 +1364,7 @@
         <div class="card-header header-elements-inline">
           <h5 class="card-title">Rasio Sales [<span class="date_label"></span>]</h5>
           <div class="header-elements">
-            <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync" onclick="refresh_charts()"></i></button>
+            {{-- <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync" onclick="refresh_charts()"></i></button> --}}
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
               data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
           </div>
@@ -1383,7 +1385,7 @@
         <div class="card-header header-elements-inline">
           <h5 class="card-title">CES (by customer) [<span class="date_label"></span>]</h5>
           <div class="header-elements">
-            <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync"></i></button>
+            {{-- <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync" onclick="refresh_charts()"></i></button> --}}
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
               data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
           </div>
@@ -1404,7 +1406,7 @@
         <div class="card-header header-elements-inline">
           <h5 class="card-title">Quality Layanan [<span class="date_label"></span>]</h5>
           <div class="header-elements">
-            <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync" onclick="refresh_charts()"></i></button>
+            {{-- <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync" onclick="refresh_charts()"></i></button> --}}
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
               data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
           </div>
@@ -1651,7 +1653,7 @@
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Insert Data [ <?php $date = date("d - M, Y"); echo date('d - M, Y',(strtotime ( '-1 day' , strtotime ( $date) ) )); ?> ]</h5>
+        <h5 class="modal-title">Insert Data </h5>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
 
