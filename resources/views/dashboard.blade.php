@@ -175,7 +175,7 @@
       }
     ]
   }
-  
+
 
   function get_perfomance_comparison() {
     $.ajaxSetup({
@@ -266,7 +266,7 @@
                     {{ $kpiObject[0]->target  ?? 0}} | Bobot {{ $kpiObject[0]->bobot  ?? 0}}</span>
                 </div>
                 <div class="progress" style="height: 1.5rem;">
-                  <div class="progress-bar bg-{{ round($target_service_level  ?? 0) > 50 ? "info" : "danger" }}" style="width: <?=$target_service_level ?? 0?>%">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round($target_service_level  ?? 0) > 50 ? "info" : "danger" }}" style="width: <?=$width_progressbar_sl ?? 0?>%">
                     <span>{{ round($target_service_level  ?? 0) }}% Complete</span>
                   </div>
                 </div>
@@ -276,7 +276,7 @@
                 <div class="d-flex align-items-center mb-1">FCR <span class="text-muted ml-auto">Target
                     {{ $kpiObject[1]->target ?? 0 }} | Bobot {{ $kpiObject[1]->bobot ?? 0 }}</span></div>
                 <div class="progress" style="height: 1.5rem;">
-                  <div class="progress-bar bg-{{ round($target_fcr  ?? 0) > 50 ? "info" : "danger" }}" style="width: <?=$target_fcr ?? 0 ?>%">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round($target_fcr  ?? 0) > 50 ? "info" : "danger" }}" style="width: <?=$width_progressbar_fcr ?? 0 ?>%">
                     <span>{{ round($target_fcr ?? 0 ) }}% Complete</span>
                   </div>
                 </div>
@@ -286,7 +286,7 @@
                 <div class="d-flex align-items-center mb-1">Rasio Sales <span class="text-muted ml-auto">Target
                     {{ $kpiObject[2]->target ?? 0 }} | Bobot {{ $kpiObject[2]->bobot ?? 0 }}</span></div>
                 <div class="progress" style="height: 1.5rem;">
-                  <div class="progress-bar bg-{{ round($target_rasio_sales  ?? 0) > 50 ? "info" : "danger" }}" style="width: <?=$target_rasio_sales ?? 0 ?>%">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round($target_rasio_sales  ?? 0) > 50 ? "info" : "danger" }}" style="width: <?=$width_progressbar_rs ?? 0 ?>%">
                     <span>{{ round($target_rasio_sales ?? 0 ) }}% Complete</span>
                   </div>
                 </div>
@@ -296,19 +296,23 @@
                 <div class="d-flex align-items-center mb-1">CES (by customer) <span class="text-muted ml-auto">Target
                     {{ $kpiObject[3]->target ?? 0 }} | Bobot {{ $kpiObject[3]->bobot ?? 0 }}</span></div>
                 <div class="progress" style="height: 1.5rem;">
-                  <div class="progress-bar bg-{{ round($target_ces  ?? 0) > 50 ? "info" : "danger" }}" style="width: <?=$target_ces ?? 0 ?>%">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round($target_ces  ?? 0) > 50 ? "info" : "danger" }}" style="width: <?=$width_progressbar_ces ?? 0 ?>%">
                     <span>{{ round($target_ces ?? 0 ) }}% Complete</span>
                   </div>
                 </div>
               </li>
 
               <li class="mt-4">
-                <div class="d-flex align-items-center mb-1">Quality Layanan <span class="text-muted ml-auto">Target
+                <div class="d-flex align-items-center mb-1">Quality Layanan <span class="text-muted ml-auto">Target NOK <
                     {{ $kpiObject[4]->target ?? 0 }} | Bobot
                     {{ $kpiObject[4]->bobot ?? 0 }}</span></div>
                 <div class="progress" style="height: 1.5rem;">
-                  <div class="progress-bar bg-{{ round($target_quality_layanan  ?? 0) > 50 ? "info" : "danger" }}" style="width: <?=$target_quality_layanan ?? 0 ?>%">
-                    <span>{{ round($target_quality_layanan ?? 0 ) }}% Complete</span>
+                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round(100-$target_quality_layanan  ?? 0) < $revert_target ? "info" : "info" }}" style="width: <?= (100-$target_quality_layanan) ?? 0 ?>%">
+                    <span>{{ round(100 - $target_quality_layanan ?? 0 ) }}% OK</span>
+                  </div>
+
+                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round($target_quality_layanan  ?? 0) <= $kpiObject[4]->target ? "success" : "danger" }}" style="width: <?=$target_quality_layanan ?? 0 ?>%">
+                    <span>{{ round($target_quality_layanan ?? 0 ) }}% NOK</span>
                   </div>
                 </div>
               </li>
@@ -333,7 +337,7 @@
                       <div class="d-flex align-items-center">
                         <div>
                           <a href="#" class="text-default font-weight-semibold letter-icon-title">Service Level</a>
-                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> FCR
+                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> COF
                           <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Call
                           </div>
                         </div>
