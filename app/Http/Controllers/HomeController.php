@@ -502,13 +502,14 @@ class HomeController extends Controller
           , formulasis.formulasi_desc AS value_desc
           , IFNULL(res.day, DAY("'.$date_value->date.'"))  AS `day`
           , IFNULL(res.date, "'.$date_value->date.'") AS `date`
-          , IFNULL(res.value_item, "") AS value_item
+          , IFNULL(res.value_item, 0) AS value_item
         ')
         ->orderBy('parameters.id')
         ->orderBy('res.id_formulasi')
         ->orderBy('res.day')
         ->get();
 
+        /*
         // Penambahan buat ngambil nilai total per harinya
         $total_data_daily = DB::table('daily_transaksis')
         ->where([
@@ -523,9 +524,104 @@ class HomeController extends Controller
           , IFNULL(daily_transaksis.tanggal, "'.$date_value->date.'") AS date
           , IFNULL(SUM(daily_transaksis.nilai), "") AS total_item'
         )->groupBy('daily_transaksis.tanggal')->first();
+        */
+
+        // Realisasi daily
+        $dt = daily_transaksi::where([
+          ['daily_transaksis.id_layanan', '=', auth()->user()->layanan]
+          , ['daily_transaksis.id_parameter', '=', $request->id_parameter]
+        ]);
+        $qWhere = "IFNULL(";
+        switch ($request->id_parameter) {
+        // 147
+          case 1:
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 2 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 1 THEN nilai ELSE 0 END)*100';
+          $param_compare = '>=';
+          break;
+          case 2:
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 4 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+          $param_compare = '>=';
+          break;
+          case 3:
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 8 OR id_formulasi = 7 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 9 THEN nilai ELSE 0 END)*100';
+          $param_compare = '>=';
+          break;
+          case 4:
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 11 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+          $param_compare = '>=';
+          break;
+          case 5:
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 15 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+          $param_compare = '<=';
+          break;
+        // Digital Media
+          case 6:
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 14 THEN nilai ELSE 0 END)/SUM(nilai)*100'; // Average beluus
+          $param_compare = '';
+          break;
+          case 7:
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 22 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+          $param_compare = '';
+          break;
+          case 8:
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 27 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 26 THEN nilai ELSE 0 END)*100';
+          $param_compare = '';
+          break;
+          case 9:
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 29 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+          $param_compare = '';
+          break;
+          case 10:
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 32 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+          $param_compare = '';
+          break;
+        // C4
+          case 11:
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 35 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 34 THEN nilai ELSE 0 END)*100';
+          $param_compare = '';
+          break;
+          case 12:
+          $qWhere .= 'SUM(nilai)*100';
+          $param_compare = '';
+          break;
+          case 13:
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 38 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 37 THEN nilai ELSE 0 END)*100';
+          $param_compare = '';
+          break;
+          case 14:
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 40 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 39 THEN nilai ELSE 0 END)*100';
+          $param_compare = '';
+          break;
+        // MyIndihome
+          case 15:
+          $qWhere .= 'SUM(nilai)*100';
+          $param_compare = '';
+          break;
+          case 16:
+          $qWhere .= 'SUM(nilai)*100';
+          $param_compare = '';
+          break;
+          case 17:
+          $qWhere .= 'SUM(nilai)*100';
+          $param_compare = '';
+          break;
+          case 18:
+          $qWhere .= 'SUM(nilai)*100';
+          $param_compare = '';
+          break;
+
+          default:
+          abort(500, 'Error, Parameter not found');
+          break;
+        }
+        $qWhere .= ", 0) as realisasi";
+        $dt->selectRaw($qWhere);
+        $dt = $dt->whereRaw('daily_transaksis.tanggal = "'.$date_value->date.'"')->first();
+        $realisasi = $dt->realisasi;
         
         foreach ($data as $detailed_data) {
-          $detailed_data->total_item = $total_data_daily->total_item;
+          //$detailed_data->total_item = $total_data_daily->total_item;
+          $detailed_data->realisasi = $realisasi;
           $datas[] = $detailed_data;
         }
       }

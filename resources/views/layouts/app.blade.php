@@ -37,6 +37,7 @@
   <script src="{{ asset('assets/js/app.js') }}"></script>
   <script src="{{ asset('assets/js/demo_pages/extra_pnotify.js') }}"></script>
   <script src="{{ asset('assets/js/demo_pages/components_buttons.js') }}"></script>
+  <script src="{{ asset('assets/js/plugins/ui/moment/moment.min.js') }}"></script>
   @yield('extra-liblary')
   <!-- /theme JS files -->
 </head>
@@ -103,14 +104,17 @@
               <div class="col-md-6">
                 <select class="form-control form-control-select2 bg-transparent" data-placeholder="This Yeaar"
                   data-container-css-class="text-black" data-fouc id="list_year" style="width:100%">
+                  {{--
                   <option></option>
                   <option value="2020">2020</option>
+                   --}}
                 </select>
               </div>
 
               <div class="col-md-6">
                 <select class="form-control form-control-select2 bg-transparent" data-placeholder="This Month"
                   data-container-css-class="text-black" data-fouc id="list_month" style="width:100%">
+                  {{-- 
                   <option></option>
                   <option value="jan">January</option>
                   <option value="feb">February</option>
@@ -124,6 +128,7 @@
                   <option value="okt">Oktober</option>
                   <option value="nov">November</option>
                   <option value="des">Desember</option>
+                  --}}
                 </select>
               </div>
             </div>
@@ -201,6 +206,74 @@
           type: type
       });
     }
+    function chain3() {
+        $.ajaxSetup({
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+        });
+        $.ajax({
+         type:"post",
+         url:'/list-date',
+         //data: {'id_parameter':id},
+         success: function(data){
+          var ahtml = ''//'<option></option>';
+          for (var i = 0; i < data.length; i++) {
+            ahtml+="<option value='"+data[i]['year']+"'>"+data[i]['year']+"</option>"
+            tempYear = data[i]['year'];
+          }
+          $('#list_year').html(ahtml);
+        },
+        error : function(data) {
+
+          console.log("error chain2");
+
+        }
+      }).done(function(){
+        $('#list_year').val(tempYear).trigger('change');
+        //console.log(tempYear)
+
+      });
+    }
+    function chain4(id) {
+        $.ajaxSetup({
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+        });
+        $.ajax({
+         type:"post",
+         url:'/list-date',
+         data: {'select_year':id},
+         success: function(data){
+          var ahtml = ''//'<option></option>';
+          for (var i = 0; i < data.length; i++) {
+            var d = new Date(id, data[i]['month']-1, 1);
+            ahtml+="<option value='"+data[i]['month']+"'>"+moment(d).format('MMMM')+"</option>"
+            tempMonth = data[i]['month'];
+          }
+          $('#list_month').html(ahtml);
+
+        },
+        error : function(data) {
+
+          console.log("error chain2");
+
+        }
+      }).done(function(){
+        $('#list_month').val(tempMonth).trigger('change');
+        //console.log(tempMonth)
+
+      });
+    }
+    $("#list_year").change(function() {
+      var id = $(this).val();
+      tempYear = id;
+      if (id != "" && id != null)
+      {
+        chain4(id);
+      }
+    });
   </script>
 </body>
 

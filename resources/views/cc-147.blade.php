@@ -16,7 +16,6 @@
 --}}
 <script src="assets/js/demo_pages/form_select2.js"></script>
 <script src="assets/js/demo_pages/form_layouts.js"></script>
-<script src="assets/js/plugins/ui/moment/moment.min.js"></script>
 <script src="assets/js/plugins/pickers/pickadate/picker.js"></script>
 <script src="assets/js/plugins/pickers/pickadate/picker.date.js"></script>
 @endsection
@@ -100,66 +99,7 @@
 
     });
   }
-  function chain3() {
-      $.ajaxSetup({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-      });
-      $.ajax({
-       type:"post",
-       url:'/list-date',
-       //data: {'id_parameter':id},
-       success: function(data){
-        var ahtml = ''//'<option></option>';
-        for (var i = 0; i < data.length; i++) {
-          ahtml+="<option value='"+data[i]['year']+"'>"+data[i]['year']+"</option>"
-          tempYear = data[i]['year'];
-        }
-        $('#list_year').html(ahtml);
-      },
-      error : function(data) {
-
-        console.log("error chain2");
-
-      }
-    }).done(function(){
-      $('#list_year').val(tempYear).trigger('change');
-      //console.log(tempYear)
-
-    });
-  }
-  function chain4(id) {
-      $.ajaxSetup({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-      });
-      $.ajax({
-       type:"post",
-       url:'/list-date',
-       data: {'select_year':id},
-       success: function(data){
-        var ahtml = ''//'<option></option>';
-        for (var i = 0; i < data.length; i++) {
-          var d = new Date(id, data[i]['month']-1, 1);
-          ahtml+="<option value='"+data[i]['month']+"'>"+moment(d).format('MMMM')+"</option>"
-          tempMonth = data[i]['month'];
-        }
-        $('#list_month').html(ahtml);
-
-      },
-      error : function(data) {
-
-        console.log("error chain2");
-
-      }
-    }).done(function(){
-      $('#list_month').val(tempMonth).trigger('change');
-      //console.log(tempMonth)
-
-    });
-  }
+  {{--  FUnc Chain 3 dan Chain 4 pindah ke Layouts App Blade --}}
   // Func-Func
   function tab_for_parameter(id_parameter) {
     get_current_kpi(id_parameter);
@@ -269,14 +209,7 @@
       chain2(id);
     }
   });
-  $("#list_year").change(function() {
-    var id = $(this).val();
-    tempYear = id;
-    if (id != "" && id != null)
-    {
-      chain4(id);
-    }
-  });
+  {{-- FUnc List Year di pindahin ke Layouts App Blade --}}
   $("#list_month").change(function() {
     var id = $(this).val();
     tempMonth = id;

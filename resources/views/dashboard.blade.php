@@ -37,6 +37,7 @@
     return retArr;
   }
     $(document).ready(function() {
+      chain3();
       get_perfomance_comparison();
     });
 </script>
