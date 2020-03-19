@@ -305,7 +305,8 @@
       }
     }],
     // Vertical axis
-    yAxis: [{
+    yAxis: [
+    {
       type: 'value',
       axisLabel: {
         color: '#333'
@@ -326,7 +327,34 @@
           color: ['rgba(250,250,250,0.1)', 'rgba(0,0,0,0.01)']
         }
       }
-    }],
+    },
+    {
+      type: 'value',
+      min: 0,
+      max: 100,
+      //interval: 5,
+      axisLabel: {
+        color: '#333'
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#999'
+        }
+      },
+      splitLine: {
+        lineStyle: {
+          color: ['#eee']
+        }
+      },
+      splitArea: {
+        show: true,
+        areaStyle: {
+          color: ['rgba(250,250,250,0.1)', 'rgba(0,0,0,0.01)']
+        }
+      }
+    },
+
+    ],
     // Add series
     /*series: [
     {
@@ -1002,11 +1030,17 @@
   }
   function list_data_series(data, value_parameter, value_desc, type_chart) {
     var tempArr = [];
+    window["data_"+value_parameter] =[];
     for (var j = 0; j < value_desc.length; j++) {
       window["data_"+value_parameter+value_desc[j]] =[];
       for (var i = 0; i < data.length; i++) {
         if (data[i]['parameter_desc'] == value_parameter && data[i]['value_desc'] == value_desc[j] ) {
-          window["data_"+value_parameter+value_desc[j]].push( ((data[i]['value_item']/data[i]['total_item'])*100).toFixed(2) )
+          window["data_"+value_parameter+value_desc[j]].push( data[i]['value_item'] )
+        }
+      }
+      for (var h = 0; h < data.length; h++) {
+        if ( data[h]['parameter_desc'] == value_parameter ) {
+          window["data_"+value_parameter].push( Math.ceil(data[h]['realisasi']) )
         }
       }
       //console.log( window["data_"+value_parameter+value_desc[j]] )
@@ -1018,7 +1052,8 @@
           normal: {
             label: {
               show: true,
-              formatter: '{c}%',
+              //formatter: '{c}%',
+              formatter: '{c}',
               position: "top",
               textStyle: {
                 fontWeight: 500
@@ -1028,14 +1063,34 @@
         }
       })
     }
+    tempArr.push({
+      name: "Realisasi",
+      type: 'line',
+      data: window["data_"+value_parameter],
+      yAxisIndex: 1,
+      itemStyle: {
+          normal: {
+            label: {
+              show: true,
+              formatter: '{c}%',
+              position: "top",
+              textStyle: {
+                fontWeight: 500
+              }
+            }
+          }
+        }      
+    })
     //console.log(tempArr)
     return tempArr;
   }
 
   // mencari value
   function init_chart_value(year_value, month_value){
-    var list_option_charts = [columns_basic_options, line_basic_options, line_stacked_options, line_basic1_options, line_basic2_options]
-    var list_type_charts = ['bar', 'line', 'line', 'line', 'line']
+    //var list_option_charts = [columns_basic_options, line_basic_options, line_stacked_options, line_basic1_options, line_basic2_options]
+    var list_option_charts = [columns_basic_options, columns_basic_options, columns_basic_options, columns_basic_options, columns_basic_options, ]
+    //var list_type_charts = ['bar', 'line', 'line', 'line', 'line']
+    var list_type_charts = ['bar', 'bar', 'bar', 'bar', 'bar']
     var charts = [columns_basic, line_basic, line_stacked, line_basic1, line_basic2];
     for (var i = 0; i < list_option_charts.length; i++) {
       get_monthly_data( $("#list_year").val(), $('#list_month').val(), i+1, charts[i], list_option_charts[i], list_type_charts[i], list_tables[i])
