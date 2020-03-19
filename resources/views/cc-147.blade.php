@@ -779,11 +779,11 @@
           window["data_"+value_parameter+value_desc[j]].push( data[i]['value_item'] )
         }
       }
-      for (var h = 0; h < data.length; h++) {
+      /*for (var h = 0; h < data.length; h++) {
         if ( data[h]['parameter_desc'] == value_parameter ) {
           window["data_"+value_parameter].push( Math.ceil(data[h]['realisasi']) )
         }
-      }
+      }*/
       //console.log( window["data_"+value_parameter+value_desc[j]] )
       tempArr.push({
         name: value_desc[j],
@@ -804,6 +804,17 @@
         }
       })
     }
+    
+    var list_day = trans_val(data, 'day');
+    for (var i = 0; i < value_desc.length; i++) {
+      for (var j = 0; j < data.length; j++) {
+        for (var k = 0; k < list_day.length; k++) {
+          if ( data[j]['parameter_desc'] == value_parameter && data[j]['value_desc'] == value_desc[i] && data[j]['day'] == list_day[k] ) {
+            window["data_"+value_parameter].push( Math.ceil(data[j]['realisasi']) )
+          }
+        }
+      }
+    }
     tempArr.push({
       name: "Realisasi",
       type: 'line',
@@ -823,7 +834,7 @@
           }
         }
     })
-    //console.log(tempArr)
+    //console.log(window["data_"+value_parameter])
     return tempArr;
   }
 
