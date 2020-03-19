@@ -283,6 +283,7 @@
     // Horizontal axis
     xAxis: [{
       type: 'category',
+      //data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
       axisLabel: {
         color: '#333'
       },
@@ -300,8 +301,7 @@
       }
     }],
     // Vertical axis
-    yAxis: [
-    {
+    yAxis: [{
       type: 'value',
       axisLabel: {
         color: '#333'
@@ -322,7 +322,73 @@
           color: ['rgba(250,250,250,0.1)', 'rgba(0,0,0,0.01)']
         }
       }
-
+    },
+    {
+      type: 'value',
+      min: 0,
+      max: 100,
+      //interval: 5,
+      axisLabel: {
+        color: '#333'
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#999'
+        }
+      },
+      splitLine: {
+        lineStyle: {
+          color: ['#eee']
+        }
+      },
+      splitArea: {
+        show: true,
+        areaStyle: {
+          color: ['rgba(250,250,250,0.1)', 'rgba(0,0,0,0.01)']
+        }
+      }
+    },],
+    // Add series
+    /*series: [
+    {
+      name: 'COF',
+      type: 'bar',
+      data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 15.6, 12.2, 32.6, 20.0, 6.4, 3.3],
+      itemStyle: {
+        normal: {
+          label: {
+            show: true,
+            position: 'top',
+            textStyle: {
+              fontWeight: 500
+            }
+          }
+        }
+      },
+      markLine: {
+        data: [{type: 'average', name: 'Average'}]
+      }
+    },
+    {
+      name: 'Call W 20 Sec',
+      type: 'bar',
+      data: [2.6, 5.9, 9.0, 26.4, 58.7, 70.7, 17.6, 12.2, 48.7, 18.8, 6.0, 2.3],
+      itemStyle: {
+        normal: {
+          label: {
+            show: true,
+            position: 'top',
+            textStyle: {
+              fontWeight: 500
+            }
+          }
+        }
+      },
+      markLine: {
+        data: [{type: 'average', name: 'Average'}]
+      }
+    }
+    ]*/
     };
   var line_basic_options = {
         // Define colors
@@ -854,6 +920,7 @@
     //setTimeout(init_chart_value( $("#list_year").val(), $('#list_month').val() ), 5000);
   }
 
+  // Ini ga dipake
   function init_chart_element() {
     columns_basic.setOption(columns_basic_options, true);
     line_basic.setOption(line_basic_options, true);
