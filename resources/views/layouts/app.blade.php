@@ -64,7 +64,7 @@
         <li class="nav-item">
           <a href="/cc-147" class="navbar-nav-link">
             <i class="icon-headset mr-2"></i>
-            CC 147
+            Daily CC 147
           </a>
         </li>
 
@@ -72,7 +72,7 @@
         <li class="nav-item">
           <a href="/digital-media" class="navbar-nav-link">
             <i class="icon-presentation mr-2"></i>
-            Digital Media
+            Daily Digital Media
           </a>
         </li>
 
@@ -80,7 +80,7 @@
         <li class="nav-item">
           <a href="/c4" class="navbar-nav-link">
             <i class="icon-cogs mr-2"></i>
-            C4
+            Daily C4
           </a>
         </li>
 
@@ -88,7 +88,7 @@
         <li class="nav-item">
           <a href="/myindihome" class="navbar-nav-link">
             <i class="icon-home5 mr-2"></i>
-            myIndiHome
+            Daily myIndiHome
           </a>
         </li>
 
