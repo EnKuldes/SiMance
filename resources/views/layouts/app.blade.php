@@ -104,18 +104,26 @@
                 <select class="form-control form-control-select2 bg-transparent" data-placeholder="This Yeaar"
                   data-container-css-class="text-black" data-fouc id="list_year" style="width:100%">
                   <option></option>
-                  <option value="2019">2019</option>
                   <option value="2020">2020</option>
                 </select>
               </div>
 
               <div class="col-md-6">
-                <select class="form-control form-control-select2 bg-transparent" data-placeholder="This Yeaar"
+                <select class="form-control form-control-select2 bg-transparent" data-placeholder="This Month"
                   data-container-css-class="text-black" data-fouc id="list_month" style="width:100%">
                   <option></option>
                   <option value="jan">January</option>
                   <option value="feb">February</option>
                   <option value="mar">March</option>
+                  <option value="apr">April</option>
+                  <option value="mei">Mei</option>
+                  <option value="jun">June</option>
+                  <option value="jul">July</option>
+                  <option value="aug">August</option>
+                  <option value="sep">Sepember</option>
+                  <option value="okt">Oktober</option>
+                  <option value="nov">November</option>
+                  <option value="des">Desember</option>
                 </select>
               </div>
             </div>
@@ -188,6 +196,7 @@
       new PNotify({
           title: title,
           text: text,
+          delay: 300,
           addclass: 'alert alert-styled-left alert-arrow-left',
           type: type
       });
