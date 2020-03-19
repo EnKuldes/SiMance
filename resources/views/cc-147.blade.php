@@ -809,6 +809,7 @@
       type: 'line',
       data: window["data_"+value_parameter],
       yAxisIndex: 1,
+      color : '#f42',
       itemStyle: {
           normal: {
             label: {
@@ -820,7 +821,7 @@
               }
             }
           }
-        }      
+        }
     })
     //console.log(tempArr)
     return tempArr;
