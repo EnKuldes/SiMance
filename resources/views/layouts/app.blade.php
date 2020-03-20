@@ -166,7 +166,7 @@
     <div class="content-wrapper">
       <!-- Content area -->
       <div class="content">
-        {{-- <button type="button" class="btn btn-primary" id="block-page">Block the whole page</button> --}}
+        <button type="button" class="btn btn-primary legitRipple" id="block-card">Block this card</button>
         @yield('content')
       </div>
       <!-- /content area -->
