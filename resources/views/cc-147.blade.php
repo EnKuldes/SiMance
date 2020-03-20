@@ -1,6 +1,6 @@
 @extends('layouts/app')
 
-@section('title', 'CC 147')
+@section('title', Auth::user()->layanans->layanan_desc)
 
 @section('liblary')
 <script src="assets/js/plugins/visualization/echarts/echarts.min.js"></script>
@@ -96,7 +96,7 @@
     });
   }
   {{--  FUnc Chain 3 dan Chain 4 pindah ke Layouts App Blade --}}
-  // Func-Func
+  // Func-Func Inactive
   function tab_for_parameter(id_parameter) {
     get_current_kpi(id_parameter);
     $('#form-target-bobot input[name=value_parameter]').val(id_parameter);
@@ -128,6 +128,7 @@
     });
   }
 
+  // Func-Func Active
   function get_realisasi_monthly(year_value, month_value) {
     $.ajaxSetup({
       headers: {
@@ -139,7 +140,12 @@
      url:'/get-realisasi-monthly',
          data: {year: year_value, month: month_value},
          success: function(data){
-          var labelTitles = ['sl_val', 'fcr_val', 'rs_val', 'ces_val', 'ql_val']
+          var labelTitles = [
+          //'sl_val', 'fcr_val', 'rs_val', 'ces_val', 'ql_val'
+          @foreach ($data['parameters_tab'] as $record)
+            '{{ $record->id }}_val', 
+          @endforeach
+          ]
           //console.log(data)
           for (var i = 0; i < labelTitles.length; i++) {
             if (data[i]['realisasi'] != null) {realisasi = data[i]['realisasi']}
@@ -232,14 +238,30 @@
     });
 
   // Charts
-  var columns_basic = echarts.init( document.getElementById('columns_basic') ); // service level
+  @foreach ($data['parameters_tab'] as $record)
+    var chart_pid_{{ $record->id }} =echarts.init( document.getElementById('chart_pid_{{ $record->id }}') );
+  @endforeach
+  /*var columns_basic = echarts.init( document.getElementById('columns_basic') ); // service level
   var line_basic = echarts.init( document.getElementById("line_basic") ); // fcr
   var line_basic1 = echarts.init( document.getElementById("line_basic1") ); // ces
   var line_basic2 = echarts.init( document.getElementById("line_basic2") ); // quality layanan
-  var line_stacked = echarts.init( document.getElementById("line_stacked") ); // rasio sales
+  var line_stacked = echarts.init( document.getElementById("line_stacked") ); // rasio sales*/
 
   // Variable penampung html tables
-  var list_tables = ["summary_table_sl", "summary_table_fcr", "summary_table_rs", "summary_table_ces", "summary_table_ql"]
+  var list_tables = [
+  //"summary_table_sl", "summary_table_fcr", "summary_table_rs", "summary_table_ces", "summary_table_ql"
+    @php
+    $temp_table_id = 0;
+    @endphp
+    @foreach ($data['parameters_tab'] as $record)
+    @php
+    if ($temp_table_id == 0){
+      $temp_table_id = $record->id;
+    }
+    @endphp
+    "summary_table_{{ $record->id }}", 
+    @endforeach
+  ]
 
   // Options
   // Yang perlu diisi Legend.data, xAxis.data, Series
@@ -348,47 +370,6 @@
         }
       }
     },],
-    // Add series
-    /*series: [
-    {
-      name: 'COF',
-      type: 'bar',
-      data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 15.6, 12.2, 32.6, 20.0, 6.4, 3.3],
-      itemStyle: {
-        normal: {
-          label: {
-            show: true,
-            position: 'top',
-            textStyle: {
-              fontWeight: 500
-            }
-          }
-        }
-      },
-      markLine: {
-        data: [{type: 'average', name: 'Average'}]
-      }
-    },
-    {
-      name: 'Call W 20 Sec',
-      type: 'bar',
-      data: [2.6, 5.9, 9.0, 26.4, 58.7, 70.7, 17.6, 12.2, 48.7, 18.8, 6.0, 2.3],
-      itemStyle: {
-        normal: {
-          label: {
-            show: true,
-            position: 'top',
-            textStyle: {
-              fontWeight: 500
-            }
-          }
-        }
-      },
-      markLine: {
-        data: [{type: 'average', name: 'Average'}]
-      }
-    }
-    ]*/
     };
   var line_basic_options = {
         // Define colors
@@ -841,12 +822,32 @@
   // mencari value
   function init_chart_value(year_value, month_value){
     //var list_option_charts = [columns_basic_options, line_basic_options, line_stacked_options, line_basic1_options, line_basic2_options]
-    var list_option_charts = [columns_basic_options, columns_basic_options, columns_basic_options, columns_basic_options, columns_basic_options, ]
+    var list_option_charts = [
+    @foreach ($data['parameters_tab'] as $record)
+      columns_basic_options, 
+    @endforeach
+    //columns_basic_options, columns_basic_options, columns_basic_options, columns_basic_options, columns_basic_options
+    ]
     //var list_type_charts = ['bar', 'line', 'line', 'line', 'line']
-    var list_type_charts = ['bar', 'bar', 'bar', 'bar', 'bar']
-    var charts = [columns_basic, line_basic, line_stacked, line_basic1, line_basic2];
+    var list_type_charts = [
+    @foreach ($data['parameters_tab'] as $record)
+      'bar', 
+    @endforeach
+    //'bar', 'bar', 'bar', 'bar', 'bar'
+    ]
+    var charts = [
+    @foreach ($data['parameters_tab'] as $record)
+      chart_pid_{{ $record->id }}, 
+    @endforeach
+    //columns_basic, line_basic, line_stacked, line_basic1, line_basic2
+    ];
+    var param_id = [
+    @foreach ($data['parameters_tab'] as $record)
+      {{ $record->id }}, 
+    @endforeach
+    ];
     for (var i = 0; i < list_option_charts.length; i++) {
-      get_monthly_data( $("#list_year").val(), $('#list_month').val(), i+1, charts[i], list_option_charts[i], list_type_charts[i], list_tables[i])
+      get_monthly_data( $("#list_year").val(), $('#list_month').val(), param_id[i], charts[i], list_option_charts[i], list_type_charts[i], list_tables[i])
     }
     //get_monthly_data( $("#list_year").val(), $('#list_month').val(), 1, charts[0], list_option_charts[0], list_type_charts[0], list_tables[0])
   }
@@ -932,22 +933,16 @@
     //setTimeout(init_chart_value( $("#list_year").val(), $('#list_month').val() ), 5000);
   }
 
-  // Ini ga dipake
-  function init_chart_element() {
-    columns_basic.setOption(columns_basic_options, true);
-    line_basic.setOption(line_basic_options, true);
-    line_basic1.setOption(line_basic1_options, true);
-    line_basic2.setOption(line_basic2_options, true);
-    line_stacked.setOption(line_stacked_options, true);
-  }
-
   // Resize function
   var triggerChartResize = function() {
-      columns_basic && columns_basic.resize();
+    @foreach ($data['parameters_tab'] as $record)
+      chart_pid_{{ $record->id }} && chart_pid_{{ $record->id }}.resize();
+    @endforeach
+      /*columns_basic && columns_basic.resize();
       line_basic && line_basic.resize();
       line_basic1 && line_basic1.resize();
       line_basic2 && line_basic2.resize();
-      line_stacked && line_stacked.resize();
+      line_stacked && line_stacked.resize();*/
     };
 
     // On sidebar width change
@@ -973,11 +968,14 @@
 
   // Clear Chart Area
   function f_clear_chart(){
-    columns_basic.clear();
+    @foreach ($data['parameters_tab'] as $record)
+      chart_pid_{{ $record->id }}.clear()
+    @endforeach
+    /*columns_basic.clear();
     line_basic.clear();
     line_basic1.clear();
     line_basic2.clear();
-    line_stacked.clear();
+    line_stacked.clear();*/
   }
 
   // Populate Tabel Summary Data
@@ -1041,8 +1039,8 @@
       chain1();
       chain3();
       reset_input();
-      init_chart_element();
-      change_table_data("summary_table_sl");
+      //init_chart_element();
+      change_table_data("summary_table_{{ $temp_table_id }}");
       //get_realisasi_monthly()
       $('#input_date').pickadate({format: 'yyyy-mm-dd'});
     });
@@ -1065,41 +1063,60 @@
         <div class="card-body p-0">
           <ul class="nav nav-sidebar mb-2">
             <li class="nav-item-header">Parameter</li>
-            <li class="nav-item">
-              <a href="#service_level" class="nav-link active" data-toggle="tab" onclick="change_table_data('summary_table_sl')">
-                <i class="icon-cog"></i>
-                Service Level
-                <span class="badge bg-info badge-pill ml-auto" id="sl_val">0%</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#fcr" class="nav-link" data-toggle="tab" onclick="change_table_data('summary_table_fcr')">
-                <i class="icon-watch2"></i>
-                FCR
-                <span class="badge bg-info badge-pill ml-auto" id="fcr_val">0%</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#rasio_sales" class="nav-link" data-toggle="tab" onclick="change_table_data('summary_table_rs')">
-                <i class="icon-clipboard5"></i>
-                Rasio Sales
-                <span class="badge bg-info badge-pill ml-auto" id="rs_val">0%</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#ces" class="nav-link" data-toggle="tab" onclick="change_table_data('summary_table_ces')">
-                <i class="icon-search4"></i>
-                CES (by customer)
-                <span class="badge bg-info badge-pill ml-auto" id="ces_val">0%</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#quality_layanan" class="nav-link" data-toggle="tab" onclick="change_table_data('summary_table_ql')">
-                <i class="icon-thumbs-up2"></i>
-                Quality Layanan
-                <span class="badge bg-info badge-pill ml-auto" id="ql_val">0%</span>
-              </a>
-            </li>
+            {{-- <section id="parameter_side_bar"> --}}
+              @php
+              $i = 0;
+              @endphp
+              @foreach ($data['parameters_tab'] as $record)
+              <li class="nav-item">
+                <a href="#pid_{{ $record->id }}" class="nav-link {{ $i == 0 ? 'active' : '' }}" data-toggle="tab" onclick="change_table_data('summary_table_{{ $record->id }}')">
+                  <i class="icon-cog"></i>
+                  {{ $record->parameter_desc }}
+                  <span class="badge bg-info badge-pill ml-auto" id="{{ $record->id }}_val">0%</span>
+                </a>
+              </li>
+              @php
+              $i++;
+              @endphp
+              @endforeach
+              {{-- 
+              <li class="nav-item">
+                <a href="#service_level" class="nav-link active" data-toggle="tab" onclick="change_table_data('summary_table_sl')">
+                  <i class="icon-cog"></i>
+                  Service Level
+                  <span class="badge bg-info badge-pill ml-auto" id="sl_val">0%</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#fcr" class="nav-link" data-toggle="tab" onclick="change_table_data('summary_table_fcr')">
+                  <i class="icon-watch2"></i>
+                  FCR
+                  <span class="badge bg-info badge-pill ml-auto" id="fcr_val">0%</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#rasio_sales" class="nav-link" data-toggle="tab" onclick="change_table_data('summary_table_rs')">
+                  <i class="icon-clipboard5"></i>
+                  Rasio Sales
+                  <span class="badge bg-info badge-pill ml-auto" id="rs_val">0%</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#ces" class="nav-link" data-toggle="tab" onclick="change_table_data('summary_table_ces')">
+                  <i class="icon-search4"></i>
+                  CES (by customer)
+                  <span class="badge bg-info badge-pill ml-auto" id="ces_val">0%</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#quality_layanan" class="nav-link" data-toggle="tab" onclick="change_table_data('summary_table_ql')">
+                  <i class="icon-thumbs-up2"></i>
+                  Quality Layanan
+                  <span class="badge bg-info badge-pill ml-auto" id="ql_val">0%</span>
+                </a>
+              </li>
+              --}}
+            {{-- </section> --}}
           </ul>
         </div>
       </div>
@@ -1113,7 +1130,36 @@
 
 
   <!-- Right content -->
-  <div class="tab-content w-100 overflow-auto">
+  <div class="tab-content w-100 overflow-auto" id="parameter_tab_content">
+    @php
+    $i = 0;
+    @endphp
+    @foreach ($data['parameters_tab'] as $record)
+    <div class="tab-pane fade {{ $i == 0 ? 'active' : '' }} show" id="pid_{{ $record->id }}">
+      <!-- Basic columns -->
+      <div class="card">
+        <div class="card-header header-elements-inline">
+          <h5 class="card-title">{{ $record->parameter_desc }} [<span class="date_label"></span>]</h5>
+          <div class="header-elements">
+            <button type="button" class="btn bg-info btn-icon ml-3 legitRipple" data-toggle="modal"
+              data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="chart-container">
+            <div class="chart" id="chart_pid_{{ $record->id }}" style="height: 300px;"></div>
+          </div>
+        </div>
+      </div>
+      <!-- /basic columns -->
+    </div>
+    @php
+    $i++;
+    @endphp
+    @endforeach
+    
+    {{-- 
     <div class="tab-pane fade active show" id="service_level">
       <!-- Basic columns -->
       <div class="card">
@@ -1200,7 +1246,6 @@
         <div class="card-header header-elements-inline">
           <h5 class="card-title">Quality Layanan [<span class="date_label"></span>]</h5>
           <div class="header-elements">
-            {{-- <button type="button" class="btn bg-blue btn-icon legitRipple ml-3"><i class="icon-sync" onclick="refresh_charts()"></i></button> --}}
             <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
               data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
           </div>
@@ -1214,6 +1259,7 @@
       </div>
       <!-- /basic line -->
     </div>
+    --}}
 
     <div class="tab-pane fade" id="target_bobot_management">
       <div class="card">
@@ -1328,7 +1374,12 @@
 <!-- /inner container -->
 
 <div class="card">
-  <div class="table-responsive">
+  <div class="table-responsive" id="parameter_table">
+    @foreach ($data['parameters_tab'] as $record)
+    <table class="table table-xs table-bordered" id="summary_table_{{ $record->id }}">
+    </table>
+    @endforeach
+    {{-- 
     <table class="table table-xs table-bordered" id="summary_table_sl">
     </table>
     <table class="table table-xs table-bordered" id="summary_table_fcr">
@@ -1339,6 +1390,7 @@
     </table>
     <table class="table table-xs table-bordered" id="summary_table_ql">
     </table>
+    --}}
   </div>
 </div>
 

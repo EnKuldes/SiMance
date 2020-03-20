@@ -404,23 +404,40 @@ class HomeController extends Controller
     // Func-func page daily input
     public function cc_147()
     {
+      if ( auth()->user()->layanan != 1 ) {
+        abort(401);
+      }
+      return $this->daily_page();
+    }
+    public function digital_media()
+    {
+      if ( auth()->user()->layanan != 2 ) {
+        abort(401);
+      }
+      return $this->daily_page();
+    }
+    public function c4()
+    {
+      if ( auth()->user()->layanan != 3 ) {
+        abort(401);
+      }
+      return $this->daily_page();
+    }
+    public function myindihome()
+    {
+      if ( auth()->user()->layanan != 4 ) {
+        abort(401);
+      }
+      return $this->daily_page();
+    }
+    # Redirect ke Daily
+    public function daily_page()
+    {
       $data['parameters_tab'] = DB::table('parameters')->select('id', 'parameter_desc')->where([
         ['is_enabled','=','1']
       ])->where('id_layanan', '=', auth()->user()->layanan)->get();
 
       return view('cc-147')->with('data',$data);;
-    }
-    public function digital_media()
-    {
-        return view('digital-media');
-    }
-    public function c4()
-    {
-        return view('c4');
-    }
-    public function myindihome()
-    {
-        return view('myindihome');
     }
 
     # Save Target, Bobot dan Satuan
@@ -505,58 +522,58 @@ class HomeController extends Controller
           break;
         // Digital Media
         case 6:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 14 THEN nilai ELSE 0 END)/SUM(nilai)*100'; // Average beluus
-          $param_compare = '';
+          $qWhere .= 'SUM(nilai)/COUNT(nilai)'; 
+          $param_compare = '<=';
           break;
         case 7:
           $qWhere .= 'SUM(CASE WHEN id_formulasi = 22 THEN nilai ELSE 0 END)/SUM(nilai)*100';
-          $param_compare = '';
+          $param_compare = '>=';
           break;
         case 8:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 27 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 26 THEN nilai ELSE 0 END)*100';
-          $param_compare = '';
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 25 OR id_formulasi = 26 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 27 THEN nilai ELSE 0 END)*100';
+          $param_compare = '>=';
           break;
         case 9:
           $qWhere .= 'SUM(CASE WHEN id_formulasi = 29 THEN nilai ELSE 0 END)/SUM(nilai)*100';
-          $param_compare = '';
+          $param_compare = '>=';
           break;
         case 10:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 32 THEN nilai ELSE 0 END)/SUM(nilai)*100';
-          $param_compare = '';
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 33 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+          $param_compare = '<=';
           break;
         // C4
         case 11:
           $qWhere .= 'SUM(CASE WHEN id_formulasi = 35 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 34 THEN nilai ELSE 0 END)*100';
-          $param_compare = '';
+          $param_compare = '>=';
           break;
         case 12:
-          $qWhere .= 'SUM(nilai)*100';
-          $param_compare = '';
+          $qWhere .= 'AVG(nilai)';
+          $param_compare = '>=';
           break;
         case 13:
           $qWhere .= 'SUM(CASE WHEN id_formulasi = 38 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 37 THEN nilai ELSE 0 END)*100';
-          $param_compare = '';
+          $param_compare = '>=';
           break;
         case 14:
           $qWhere .= 'SUM(CASE WHEN id_formulasi = 40 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 39 THEN nilai ELSE 0 END)*100';
-          $param_compare = '';
+          $param_compare = '>=';
           break;
         // MyIndihome
         case 15:
-          $qWhere .= 'SUM(nilai)*100';
-          $param_compare = '';
+          $qWhere .= 'SUM(nilai)';
+          $param_compare = '>=';
           break;
         case 16:
-          $qWhere .= 'SUM(nilai)*100';
-          $param_compare = '';
+          $qWhere .= 'SUM(nilai)';
+          $param_compare = '>=';
           break;
         case 17:
-          $qWhere .= 'SUM(nilai)*100';
-          $param_compare = '';
+          $qWhere .= 'SUM(nilai)*100'; // ini belum bener itungannya
+          $param_compare = '>=';
           break;
         case 18:
-          $qWhere .= 'SUM(nilai)*100';
-          $param_compare = '';
+          $qWhere .= 'SUM(nilai)*100'; // ini belum bener itungannya
+          $param_compare = '>=';
           break;
 
         default:
@@ -574,7 +591,12 @@ class HomeController extends Controller
         case 5:
           $achievement = (100-$realisasi)/(100-$kpi_model->target)*100;
           break;
-
+        case 6:
+          $achievement = ($kpi_model->target/60)/($realisasi/60)*100;
+          break;
+        case 10:
+          $achievement = (100-$realisasi)/(100-$kpi_model->target)*100;
+          break;
         default:
           # do nothing
           break;
@@ -728,82 +750,82 @@ class HomeController extends Controller
         ]);
         $qWhere = "IFNULL(";
         switch ($request->id_parameter) {
-        // 147
+          // 147
           case 1:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 2 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 1 THEN nilai ELSE 0 END)*100';
-          $param_compare = '>=';
-          break;
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 2 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 1 THEN nilai ELSE 0 END)*100';
+            $param_compare = '>=';
+            break;
           case 2:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 4 THEN nilai ELSE 0 END)/SUM(nilai)*100';
-          $param_compare = '>=';
-          break;
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 4 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+            $param_compare = '>=';
+            break;
           case 3:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 8 OR id_formulasi = 7 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 9 THEN nilai ELSE 0 END)*100';
-          $param_compare = '>=';
-          break;
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 8 OR id_formulasi = 7 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 9 THEN nilai ELSE 0 END)*100';
+            $param_compare = '>=';
+            break;
           case 4:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 11 THEN nilai ELSE 0 END)/SUM(nilai)*100';
-          $param_compare = '>=';
-          break;
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 11 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+            $param_compare = '>=';
+            break;
           case 5:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 15 THEN nilai ELSE 0 END)/SUM(nilai)*100';
-          $param_compare = '<=';
-          break;
-        // Digital Media
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 15 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+            $param_compare = '<=';
+            break;
+          // Digital Media
           case 6:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 14 THEN nilai ELSE 0 END)/SUM(nilai)*100'; // Average beluus
-          $param_compare = '';
-          break;
+            $qWhere .= 'SUM(nilai)/COUNT(nilai)'; // Average beluus
+            $param_compare = '<=';
+            break;
           case 7:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 22 THEN nilai ELSE 0 END)/SUM(nilai)*100';
-          $param_compare = '';
-          break;
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 22 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+            $param_compare = '>=';
+            break;
           case 8:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 27 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 26 THEN nilai ELSE 0 END)*100';
-          $param_compare = '';
-          break;
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 25 OR id_formulasi = 26 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 27 THEN nilai ELSE 0 END)*100';
+            $param_compare = '>=';
+            break;
           case 9:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 29 THEN nilai ELSE 0 END)/SUM(nilai)*100';
-          $param_compare = '';
-          break;
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 29 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+            $param_compare = '>=';
+            break;
           case 10:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 32 THEN nilai ELSE 0 END)/SUM(nilai)*100';
-          $param_compare = '';
-          break;
-        // C4
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 32 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+            $param_compare = '<=';
+            break;
+          // C4
           case 11:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 35 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 34 THEN nilai ELSE 0 END)*100';
-          $param_compare = '';
-          break;
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 35 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 34 THEN nilai ELSE 0 END)*100';
+            $param_compare = '>=';
+            break;
           case 12:
-          $qWhere .= 'SUM(nilai)*100';
-          $param_compare = '';
-          break;
+            $qWhere .= 'AVG(nilai)';
+            $param_compare = '>=';
+            break;
           case 13:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 38 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 37 THEN nilai ELSE 0 END)*100';
-          $param_compare = '';
-          break;
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 38 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 37 THEN nilai ELSE 0 END)*100';
+            $param_compare = '>=';
+            break;
           case 14:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 40 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 39 THEN nilai ELSE 0 END)*100';
-          $param_compare = '';
-          break;
-        // MyIndihome
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 40 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 39 THEN nilai ELSE 0 END)*100';
+            $param_compare = '>=';
+            break;
+          // MyIndihome
           case 15:
-          $qWhere .= 'SUM(nilai)*100';
-          $param_compare = '';
-          break;
+            $qWhere .= 'SUM(nilai)';
+            $param_compare = '>=';
+            break;
           case 16:
-          $qWhere .= 'SUM(nilai)*100';
-          $param_compare = '';
-          break;
+            $qWhere .= 'SUM(nilai)';
+            $param_compare = '>=';
+            break;
           case 17:
-          $qWhere .= 'SUM(nilai)*100';
-          $param_compare = '';
-          break;
+            $qWhere .= 'SUM(nilai)*100'; // ini belum bener itungannya
+            $param_compare = '>=';
+            break;
           case 18:
-          $qWhere .= 'SUM(nilai)*100';
-          $param_compare = '';
-          break;
+            $qWhere .= 'SUM(nilai)*100'; // ini belum bener itungannya
+            $param_compare = '>=';
+            break;
 
           default:
           abort(500, 'Error, Parameter not found');
@@ -950,11 +972,11 @@ class HomeController extends Controller
           $bobot = 0;
         }
         $progress_bar = '<li class="mt-4 mb-4">';
-        if ($key->id == 5) {
+        if ($key->id == 5 OR $key->id == 10) {
           $progress_bar .= '<div class="d-flex align-items-center mb-1">'.$key->parameter_desc.' <span class="text-muted ml-auto">Target NOK < '.$key->target.' | Bobot '.$key->bobot.'</span></div>';
           $progress_bar .= '<div class="progress" style="height: 1.5rem;">';
           $progress_bar_color = ($realisasi < $target ? 'success' : 'danger');
-          $progress_bar_width = round(($realisasi/$target)*100);
+          $progress_bar_width = round($realisasi);
           //$progress_bar_width = 0;
           if ($progress_bar_width == 0) {
             $progress_bar_width1 = 0;
