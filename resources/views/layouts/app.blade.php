@@ -38,6 +38,7 @@
   <script src="{{ asset('assets/js/demo_pages/extra_pnotify.js') }}"></script>
   <script src="{{ asset('assets/js/demo_pages/components_buttons.js') }}"></script>
   <script src="{{ asset('assets/js/plugins/ui/moment/moment.min.js') }}"></script>
+  <script src="{{ asset('assets/js/demo_pages/extension_blockui.js') }}"></script>
   @yield('extra-liblary')
   <!-- /theme JS files -->
 </head>
