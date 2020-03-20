@@ -114,7 +114,7 @@
               <div class="col-md-6">
                 <select class="form-control form-control-select2 bg-transparent" data-placeholder="This Month"
                   data-container-css-class="text-black" data-fouc id="list_month" style="width:100%">
-                  {{-- 
+                  {{--
                   <option></option>
                   <option value="jan">January</option>
                   <option value="feb">February</option>
@@ -165,6 +165,7 @@
     <div class="content-wrapper">
       <!-- Content area -->
       <div class="content">
+        <button type="button" class="btn btn-primary" id="block-page">Block the whole page</button>
         @yield('content')
       </div>
       <!-- /content area -->
