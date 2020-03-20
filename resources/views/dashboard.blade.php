@@ -186,7 +186,7 @@
           });
         }
       }).done(function(){
-        $('.card').unblock(); 
+        $('.card-body').unblock(); 
       });
   }
 
