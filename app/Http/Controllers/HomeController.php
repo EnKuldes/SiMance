@@ -29,9 +29,26 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return $this->dashboard();
+      switch (auth()->user()->layanan) {
+        case 1:
+          return $this->dashboard_147();
+          break;
+        case 2:
+          return $this->dashboard_digital_media();
+          break;
+        case 3:
+          return $this->dashboard_c4();
+          break;
+        case 4:
+          return $this->dashboard_myIh();
+          break;
+        
+        default:
+          abort(404);
+          break;
+      }
     }
-    public function dashboard()
+    public function dashboard_147()
     {
         $service_level = DB::table('log_transaksis')->where([
             ['layanan', '=', '1']
@@ -207,6 +224,184 @@ class HomeController extends Controller
             'input_per_formulasi' => $total_input_per_formulasi,
         ]);
     }
+    public function dashboard_digital_media()
+    {
+        $service_level = DB::table('log_transaksis')->where([
+            ['layanan', '=', '2']
+            , ['parameter', '=', '6']
+        ])
+        ->whereRaw('MONTH(log_date) = MONTH(CURDATE()) AND YEAR(log_date) = YEAR(CURDATE())')
+        ->orderBy('created_at', 'desc')->first();
+
+        $fcr = DB::table('log_transaksis')->where([
+            ['layanan', '=', '2']
+            , ['parameter', '=', '7']
+            //, ['log_date', '=', date('Y-m-d')]
+        ])
+        ->whereRaw('MONTH(log_date) = MONTH(CURDATE()) AND YEAR(log_date) = YEAR(CURDATE())')
+        ->orderBy('created_at', 'desc')->first();
+
+        $rasio_sales = DB::table('log_transaksis')->where([
+            ['layanan', '=', '2']
+            , ['parameter', '=', '8']
+        ])
+        ->whereRaw('MONTH(log_date) = MONTH(CURDATE()) AND YEAR(log_date) = YEAR(CURDATE())')
+        ->orderBy('created_at', 'desc')->first();
+
+        $ces = DB::table('log_transaksis')->where([
+            ['layanan', '=', '2']
+            , ['parameter', '=', '9']
+        ])
+        ->whereRaw('MONTH(log_date) = MONTH(CURDATE()) AND YEAR(log_date) = YEAR(CURDATE())')
+        ->orderBy('created_at', 'desc')->first();
+
+        $quality_layanan = DB::table('log_transaksis')->where([
+            ['layanan', '=', '2']
+            , ['parameter', '=', '10']
+        ])
+        ->whereRaw('MONTH(log_date) = MONTH(CURDATE()) AND YEAR(log_date) = YEAR(CURDATE())')
+        ->orderBy('created_at', 'desc')->first();
+
+        // Bobot dan Target Resources
+        $kpi = DB::table('kpi')->where([
+          ['id_layanan', '=', 2]
+          , ['active', '=', 'current']
+        ]);
+        $parameter = DB::table('parameters')
+        ->leftJoinSub($kpi, 'kpi', function ($join) {
+            $join->on('kpi.id_parameter', '=', 'parameters.id');
+        })
+        ->selectRaw('
+          parameters.`id`
+          , parameters.`parameter_desc`
+          , IFNULL(CONCAT(ROUND(kpi.`target`), kpi.`satuan`), "Undefined") AS target
+          , IFNULL(CONCAT(kpi.`bobot`, "%"), "Undefined") AS bobot
+          ')
+        ->where([
+          ['parameters.is_enabled', '=', '1']
+          , ['parameters.id_layanan', '=', 2]
+        ])
+        ->orderBy('parameters.id')->get();
+
+        // Total Input Daily per Formulasi berdasarkan Parameter
+        $total_input = DB::table('daily_transaksis')->selectRaw('
+          id_formulasi
+          , SUM(nilai) AS total
+          ')->whereRaw('MONTH(tanggal) = MONTH(CURDATE()) AND YEAR(tanggal) = YEAR(CURDATE()) AND id_layanan = 2')
+        ->groupBy('id_formulasi');
+        $total_input_per_formulasi = DB::table('formulasis')
+        ->selectRaw('
+          formulasis.id_parameter,
+          formulasis.id,
+          formulasis.formulasi_desc,
+          res.total
+          ')
+        ->leftJoinSub($total_input, 'res', function ($join) {
+              $join->on('res.id_formulasi', '=', 'formulasis.id');
+          })
+        ->whereRaw("
+          formulasis.is_enabled = '1' AND formulasis.id_parameter IN (SELECT id FROM parameters WHERE id_layanan = 2 AND is_enabled = '1')
+          ")
+        ->get();
+
+
+
+        $t_bobot = optional($service_level)->persetasi_bobot+optional($fcr)->persetasi_bobot+optional($rasio_sales)->persetasi_bobot+optional($ces)->persetasi_bobot+optional($quality_layanan)->persetasi_bobot;
+
+        $percent = 100;
+        $ttl_service_level_target_bobot = optional($service_level)->target + optional($service_level)->bobot;
+        if($ttl_service_level_target_bobot != 0 && $ttl_service_level_target_bobot > 0){
+            //$target_service_level = (optional($service_level)->target/$ttl_service_level_target_bobot)*$percent;
+            $target_service_level = (optional($service_level)->realisasi);
+            $bobot_service_level = $percent-$target_service_level;
+            $width_progressbar_sl = round(($target_service_level/$service_level->target)*$percent);
+        }else{
+            $target_service_level= 0;
+            $bobot_service_level= 0;
+            $width_progressbar_sl = 0;
+        }
+
+        $ttl_fcr_target_bobot = optional($fcr)->target + optional($fcr)->bobot;
+        if($ttl_fcr_target_bobot != 0 && $ttl_fcr_target_bobot > 0){
+            //$target_fcr = (optional($fcr)->target*$percent)/$ttl_fcr_target_bobot;
+            $target_fcr = (optional($fcr)->realisasi);
+            $bobot_fcr = $percent-$target_fcr;
+            $width_progressbar_fcr = round(($target_fcr/$fcr->target)*$percent);
+        }else{
+            $target_fcr= 0;
+            $bobot_fcr= 0;
+            $width_progressbar_fcr = 0;
+        }
+
+        $ttl_rasio_sales_target_bobot = optional($rasio_sales)->target + optional($rasio_sales)->bobot;
+        if($ttl_rasio_sales_target_bobot != 0 && $ttl_rasio_sales_target_bobot > 0){
+            //$target_rasio_sales = (optional($rasio_sales)->target*$percent)/$ttl_rasio_sales_target_bobot;
+            $target_rasio_sales = (optional($rasio_sales)->realisasi);
+            $bobot_rasio_sales = $percent-$target_rasio_sales;
+            $width_progressbar_rs = round(($target_rasio_sales/$rasio_sales->target)*$percent);
+        }else{
+            $target_rasio_sales= 0;
+            $bobot_rasio_sales= 0;
+            $width_progressbar_rs = 0;
+        }
+
+        $ttl_ces_target_bobot = optional($ces)->target + optional($ces)->bobot;
+        if($ttl_ces_target_bobot != 0 && $ttl_ces_target_bobot > 0){
+            //$target_ces = (optional($ces)->target*$percent)/$ttl_ces_target_bobot;
+            $target_ces = (optional($ces)->realisasi);
+            $bobot_ces = $percent-$target_ces;
+            $width_progressbar_ces = round(($target_ces/$ces->target)*$percent);
+        }else{
+            $target_ces= 0;
+            $bobot_ces= 0;
+            $width_progressbar_ces = 0;
+        }
+
+        $ttl_quality_layanan_target_bobot = optional($quality_layanan)->target + optional($quality_layanan)->bobot;
+        if($ttl_quality_layanan_target_bobot != 0 && $ttl_quality_layanan_target_bobot > 0){
+            //$target_quality_layanan = (optional($quality_layanan)->target*$percent)/$ttl_quality_layanan_target_bobot;
+            $target_quality_layanan = (optional($quality_layanan)->realisasi);
+            $bobot_quality_layanan = $percent-$target_quality_layanan;
+            $width_progressbar_ql = round(($target_quality_layanan/$quality_layanan->target)*$percent);
+            $revert_target = 100 - $quality_layanan->target;
+        }else{
+            $target_quality_layanan= 0;
+            $bobot_quality_layanan= 0;
+            $width_progressbar_ql = 0;
+            $revert_target = 0;
+        }
+
+        return view('dashboard',[
+            'service_level' => $service_level,
+            'fcr' => $fcr,
+            'rasio_sales' => $rasio_sales,
+            'ces' => $ces,
+            'quality_layanan' => $quality_layanan,
+            't_bobot' => $t_bobot,
+
+            'target_service_level' => $target_service_level,
+            'width_progressbar_sl' => $width_progressbar_sl,
+            'width_progressbar_fcr' => $width_progressbar_fcr,
+            'width_progressbar_rs' => $width_progressbar_rs,
+            'width_progressbar_ces' => $width_progressbar_ces,
+            'width_progressbar_ql' => $width_progressbar_ql,
+            'bobot_service_level' => $bobot_service_level,
+            'revert_target' => $revert_target,
+            'target_fcr' => $target_fcr,
+            'bobot_fcr' => $bobot_fcr,
+            'target_rasio_sales' => $target_rasio_sales,
+            'bobot_rasio_sales' => $bobot_rasio_sales,
+            'target_ces' => $target_ces,
+            'bobot_ces' => $bobot_ces,
+            'target_quality_layanan' => $target_quality_layanan,
+            'bobot_quality_layanan' => $bobot_quality_layanan,
+
+            'kpiObject' => $parameter,
+            'input_per_formulasi' => $total_input_per_formulasi,
+        ]);
+    }
+
+    // Func-func page daily input
     public function cc_147()
     {
       $data['parameters_tab'] = DB::table('parameters')->select('id', 'parameter_desc')->where([
@@ -638,7 +833,9 @@ class HomeController extends Controller
         , ['is_enabled', '=', '1']
       ])->get();
       $total_perfomance = [];
-      $qWhere = ['MONTH(log_transaksis.log_date) = MONTH(CURRENT_DATE() - INTERVAL 1 MONTH) AND YEAR(log_transaksis.log_date) = YEAR(CURRENT_DATE() - INTERVAL 1 MONTH)', 'MONTH(log_transaksis.log_date) = MONTH(CURRENT_DATE()) AND YEAR(log_transaksis.log_date) = YEAR(CURRENT_DATE())'];
+      $req_date = date("Y-m-d" ,strtotime($request->year."-".$request->month."-1"));
+      //$qWhere = ['MONTH(log_transaksis.log_date) = MONTH(CURRENT_DATE() - INTERVAL 1 MONTH) AND YEAR(log_transaksis.log_date) = YEAR(CURRENT_DATE() - INTERVAL 1 MONTH)', 'MONTH(log_transaksis.log_date) = MONTH(CURRENT_DATE()) AND YEAR(log_transaksis.log_date) = YEAR(CURRENT_DATE())'];
+      $qWhere = ['MONTH(log_transaksis.log_date) = MONTH("'.$req_date.'" - INTERVAL 1 MONTH) AND YEAR(log_transaksis.log_date) = YEAR("'.$req_date.'" - INTERVAL 1 MONTH)', 'MONTH(log_transaksis.log_date) = MONTH("'.$req_date.'") AND YEAR(log_transaksis.log_date) = YEAR("'.$req_date.'")'];
       $name_desc = ['Last Month', 'This Month'];
       for ($i=0; $i < count($qWhere) ; $i++) {
         $tempArr = [];
@@ -659,6 +856,8 @@ class HomeController extends Controller
 
       return response()->json($total_perfomance);
     }
+
+    # Get Realiasi Monthly
     public function get_realisasi_monthly(Request $request)
     {
       $list_parameter = DB::table('parameters')->where([
@@ -689,6 +888,191 @@ class HomeController extends Controller
       }
 
       return response()->json($list_realisasi);
+    }
+
+    # Get KPI Information dan Progress Monthly
+    public function get_kpi_information_progress(Request $request)
+    {
+      // Buat Variable yang nampung kpi bobot dan target per paramater
+      $kpi = DB::table('kpi')->where([
+        //['id_layanan', '=', 1]
+        ['id_layanan', '=', auth()->user()->layanan]
+        , ['active', '=', 'current']
+      ]);
+      $parameter = DB::table('parameters')
+      ->leftJoinSub($kpi, 'kpi', function ($join) {
+        $join->on('kpi.id_parameter', '=', 'parameters.id');
+      })
+      ->selectRaw('
+        parameters.`id`
+        , parameters.`parameter_desc`
+        , IFNULL(CONCAT(ROUND(kpi.`target`), kpi.`satuan`), "Undefined") AS target
+        , IFNULL(CONCAT(kpi.`bobot`, "%"), "Undefined") AS bobot
+        , IFNULL(ROUND(kpi.`target`), 0) AS target_number
+        , IFNULL(ROUND(kpi.`bobot`), 0) AS bobot_number
+        ')
+      ->where([
+        ['parameters.is_enabled', '=', '1']
+        //, ['parameters.id_layanan', '=', 1]
+        , ['parameters.id_layanan', '=', auth()->user()->layanan]
+      ])
+      ->orderBy('parameters.id')->get();
+
+      // Variable Temp buat nampiungs
+      $tempArr = [];
+
+      foreach ($parameter as $key) {
+        $lt = DB::table('log_transaksis')->where([
+            ['layanan', '=', auth()->user()->layanan]
+            , ['parameter', '=', $key->id]
+        ])
+        //->whereRaw('MONTH(log_date) = MONTH(CURDATE()) AND YEAR(log_date) = YEAR(CURDATE())')
+        ->whereRaw('MONTH(log_date) = '.$request->month.' AND YEAR(log_date) = '.$request->year.'')
+        ->orderBy('created_at', 'desc')->first();
+        if ($lt) {
+          $realisasi = optional($lt)->realisasi;
+          $achievement = optional($lt)->achievement;
+          $persetasi_bobot = optional($lt)->persetasi_bobot;
+          $perfomance = optional($lt)->perfomance;
+        }
+        else{
+          $realisasi = 0;
+          $achievement = 0;
+          $persetasi_bobot = 0;
+          $perfomance = 0;
+        }
+        if ($key) {
+          $target = optional($key)->target_number;
+          $bobot = optional($key)->bobot_number;
+        }
+        else{
+          $target = 0;
+          $bobot = 0;
+        }
+        $progress_bar = '<li class="mt-4 mb-4">';
+        if ($key->id == 5) {
+          $progress_bar .= '<div class="d-flex align-items-center mb-1">'.$key->parameter_desc.' <span class="text-muted ml-auto">Target NOK < '.$key->target.' | Bobot '.$key->bobot.'</span></div>';
+          $progress_bar .= '<div class="progress" style="height: 1.5rem;">';
+          $progress_bar_color = ($realisasi < $target ? 'success' : 'danger');
+          $progress_bar_width = round(($realisasi/$target)*100);
+          //$progress_bar_width = 0;
+          if ($progress_bar_width == 0) {
+            $progress_bar_width1 = 0;
+          }
+          else{
+            $progress_bar_width1 = 100 - $progress_bar_width;
+          }
+          $progress_bar .= '<div class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width: '.$progress_bar_width1.'%">';
+          $progress_bar .= '<span>'.$progress_bar_width1.'% OK</span></div>';
+          $progress_bar .= '<div class="progress-bar progress-bar-striped progress-bar-animated bg-'.$progress_bar_color.'" style="width: '.$progress_bar_width.'%">';
+          $progress_bar .= '<span>'.round($realisasi).'% NOK</span></div></div></li>';
+        }
+        else{
+          $progress_bar .= '<div class="d-flex align-items-center mb-1">'.$key->parameter_desc.' <span class="text-muted ml-auto">Target '.$key->target.' | Bobot '.$key->bobot.'</span></div>';
+          $progress_bar .= '<div class="progress" style="height: 1.5rem;">';
+          $progress_bar_color = ($realisasi > $target ? 'success' : 'danger');
+          $progress_bar_width = round(($realisasi/$target)*100);
+          //$progress_bar_width = 0;
+          $progress_bar .= '<div class="progress-bar progress-bar-striped progress-bar-animated bg-'.$progress_bar_color.'" style="width: '.$progress_bar_width.'%">';
+          $progress_bar .= '<span>'.round($realisasi).'% Complete</span></div></div></li>';
+        }
+
+        $tempArr[] = [
+          "parameter_id" => $key->id
+          , "parameter_desc" => $key->parameter_desc
+          , "target" => optional($key)->target
+          , "bobot" => optional($key)->bobot
+          , "realisasi" => $realisasi
+          //, "achievement" => $achievement
+          //, "persetasi_bobot" => $persetasi_bobot
+          //, "perfomance" => $perfomance
+          , "progress_bar_element" => $progress_bar
+        ];
+      }
+
+      return response()->json( $tempArr);
+    }
+
+    public function get_summary_layanan(Request $request)
+    {
+      // Fetch Parameter berdasarkan Layanan
+      $list_parameter = DB::table('parameters')->where([
+        ['id_layanan', '=', auth()->user()->layanan]
+        , ['is_enabled', '=', '1']
+      ])->get();
+      $tempArr = [];
+      foreach ($list_parameter as $parameter) {
+        // Fetch Nilai Summary Bulanan dari Log Transaksi
+        $summary_per_parameter = DB::table('log_transaksis')->where([
+          ['layanan', '=', auth()->user()->layanan]
+          , ['parameter', '=', $parameter->id]
+        ])
+        //->whereRaw('MONTH(log_date) = MONTH(CURDATE()) AND YEAR(log_date) = YEAR(CURDATE())')
+        ->whereRaw('MONTH(log_date) = '.$request->month.' AND YEAR(log_date) = '.$request->year.'')
+        ->orderBy('created_at', 'desc')->first();
+        if ($summary_per_parameter) {
+          $realisasi = optional($summary_per_parameter)->realisasi;
+          $achievement = optional($summary_per_parameter)->achievement;
+          $persetasi_bobot = optional($summary_per_parameter)->persetasi_bobot;
+          $perfomance = optional($summary_per_parameter)->perfomance;
+        }
+        else{
+          $realisasi = 0;
+          $achievement = 0;
+          $persetasi_bobot = 0;
+          $perfomance = 0;
+        }
+
+        $tempArr[] = [
+          "paramater_id" => $parameter->id
+          , "parameter_desc" => $parameter->parameter_desc
+          , "realisasi" => $realisasi
+          , "achievement" => $achievement
+          , "persetasi_bobot" => $persetasi_bobot
+          , "perfomance" => $perfomance
+        ];
+      }
+
+      // Looping per tempArr untuk dapat hasil counting formulasi per parameter
+      for ($i=0; $i < count($tempArr) ; $i++) { 
+        // Total Input Daily per Formulasi berdasarkan Parameter
+        $total_input = DB::table('daily_transaksis')->selectRaw('
+          id_formulasi
+          , SUM(nilai) AS total
+          ')
+        //->whereRaw('MONTH(tanggal) = MONTH(CURDATE()) AND YEAR(tanggal) = YEAR(CURDATE()) AND id_layanan = 1')
+        ->whereRaw('MONTH(tanggal) = '.$request->month.' AND YEAR(tanggal) = '.$request->year.' AND id_layanan = '.auth()->user()->layanan)
+        ->groupBy('id_formulasi');
+        $total_input_per_formulasi = DB::table('formulasis')
+        ->selectRaw('
+          formulasis.id_parameter,
+          formulasis.id,
+          formulasis.formulasi_desc,
+          res.total
+          ')
+        ->leftJoinSub($total_input, 'res', function ($join) {
+          $join->on('res.id_formulasi', '=', 'formulasis.id');
+        })
+        /*->whereRaw("
+          formulasis.is_enabled = '1' AND formulasis.id_parameter IN (SELECT id FROM parameters WHERE id_layanan = 1 AND is_enabled = '1')
+          ")*/
+        ->whereRaw("
+          formulasis.is_enabled = '1' AND formulasis.id_parameter = ".$tempArr[$i]['paramater_id']."
+          ")
+        ->get();
+        $tempArr1 = [];
+        foreach ($total_input_per_formulasi as $total_per_formulasi) {
+          $tempArr1[] = [
+            "formulasi_id" => $total_per_formulasi->id
+            , "formulasi_desc" => $total_per_formulasi->formulasi_desc
+            , "formulasi_total" => $total_per_formulasi->total
+          ];
+        }
+        $tempArr[$i]['realisasi_per_formulasi'] = $tempArr1;
+      }
+
+
+      return response()->json($tempArr);
     }
 
     # Chaining

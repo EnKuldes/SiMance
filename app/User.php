@@ -38,7 +38,7 @@ class User extends Authenticatable
     ];
 
     # ID Layanan belongsTo tabel Layanans
-    public function layanan()
+    public function layanans()
     {
         return $this->belongsTo('App\layanan', 'layanan');
     }

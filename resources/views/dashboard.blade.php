@@ -36,10 +36,162 @@
     }
     return retArr;
   }
-    $(document).ready(function() {
-      chain3();
-      get_perfomance_comparison();
+  function titleCase(string) {
+    var sentence = string.toLowerCase().split(" ");
+    for(var i = 0; i< sentence.length; i++){
+      sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1);
+    }
+    document.write(sentence.join(" "));
+    return sentence;
+   }
+
+
+  // Func
+  function get_kpi_information_progress(year_value, month_value) {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
     });
+    $.ajax({
+     type:"post",
+     url:'/get-kpi-information-progress',
+         data: {year: year_value, month: month_value},
+         success: function(data){
+          var progress_bar = '';
+          for (var i = 0; i < data.length; i++) {
+            /*progress_bar += '<li class="mt-4 mb-4">';
+            progress_bar += '<div class="d-flex align-items-center mb-1">'+ data[i]['parameter_desc'] +' <span class="text-muted ml-auto">Target '+ data[i]['target'] +' | Bobot '+ data[i]['bobot'] +'</span></div>';
+            progress_bar += '<div class="progress" style="height: 1.5rem;">';
+            if (data[i]['parameter_id'] == 5) {
+              progress_bar_color = (data[i]['realisasi'] < data[i]['target'] ? 'success' : 'danger');
+              progress_bar_width = (data[i]['realisasi']/data[i]['target'])*100;
+              //progress_bar_width = 0;
+              progress_bar_width1 = 100 - progress_bar_width;
+              progress_bar += '<div class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width: '+ progress_bar_width1 +'%">';
+              progress_bar += '<span>'+ progress_bar_width1 +'% OK</span></div>';
+              progress_bar += '<div class="progress-bar progress-bar-striped progress-bar-animated bg-'+ progress_bar_color +'" style="width: '+ progress_bar_width +'%">';
+              progress_bar += '<span>'+ Math.round(data[i]['realisasi']) +'% NOK</span></div></div></li>';
+            }
+            else{
+              progress_bar_color = (data[i]['realisasi'] > data[i]['target'] ? 'success' : 'danger');
+              progress_bar_width = (data[i]['realisasi']/data[i]['target'])*100;
+              //progress_bar_width = 0;
+              progress_bar += '<div class="progress-bar progress-bar-striped progress-bar-animated bg-'+ progress_bar_color +'" style="width: '+ progress_bar_width +'%">';
+              progress_bar += '<span>'+ Math.round(data[i]['realisasi']) +'% Complete</span></div></div></li>';
+            }*/
+            progress_bar += data[i]['progress_bar_element']
+          }
+          //console.log(progress_bar)
+          $('#kpi_layanan').html(progress_bar)
+        },
+        error: function(jqXhr, json, errorThrown){// this are default for ajax errors
+          var errors = jqXhr.responseJSON;
+          var errorsHtml = '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Error ' + jqXhr.status + ': ' + errorThrown + '</div>';
+          notificationScript("error", "Error " + jqXhr.status, errorThrown);
+          $.each(errors['errors'], function (index, value) {
+            errorsHtml += '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + value + '</div>';
+            notificationScript("error", "Error Field", value);
+          });
+        }
+      }).done(function(){
+
+      });
+  }
+
+  function get_summary_layanan(year_value, month_value) {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    $.ajax({
+     type:"post",
+     url:'/get-summary-layanan',
+         data: {year: year_value, month: month_value},
+         success: function(data){
+          console.log(data[0])
+          var content = '';
+          var t_bobot_val = 0;
+          for (var i = 0; i < data.length; i++) {
+            content += '<tr><td><div class="d-flex align-items-center"><div>';
+            content += '<a href="#" class="text-default font-weight-semibold letter-icon-title">'+ data[i]['parameter_desc'] +'</a>';
+            if (data[i]['paramater_id'] == 3) {
+              content += '<div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Total Transaksi';
+              content += '<div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> '+data[i]['realisasi_per_formulasi'][2]['formulasi_desc'];
+            }
+            else{
+              for (var j = 0; j < data[i]['realisasi_per_formulasi'].length; j++) {
+                content += '<div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> '+data[i]['realisasi_per_formulasi'][j]['formulasi_desc'];
+              }
+            }
+            content += '</div></div></div></td>';
+            content += '<td>';
+            if (data[i]['paramater_id'] == 3) {
+              content += '<p class="font-weight-bold font-size-sm text-center mb-0 mt-3 '
+              content += 'text-success">'+new Intl.NumberFormat().format(data[i]['realisasi_per_formulasi'][0]['formulasi_total']+data[i]['realisasi_per_formulasi'][1]['formulasi_total'])+'</p>';
+              content += '<p class="font-weight-bold font-size-sm text-center mb-0 text-success">'+new Intl.NumberFormat().format(data[i]['realisasi_per_formulasi'][2]['formulasi_total'])+'</p>';
+            }
+            else{
+              for (var j = 0; j < data[i]['realisasi_per_formulasi'].length; j++) {
+                content += '<p class="font-weight-bold font-size-sm text-center mb-0'
+                content += (j == 0) ? ' mt-3 ' : ' ';
+                content += 'text-success">'+new Intl.NumberFormat().format(data[i]['realisasi_per_formulasi'][j]['formulasi_total'])+'</p>';
+              }
+            }
+            content += '</td>';
+            content += '<td>';
+            content += '<p class="font-weight-bold font-size-lg text-center text-success mb-0">'+data[i]['realisasi']+'%</p>';
+            content += '</td>';
+            content += '<td>';
+            content += '<p class="font-weight-bold font-size-lg text-center text-orange mb-0">'+data[i]['achievement']+'%</p>';
+            content += '</td>';
+            content += '<td>';
+            content += '<p class="font-weight-bold font-size-lg text-center text-info mb-0">'+data[i]['perfomance']+'%</p>';
+            content += '</td>';
+            content += '<td>';
+            content += '<p class="font-weight-bold font-size-lg text-center text-purple mb-0">'+data[i]['persetasi_bobot']+'%</p>';
+            content += '</td>';
+            content += '</tr>';
+
+            t_bobot_val += data[i]['persetasi_bobot'];
+          }
+          $('#summary_layanan tbody').html(content)
+          $('#t_bobot').html(t_bobot_val)
+        },
+        error: function(jqXhr, json, errorThrown){// this are default for ajax errors
+          var errors = jqXhr.responseJSON;
+          var errorsHtml = '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Error ' + jqXhr.status + ': ' + errorThrown + '</div>';
+          notificationScript("error", "Error " + jqXhr.status, errorThrown);
+          $.each(errors['errors'], function (index, value) {
+            errorsHtml += '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + value + '</div>';
+            notificationScript("error", "Error Field", value);
+          });
+        }
+      }).done(function(){
+
+      });
+  }
+
+  // On change events
+  $("#list_month").change(function() {
+    var id = $(this).val();
+    tempMonth = id;
+    if (id != "" && id != null)
+    {
+      setTimeout(re_init(), 5000);
+    }
+  });
+
+  // Func re inisiasi tampulan
+  function re_init() {
+    get_perfomance_comparison( $("#list_year").val(), $("#list_month").val() );
+    get_kpi_information_progress( $("#list_year").val(), $("#list_month").val() );
+    get_summary_layanan( $("#list_year").val(), $("#list_month").val() );
+  }
+  $(document).ready(function() {
+    chain3();
+  });
 </script>
 <script type="text/javascript">
   // Define elements
@@ -178,7 +330,7 @@
   }
 
 
-  function get_perfomance_comparison() {
+  function get_perfomance_comparison(year_value, month_value) {
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -187,7 +339,7 @@
     $.ajax({
      type:"post",
      url:'/get-perfomance-comparison',
-         //data: {year: year_value, month: month_value, id_parameter: parameter_value},
+     data: {year: year_value, month: month_value},
          success: function(data){
           var list_xAxis = trans_val(data, 'desc');
           columns_basic1_option.xAxis[0].data = list_xAxis
@@ -242,6 +394,8 @@
   $('.nav-link[data-toggle="tab"]').on("shown.bs.tab", function(e) {
     triggerChartResize();
   });
+
+  // Document Ready
 </script>
 @endsection
 
@@ -251,9 +405,9 @@
     <!-- Daily sales -->
     <div class="card">
       <div class="card-header header-elements-inline">
-        <h5 class="card-title font-weight-bold">CC 147</h5>
+        <h5 class="card-title font-weight-bold">{{-- CC 147 --}}{{ Auth::user()->layanans->layanan_desc }}</h5>
         <div class="header-elements">
-          <span class="font-weight-bold font-size-lg text-info-600 ml-2">TOTAL BOBOT | {{ round($t_bobot ?? 0) }}%</span>
+          <span class="font-weight-bold font-size-lg text-info-600 ml-2">TOTAL BOBOT | <span id="t_bobot">{{ round($t_bobot ?? 0) }}</span>%</span>
         </div>
       </div>
 
@@ -261,7 +415,7 @@
         <div class="row">
           <div class="col-md-4">
             <legend class="font-weight-bold font-size-lg"><i class="icon-law mr-2"></i> Target & Bobot</legend>
-            <ul class="list-unstyled mb-0">
+            <ul class="list-unstyled mb-0" id="kpi_layanan">
               <li class="mt-4 mb-4">
                 <div class="d-flex align-items-center mb-1">Service Level <span class="text-muted ml-auto">Target
                     {{ $kpiObject[0]->target  ?? 0}} | Bobot {{ $kpiObject[0]->bobot  ?? 0}}</span>
@@ -321,7 +475,7 @@
           </div>
           <div class="col-md-8">
             <div class="table-responsive">
-              <table class="table text-nowrap">
+              <table class="table text-nowrap" id="summary_layanan">
                 <thead>
                   <tr>
                     <td  class="font-weight-bold w-100">Parameter</td>
@@ -339,7 +493,7 @@
                         <div>
                           <a href="#" class="text-default font-weight-semibold letter-icon-title">Service Level</a>
                           <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> COF
-                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Call
+                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Call W/ 20 Sec
                           </div>
                         </div>
                       </div>
@@ -411,7 +565,7 @@
                     <td>
                       <div class="d-flex align-items-center">
                         <div>
-                          <a href="#" class="text-default font-weight-semibold letter-icon-title">Rasio Sales</a>
+                          <a href="#" class="text-default font-weight-semibold letter-icon-title">RASIO SALES</a>
                           <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Total Transaksi
                           <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> CWC REGIS
                           </div>
@@ -485,8 +639,8 @@
                       <div class="d-flex align-items-center">
                         <div>
                           <a href="#" class="text-default font-weight-semibold letter-icon-title">Quality Layanan</a>
-                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Agent OK
-                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Agent NOK
+                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Jumlah Agent OK
+                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Jumlah Agent NOK
                           </div>
                         </div>
                       </div>
@@ -533,7 +687,7 @@
         <h5 class="card-title">Performance Comparation</h5>
         <div class="header-elements">
           <div class="list-icons">
-            <a class="list-icons-item" data-action="reload"></a>
+            {{-- <a class="list-icons-item" data-action="reload"></a> --}}
 
           </div>
         </div>

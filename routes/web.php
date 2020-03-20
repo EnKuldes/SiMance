@@ -52,7 +52,7 @@ Auth::routes([
 ]);
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/dashboard', 'HomeController@dashboard')->name('dashboard');
+Route::get('/dashboard', 'HomeController@index')->name('dashboard');
 Route::get('/cc-147', 'HomeController@cc_147')->name('cc-147');
 Route::get('/digital-media', 'HomeController@digital_media')->name('digital-media');
 Route::get('/c4', 'HomeController@c4')->name('c4');
@@ -67,3 +67,5 @@ Route::post('/get-current-kpi', 'HomeController@get_kpi')->name('get_information
 Route::post('/get-monthly-data', 'HomeController@get_monthly_data')->name('get_information');
 Route::post('/get-perfomance-comparison', 'HomeController@get_perfomance_comparation')->name('get_information');
 Route::post('/get-realisasi-monthly', 'HomeController@get_realisasi_monthly')->name('get_information');
+Route::post('/get-kpi-information-progress', 'HomeController@get_kpi_information_progress')->name('get_information');
+Route::post('/get-summary-layanan', 'HomeController@get_summary_layanan')->name('get_information');
