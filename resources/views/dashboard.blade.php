@@ -20,6 +20,26 @@
 
 @section('script')
 <script type="text/javascript">
+  //Inisiasi BlockUI
+  var blockUIOption = { 
+    message: '<i class="icon-spinner4 spinner"></i>',
+      //timeout: 2000, //unblock after 2 seconds
+      overlayCSS: {
+          backgroundColor: '#0c0e0f',
+          opacity: 0.8,
+          zIndex: 1200,
+          cursor: 'wait'
+      },
+      css: {
+          border: 0,
+          color: '#fff',
+          padding: 0,
+          zIndex: 1201,
+          backgroundColor: 'transparent'
+      }
+  }; 
+  $.blockUI(blockUIOption);
+
   function trans_val(data, key) {
     var resArr = [];
     data.filter(function(item){
@@ -110,7 +130,7 @@
      url:'/get-summary-layanan',
          data: {year: year_value, month: month_value},
          success: function(data){
-          console.log(data[0])
+          //console.log(data[0])
           var content = '';
           var t_bobot_val = 0;
           for (var i = 0; i < data.length; i++) {
@@ -169,7 +189,7 @@
           });
         }
       }).done(function(){
-
+        $.unblockUI();
       });
   }
 
@@ -185,12 +205,14 @@
 
   // Func re inisiasi tampulan
   function re_init() {
+    $.blockUI(blockUIOption);
     get_perfomance_comparison( $("#list_year").val(), $("#list_month").val() );
     get_kpi_information_progress( $("#list_year").val(), $("#list_month").val() );
     get_summary_layanan( $("#list_year").val(), $("#list_month").val() );
   }
   $(document).ready(function() {
     chain3();
+    $.unblockUI();
   });
 </script>
 <script type="text/javascript">
@@ -394,8 +416,6 @@
   $('.nav-link[data-toggle="tab"]').on("shown.bs.tab", function(e) {
     triggerChartResize();
   });
-
-  // Document Ready
 </script>
 @endsection
 
@@ -687,7 +707,7 @@
         <h5 class="card-title">Performance Comparation</h5>
         <div class="header-elements">
           <div class="list-icons">
-            {{-- <a class="list-icons-item" data-action="reload"></a> --}}
+            <a class="list-icons-item" data-action="reload"></a>
 
           </div>
         </div>

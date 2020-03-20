@@ -31,22 +31,26 @@ class HomeController extends Controller
     {
       switch (auth()->user()->layanan) {
         case 1:
-          return $this->dashboard_147();
+          return $this->dashboard();
           break;
         case 2:
-          return $this->dashboard_digital_media();
+          return $this->dashboard();
           break;
         case 3:
-          return $this->dashboard_c4();
+          return $this->dashboard();
           break;
         case 4:
-          return $this->dashboard_myIh();
+          return $this->dashboard();
           break;
         
         default:
           abort(404);
           break;
       }
+    }
+    public function dashboard($value='')
+    {
+       return view('dashboard');
     }
     public function dashboard_147()
     {
