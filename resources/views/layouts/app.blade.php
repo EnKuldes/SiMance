@@ -166,18 +166,6 @@
     <div class="content-wrapper">
       <!-- Content area -->
       <div class="content">
-
-        <div class="col-md-4">
-          <div class="card card-body border-top-primary text-center">
-            <h6 class="mb-0 font-weight-semibold">Content component blocking</h6>
-            <p class="mb-3 text-muted">Block content components using default options</p>
-
-            <div>
-              <button type="button" class="btn btn-primary" id="block-card">Block this card</button>
-            </div>
-          </div>
-        </div>
-
         @yield('content')
       </div>
       <!-- /content area -->
@@ -210,6 +198,8 @@
   <!-- /page content -->
   @yield('script')
   <script type="text/javascript">
+    // Variable penampuung Year
+    var tempYear;
     function notificationScript(type, title, text) {
       new PNotify({
           title: title,
