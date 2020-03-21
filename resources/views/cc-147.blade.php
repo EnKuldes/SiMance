@@ -750,14 +750,15 @@
     //console.log( uniqueValueDesc )
     return uniqueValueDesc;
   }
-  function list_data_series(data, value_parameter, value_desc, type_chart) {
+  function list_data_series(data, value_parameter, value_desc, type_chart, id_parameter) {
     var tempArr = [];
     window["data_"+value_parameter] =[];
     for (var j = 0; j < value_desc.length; j++) {
       window["data_"+value_parameter+value_desc[j]] =[];
       for (var i = 0; i < data.length; i++) {
         if (data[i]['parameter_desc'] == value_parameter && data[i]['value_desc'] == value_desc[j] ) {
-          window["data_"+value_parameter+value_desc[j]].push( Math.round(data[i]['value_item']) )
+          if (id_parameter == 6) { window["data_"+value_parameter+value_desc[j]].push( (data[i]['value_item']) ) }
+          else{ window["data_"+value_parameter+value_desc[j]].push( Math.round(data[i]['value_item']) ) }
         }
       }
       /*for (var h = 0; h < data.length; h++) {
@@ -870,11 +871,11 @@
           var tempVal =  list_parameter;
           var tempList = list_legend(data, tempVal);
           chart_option.legend.data = tempList;
-          chart_option.series = list_data_series(data, tempVal, tempList, chart_type);
+          chart_option.series = list_data_series(data, tempVal, tempList, chart_type, parameter_value);
           chart_element.setOption(chart_option, true);
 
           // Init Populate Tabe Data
-          $('#'+table_element).html(populate_table(data, list_day, tempVal, tempList))
+          $('#'+table_element).html(populate_table(data, list_day, tempVal, tempList, parameter_value))
 
           /*columns_basic_options.xAxis[0].data = list_day;
           line_basic_options.xAxis[0].data = list_day;
@@ -979,7 +980,7 @@
   }
 
   // Populate Tabel Summary Data
-  function populate_table(data, list_day, parameter_value, list_value) { // data, list_day, parameter, list formulasi
+  function populate_table(data, list_day, parameter_value, list_value, id_parameter) { // data, list_day, parameter, list formulasi
     var thead_html = '<tr><td align="center" rowspan="2">Formulasi</td>';
     thead_html += '<td align="center"  colspan="'+ list_day.length +'">Date</td>';
     thead_html += '<td align="center" rowspan="2">Total</td></tr>';
@@ -996,7 +997,15 @@
       for (var j = 0; j < data.length; j++) {
         if (data[j]['parameter_desc'] == parameter_value && data[j]['value_desc'] == list_value[i] ) {
           var value_item = 0;
-          if ( data[j]['value_item'] != "" && data[j]['value_item'] != null ) { value_item = parseInt(data[j]['value_item']) }
+          if ( data[j]['value_item'] != "" && data[j]['value_item'] != null ) { 
+            if (id_parameter == 6) {
+              value_item = parseFloat(data[j]['value_item']) 
+              console.log(value_item)
+            }
+            else{
+              value_item = parseInt(data[j]['value_item']) 
+            }
+          }
           window["data_total"+list_value[i]].push(value_item)
           tbody_html += '<td align="center">'+ new Intl.NumberFormat().format(value_item) +'</td>';
         }
@@ -1011,7 +1020,15 @@
         for (var k = 0; k < list_day.length; k++) {
           if ( data[j]['parameter_desc'] == parameter_value && data[j]['value_desc'] == list_value[i] && data[j]['day'] == list_day[k] ) {
             var value_item = 0;
-            if ( data[j]['value_item'] != "" && data[j]['value_item'] != null ) { value_item = parseInt(data[j]['value_item']) }
+            if ( data[j]['value_item'] != "" && data[j]['value_item'] != null ) { 
+              if (id_parameter == 6) {
+                value_item = parseFloat(data[j]['value_item']) 
+                console.log(value_item)
+              }
+              else{
+                value_item = parseInt(data[j]['value_item']) 
+              }
+            }
             if ( data_total[k] == null ) { data_total[k] = value_item }
             else{ data_total[k] += value_item }
           }
