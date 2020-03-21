@@ -18,7 +18,7 @@ class CreateDailyTransaksisTable extends Migration
             $table->tinyInteger('id_layanan');
             $table->tinyInteger('id_parameter');
             $table->tinyInteger('id_formulasi');
-            $table->bigInteger('nilai');
+            $table->decimal('nilai', 8, 2);
             $table->date('tanggal');
             $table->string('user_input');
             # created_at sebagai tanggal nya
