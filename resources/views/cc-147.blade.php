@@ -791,7 +791,7 @@
       for (var j = 0; j < data.length; j++) {
         for (var k = 0; k < list_day.length; k++) {
           if ( data[j]['parameter_desc'] == value_parameter && data[j]['value_desc'] == value_desc[i] && data[j]['day'] == list_day[k] ) {
-            window["data_"+value_parameter].push( (data[j]['realisasi']) )
+            window["data_"+value_parameter].push( Math.round(data[j]['realisasi']) )
           }
         }
       }
