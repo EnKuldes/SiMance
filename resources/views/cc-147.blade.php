@@ -1018,11 +1018,11 @@
         }
       }
     }
-    tbody_html += '<tr><td align="left">Total</td>';
-    for (var i = 0; i < data_total.length; i++) {
-      tbody_html += '<td align="center">'+ data_total[i] +'</td>';
-    }
-    tbody_html += '<td align="center">'+ data_total.reduce((a, b) => a + b, 0) +'</td></tr>';
+    // tbody_html += '<tr><td align="left">Total</td>';
+    // for (var i = 0; i < data_total.length; i++) {
+    //   tbody_html += '<td align="center">'+ data_total[i] +'</td>';
+    // }
+    // tbody_html += '<td align="center">'+ data_total.reduce((a, b) => a + b, 0) +'</td></tr>';
 
     return thead_html + tbody_html;
   }
