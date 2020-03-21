@@ -757,7 +757,7 @@
       window["data_"+value_parameter+value_desc[j]] =[];
       for (var i = 0; i < data.length; i++) {
         if (data[i]['parameter_desc'] == value_parameter && data[i]['value_desc'] == value_desc[j] ) {
-          window["data_"+value_parameter+value_desc[j]].push( data[i]['value_item'] )
+          window["data_"+value_parameter+value_desc[j]].push( Math.round(data[i]['value_item']) )
         }
       }
       /*for (var h = 0; h < data.length; h++) {
@@ -791,7 +791,7 @@
       for (var j = 0; j < data.length; j++) {
         for (var k = 0; k < list_day.length; k++) {
           if ( data[j]['parameter_desc'] == value_parameter && data[j]['value_desc'] == value_desc[i] && data[j]['day'] == list_day[k] ) {
-            window["data_"+value_parameter].push( Math.round(data[j]['realisasi']) )
+            window["data_"+value_parameter].push( (data[j]['realisasi']) )
           }
         }
       }
