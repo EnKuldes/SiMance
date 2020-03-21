@@ -42,7 +42,7 @@ class HomeController extends Controller
         case 4:
           return $this->dashboard();
           break;
-        
+
         default:
           abort(404);
           break;
@@ -526,7 +526,7 @@ class HomeController extends Controller
           break;
         // Digital Media
         case 6:
-          $qWhere .= 'SUM(nilai)/COUNT(nilai)'; 
+          $qWhere .= 'SUM(nilai)/COUNT(nilai)';
           $param_compare = '<=';
           break;
         case 7:
@@ -838,8 +838,8 @@ class HomeController extends Controller
         $qWhere .= ", 0) as realisasi";
         $dt->selectRaw($qWhere);
         $dt = $dt->whereRaw('daily_transaksis.tanggal = "'.$date_value->date.'"')->first();
-        $realisasi = $dt->realisasi;
-        
+        $realisasi = number_format((float)$dt->realisasi, 2, '.', '');
+
         foreach ($data as $detailed_data) {
           //$detailed_data->total_item = $total_data_daily->total_item;
           $detailed_data->realisasi = $realisasi;
@@ -1060,7 +1060,7 @@ class HomeController extends Controller
       }
 
       // Looping per tempArr untuk dapat hasil counting formulasi per parameter
-      for ($i=0; $i < count($tempArr) ; $i++) { 
+      for ($i=0; $i < count($tempArr) ; $i++) {
         // Total Input Daily per Formulasi berdasarkan Parameter
         $total_input = DB::table('daily_transaksis')->selectRaw('
           id_formulasi
