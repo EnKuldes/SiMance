@@ -998,11 +998,11 @@
           var value_item = 0;
           if ( data[j]['value_item'] != "" && data[j]['value_item'] != null ) { value_item = parseInt(data[j]['value_item']) }
           window["data_total"+list_value[i]].push(value_item)
-          tbody_html += '<td align="center">'+ value_item +'</td>';
+          tbody_html += '<td align="center">'+ new Intl.NumberFormat().format(value_item) +'</td>';
         }
       }
       window["counting_total"+list_value[i]] = window["data_total"+list_value[i]].reduce((a, b) => a + b, 0);
-      tbody_html += '<td align="center">'+ window["counting_total"+list_value[i]] +'</td></tr>'; // reduce untuk iterasi dari value array
+      tbody_html += '<td align="center">'+ new Intl.NumberFormat().format(window["counting_total"+list_value[i]]) +'</td></tr>'; // reduce untuk iterasi dari value array
     }
     // looping untuk ngisi tabel total
     var data_total = [];
