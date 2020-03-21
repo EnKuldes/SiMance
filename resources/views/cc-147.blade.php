@@ -143,7 +143,7 @@
           var labelTitles = [
           //'sl_val', 'fcr_val', 'rs_val', 'ces_val', 'ql_val'
           @foreach ($data['parameters_tab'] as $record)
-            '{{ $record->id }}_val', 
+            '{{ $record->id }}_val',
           @endforeach
           ]
           //console.log(data)
@@ -259,7 +259,7 @@
       $temp_table_id = $record->id;
     }
     @endphp
-    "summary_table_{{ $record->id }}", 
+    "summary_table_{{ $record->id }}",
     @endforeach
   ]
 
@@ -785,13 +785,13 @@
         }
       })
     }
-    
+
     var list_day = trans_val(data, 'day');
     for (var i = 0; i < value_desc.length; i++) {
       for (var j = 0; j < data.length; j++) {
         for (var k = 0; k < list_day.length; k++) {
           if ( data[j]['parameter_desc'] == value_parameter && data[j]['value_desc'] == value_desc[i] && data[j]['day'] == list_day[k] ) {
-            window["data_"+value_parameter].push( Math.ceil(data[j]['realisasi']) )
+            window["data_"+value_parameter].push( (data[j]['realisasi']) )
           }
         }
       }
@@ -824,26 +824,26 @@
     //var list_option_charts = [columns_basic_options, line_basic_options, line_stacked_options, line_basic1_options, line_basic2_options]
     var list_option_charts = [
     @foreach ($data['parameters_tab'] as $record)
-      columns_basic_options, 
+      columns_basic_options,
     @endforeach
     //columns_basic_options, columns_basic_options, columns_basic_options, columns_basic_options, columns_basic_options
     ]
     //var list_type_charts = ['bar', 'line', 'line', 'line', 'line']
     var list_type_charts = [
     @foreach ($data['parameters_tab'] as $record)
-      'bar', 
+      'bar',
     @endforeach
     //'bar', 'bar', 'bar', 'bar', 'bar'
     ]
     var charts = [
     @foreach ($data['parameters_tab'] as $record)
-      chart_pid_{{ $record->id }}, 
+      chart_pid_{{ $record->id }},
     @endforeach
     //columns_basic, line_basic, line_stacked, line_basic1, line_basic2
     ];
     var param_id = [
     @foreach ($data['parameters_tab'] as $record)
-      {{ $record->id }}, 
+      {{ $record->id }},
     @endforeach
     ];
     for (var i = 0; i < list_option_charts.length; i++) {
@@ -1079,7 +1079,7 @@
               $i++;
               @endphp
               @endforeach
-              {{-- 
+              {{--
               <li class="nav-item">
                 <a href="#service_level" class="nav-link active" data-toggle="tab" onclick="change_table_data('summary_table_sl')">
                   <i class="icon-cog"></i>
@@ -1158,8 +1158,8 @@
     $i++;
     @endphp
     @endforeach
-    
-    {{-- 
+
+    {{--
     <div class="tab-pane fade active show" id="service_level">
       <!-- Basic columns -->
       <div class="card">
@@ -1379,7 +1379,7 @@
     <table class="table table-xs table-bordered" id="summary_table_{{ $record->id }}">
     </table>
     @endforeach
-    {{-- 
+    {{--
     <table class="table table-xs table-bordered" id="summary_table_sl">
     </table>
     <table class="table table-xs table-bordered" id="summary_table_fcr">
