@@ -69,3 +69,6 @@ Route::post('/get-perfomance-comparison', 'HomeController@get_perfomance_compara
 Route::post('/get-realisasi-monthly', 'HomeController@get_realisasi_monthly')->name('get_information');
 Route::post('/get-kpi-information-progress', 'HomeController@get_kpi_information_progress')->name('get_information');
 Route::post('/get-summary-layanan', 'HomeController@get_summary_layanan')->name('get_information');
+
+// Tes PHPOffice/PHPWord
+Route::get('generate-docx', 'HomeController@generateDocx');

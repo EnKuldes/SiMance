@@ -10,6 +10,9 @@ use App\daily_transaksi;
 use App\log_transaksi;
 use App\kpi;
 
+// handle Exception Error
+use Exception;
+
 class HomeController extends Controller
 {
     /**
@@ -1151,5 +1154,28 @@ class HomeController extends Controller
       }
       $datas = $datas->get();
       return response()->json($datas);
+    }
+
+    // Tes PHPOffice/PHPWord
+    public function generateDocx()
+    {
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+
+        $section = $phpWord->addSection();
+
+        $description = "SiMance Report by Docx.";
+
+        //$section->addImage("http://itsolutionstuff.com/frontTheme/images/logo.png");
+        $section->addText($description);
+
+
+        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+        try {
+            $objWriter->save(storage_path('helloWorld.docx'));
+        } catch (Exception $e) {
+        }
+
+
+        return response()->download(storage_path('helloWorld.docx'));
     }
 }
