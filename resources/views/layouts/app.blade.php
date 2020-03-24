@@ -94,6 +94,20 @@
           </a>
         </li>
 
+        @elseif (Auth::user()->layanan == 0)
+        <li class="nav-item">
+          <a href="/myindihome" class="navbar-nav-link">
+            <i class="icon-home5 mr-2"></i>
+            Daily
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/myindihome" class="navbar-nav-link">
+            <i class="icon-home5 mr-2"></i>
+            Report
+          </a>
+        </li>
+
         @endif
 
       </ul>

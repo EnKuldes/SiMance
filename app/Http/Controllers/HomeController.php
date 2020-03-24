@@ -33,6 +33,9 @@ class HomeController extends Controller
     public function index()
     {
       switch (auth()->user()->layanan) {
+        case 0:
+          return $this->dashboard_admin();
+          break;
         case 1:
           return $this->dashboard();
           break;
@@ -407,6 +410,27 @@ class HomeController extends Controller
             'input_per_formulasi' => $total_input_per_formulasi,
         ]);
     }
+
+    // Func Admin Start
+    public function dashboard_admin()
+    {
+        return view('admin.dashboard');
+    }
+    public function daily_admin()
+    {
+        if ( auth()->user()->layanan != 0 ) {
+            abort(401);
+        }
+        return view('admin.daily');
+    }
+    public function report(Request $request)
+    {
+        if ( auth()->user()->layanan != 0 ) {
+            abort(401);
+        }
+        return view('admin.report');
+    }
+    // Func Admin End
 
     // Func-func page daily input
     public function cc_147()

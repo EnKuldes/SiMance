@@ -16,7 +16,7 @@ class add_new_user_admin_to_Users extends Seeder
 	            'name' => 'Admin',
 	            'username' => 'admin',
 	            'password' => bcrypt('4dm1n@user'),
-	            'layanan' => 1,
+	            'layanan' => 0,
 	            'email' => 'admin@dummy.com',
 	        )
         );
