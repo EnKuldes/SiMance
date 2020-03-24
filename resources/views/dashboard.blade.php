@@ -158,7 +158,7 @@
             }
             content += '</td>';
             content += '<td>';
-            content += '<p class="font-weight-bold font-size-lg text-center text-success mb-0">'+data[i]['realisasi']+'%</p>';
+            content += '<p class="font-weight-bold font-size-lg text-center text-success mb-0">'+data[i]['realisasi']+''+data[i]['satuan']+'</p>';
             content += '</td>';
             content += '<td>';
             content += '<p class="font-weight-bold font-size-lg text-center text-orange mb-0">'+data[i]['achievement']+'%</p>';

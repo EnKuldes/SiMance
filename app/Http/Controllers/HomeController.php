@@ -526,7 +526,7 @@ class HomeController extends Controller
           break;
         // Digital Media
         case 6:
-          $qWhere .= 'SUM(nilai)/COUNT(nilai)';
+          $qWhere .= '(AVG(CASE WHEN id_formulasi=16 THEN nilai ELSE NULL END) + AVG(CASE WHEN id_formulasi=17 THEN nilai ELSE NULL END) + AVG(CASE WHEN id_formulasi=18 THEN nilai ELSE NULL END) + AVG(CASE WHEN id_formulasi=19 THEN nilai ELSE NULL END) + AVG(CASE WHEN id_formulasi=20 THEN nilai ELSE NULL END))/5';
           $param_compare = '<=';
           break;
         case 7:
@@ -777,7 +777,7 @@ class HomeController extends Controller
             break;
           // Digital Media
           case 6:
-            $qWhere .= 'SUM(nilai)/COUNT(nilai)'; // Average beluus
+            $qWhere .= '(AVG(CASE WHEN id_formulasi=16 THEN nilai ELSE NULL END) + AVG(CASE WHEN id_formulasi=17 THEN nilai ELSE NULL END) + AVG(CASE WHEN id_formulasi=18 THEN nilai ELSE NULL END) + AVG(CASE WHEN id_formulasi=19 THEN nilai ELSE NULL END) + AVG(CASE WHEN id_formulasi=20 THEN nilai ELSE NULL END))/5'; // Average beluus
             $param_compare = '<=';
             break;
           case 7:
@@ -1037,17 +1037,23 @@ class HomeController extends Controller
         ->whereRaw('MONTH(log_date) = '.$request->month.' AND YEAR(log_date) = '.$request->year.'')
         ->orderBy('created_at', 'desc')->first();
         if ($summary_per_parameter) {
-          $realisasi = optional($summary_per_parameter)->realisasi;
+          $realisasi = round(optional($summary_per_parameter)->realisasi);
+          if ($parameter->id == 6) { // kalo parameternya bebrnilai service level dari layanan digital media, buat realisasi nya ga di roound
+                $realisasi = optional($summary_per_parameter)->realisasi;
+          }
           $achievement = optional($summary_per_parameter)->achievement;
           $persetasi_bobot = optional($summary_per_parameter)->persetasi_bobot;
           $perfomance = optional($summary_per_parameter)->perfomance;
+          $satuan = optional($summary_per_parameter)->satuan;
         }
         else{
           $realisasi = 0;
           $achievement = 0;
           $persetasi_bobot = 0;
           $perfomance = 0;
+          $satuan = '%';
         }
+
 
         $tempArr[] = [
           "paramater_id" => $parameter->id
@@ -1056,6 +1062,7 @@ class HomeController extends Controller
           , "achievement" => $achievement
           , "persetasi_bobot" => $persetasi_bobot
           , "perfomance" => $perfomance
+          , "satuan" => $satuan
         ];
       }
 
