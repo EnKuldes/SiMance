@@ -599,7 +599,12 @@ class HomeController extends Controller
           $achievement = (100-$realisasi)/(100-$kpi_model->target)*100;
           break;
         case 6:
-          $achievement = ($kpi_model->target/60)/($realisasi/60)*100;
+          if ($realisasi == 0) {
+            $achievement = 0;
+          }
+          else{
+            $achievement = ($kpi_model->target/60)/($realisasi/60)*100;
+          }
           break;
         case 10:
           $achievement = (100-$realisasi)/(100-$kpi_model->target)*100;
