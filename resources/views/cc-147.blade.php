@@ -152,9 +152,9 @@
           ]
           //console.log(data)
           for (var i = 0; i < labelTitles.length; i++) {
-            if (data[i]['realisasi'] != null) {realisasi = data[i]['realisasi']}
-            else{realisasi = 0}
-            $('#'+labelTitles[i]).html( realisasi+"%" )
+            if (data[i]['realisasi'] != null) {realisasi = data[i]['realisasi']; satuan = data[i]['satuan'];}
+            else{realisasi = 0; satuan = '%'}
+            $('#'+labelTitles[i]).html( realisasi+""+satuan )
           }
         },
         error: function(jqXhr, json, errorThrown){// this are default for ajax errors
@@ -1004,7 +1004,6 @@
           if ( data[j]['value_item'] != "" && data[j]['value_item'] != null ) { 
             if (id_parameter == 6) {
               value_item = parseFloat(data[j]['value_item']) 
-              console.log(value_item)
             }
             else{
               value_item = parseInt(data[j]['value_item']) 
@@ -1014,8 +1013,9 @@
           tbody_html += '<td align="center">'+ new Intl.NumberFormat().format(value_item) +'</td>';
         }
       }
-      window["counting_total"+list_value[i]] = window["data_total"+list_value[i]].reduce((a, b) => a + b, 0);
-      tbody_html += '<td align="center">'+ new Intl.NumberFormat().format(window["counting_total"+list_value[i]]) +'</td></tr>'; // reduce untuk iterasi dari value array
+      window["counting_total"+list_value[i]] = window["data_total"+list_value[i]].reduce((a, b) => a + b, 0); // reduce untuk iterasi dari value array
+      if (id_parameter == 6) { window["counting_total"+list_value[i]] = window["counting_total"+list_value[i]]/window["data_total"+list_value[i]].length }
+      tbody_html += '<td align="center">'+ new Intl.NumberFormat().format(window["counting_total"+list_value[i]]) +'</td></tr>'; 
     }
     // looping untuk ngisi tabel total
     var data_total = [];
@@ -1027,7 +1027,6 @@
             if ( data[j]['value_item'] != "" && data[j]['value_item'] != null ) { 
               if (id_parameter == 6) {
                 value_item = parseFloat(data[j]['value_item']) 
-                console.log(value_item)
               }
               else{
                 value_item = parseInt(data[j]['value_item']) 

@@ -940,6 +940,7 @@ class HomeController extends Controller
         for ($j=0; $j < count($tempArr); $j++) {
           $list_realisasi[] = [
             "realisasi"=>optional($tempArr[$j])->realisasi
+            , "satuan"=>optional($tempArr[$j])->satuan
           ];
         }
         $list_realisasi = (object) $list_realisasi;
