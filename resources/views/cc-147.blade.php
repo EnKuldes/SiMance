@@ -152,7 +152,16 @@
           ]
           //console.log(data)
           for (var i = 0; i < labelTitles.length; i++) {
-            if (data[i]['realisasi'] != null) {realisasi = data[i]['realisasi']; satuan = data[i]['satuan'];}
+            if (data[i]['realisasi'] != null) {
+              if (data[i]['satuan'] == 'Mio') {
+                realisasi = parseInt(data[i]['realisasi']); 
+                satuan = '';
+              }
+              else{
+                realisasi = data[i]['realisasi']; 
+                satuan = data[i]['satuan'];
+              }
+            }
             else{realisasi = 0; satuan = '%'}
             $('#'+labelTitles[i]).html( realisasi+""+satuan )
           }
@@ -761,7 +770,7 @@
       window["data_"+value_parameter+value_desc[j]] =[];
       for (var i = 0; i < data.length; i++) {
         if (data[i]['parameter_desc'] == value_parameter && data[i]['value_desc'] == value_desc[j] ) {
-          if (id_parameter == 6) { window["data_"+value_parameter+value_desc[j]].push( (data[i]['value_item']) ) }
+          if (id_parameter == 6 || id_parameter == 17 || id_parameter == 18) { window["data_"+value_parameter+value_desc[j]].push( (data[i]['value_item']) ) }
           else{ window["data_"+value_parameter+value_desc[j]].push( Math.round(data[i]['value_item']) ) }
         }
       }
@@ -1002,7 +1011,7 @@
         if (data[j]['parameter_desc'] == parameter_value && data[j]['value_desc'] == list_value[i] ) {
           var value_item = 0;
           if ( data[j]['value_item'] != "" && data[j]['value_item'] != null ) { 
-            if (id_parameter == 6) {
+            if (id_parameter == 6 || id_parameter == 17 || id_parameter == 18) {
               value_item = parseFloat(data[j]['value_item']) 
             }
             else{
@@ -1014,7 +1023,10 @@
         }
       }
       window["counting_total"+list_value[i]] = window["data_total"+list_value[i]].reduce((a, b) => a + b, 0); // reduce untuk iterasi dari value array
+
       if (id_parameter == 6) { window["counting_total"+list_value[i]] = window["counting_total"+list_value[i]]/window["data_total"+list_value[i]].length }
+      else if(id_parameter == 15 || id_parameter == 17) { window["counting_total"+list_value[i]] = window["data_total"+list_value[i]][window["data_total"+list_value[i]].length-1] }
+      
       tbody_html += '<td align="center">'+ new Intl.NumberFormat().format(window["counting_total"+list_value[i]]) +'</td></tr>'; 
     }
     // looping untuk ngisi tabel total

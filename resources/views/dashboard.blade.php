@@ -158,7 +158,9 @@
             }
             content += '</td>';
             content += '<td>';
-            content += '<p class="font-weight-bold font-size-lg text-center text-success mb-0">'+data[i]['realisasi']+''+data[i]['satuan']+'</p>';
+            content += '<p class="font-weight-bold font-size-lg text-center text-success mb-0">'+data[i]['realisasi'];
+            if (data[i]['paramater_id'] != 15 && data[i]['paramater_id'] != 16) { content += data[i]['satuan']; }
+            content += '</p>';
             content += '</td>';
             content += '<td>';
             content += '<p class="font-weight-bold font-size-lg text-center text-orange mb-0">'+data[i]['achievement']+'%</p>';

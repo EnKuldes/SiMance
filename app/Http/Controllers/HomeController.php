@@ -591,7 +591,7 @@ class HomeController extends Controller
           break;
         // MyIndihome
         case 15:
-          $qWhere .= 'SUM(nilai)';
+          $qWhere .= 'nilai';
           $param_compare = '>=';
           break;
         case 16:
@@ -599,7 +599,7 @@ class HomeController extends Controller
           $param_compare = '>=';
           break;
         case 17:
-          $qWhere .= 'SUM(nilai)*100'; // ini belum bener itungannya
+          $qWhere .= 'nilai'; // ini belum bener itungannya
           $param_compare = '>=';
           break;
         case 18:
@@ -613,7 +613,11 @@ class HomeController extends Controller
       }
       $qWhere .= ", 0) as realisasi";
       $dt->selectRaw($qWhere);
-      $dt = $dt->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH("'.$request->input_date.'") AND YEAR(daily_transaksis.tanggal) = YEAR("'.$request->input_date.'")')->first();
+      $dt->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH("'.$request->input_date.'") AND YEAR(daily_transaksis.tanggal) = YEAR("'.$request->input_date.'")');
+      if ($id_parameter == 15 OR $id_parameter == 17) {
+          $dt->orderBy('daily_transaksis.tanggal', 'desc');
+      }
+      $dt = $dt->first();
       $realisasi = $dt->realisasi;
       $achievement = ($realisasi/$kpi_model->target)*100;
       // Ada yang berbeda perhiyungannya dari yg umum, dilakuka disini aja perubahannya
@@ -847,7 +851,7 @@ class HomeController extends Controller
             break;
           // MyIndihome
           case 15:
-            $qWhere .= 'SUM(nilai)';
+            $qWhere .= 'nilai';
             $param_compare = '>=';
             break;
           case 16:
@@ -855,7 +859,7 @@ class HomeController extends Controller
             $param_compare = '>=';
             break;
           case 17:
-            $qWhere .= 'SUM(nilai)*100'; // ini belum bener itungannya
+            $qWhere .= 'nilai'; // ini belum bener itungannya
             $param_compare = '>=';
             break;
           case 18:
@@ -869,7 +873,11 @@ class HomeController extends Controller
         }
         $qWhere .= ", 0) as realisasi";
         $dt->selectRaw($qWhere);
-        $dt = $dt->whereRaw('daily_transaksis.tanggal = "'.$date_value->date.'"')->first();
+        $dt->whereRaw('daily_transaksis.tanggal = "'.$date_value->date.'"');
+        if ($request->id_parameter == 15 OR $request->id_parameter == 17) {
+            $dt->orderBy('daily_transaksis.tanggal', 'desc');
+        }
+        $dt = $dt->first();
         $realisasi = number_format((float)$dt->realisasi, 2, '.', '');
 
         foreach ($data as $detailed_data) {
@@ -993,12 +1001,14 @@ class HomeController extends Controller
           $achievement = optional($lt)->achievement;
           $persetasi_bobot = optional($lt)->persetasi_bobot;
           $perfomance = optional($lt)->perfomance;
+          $satuan = optional($lt)->satuan;
         }
         else{
           $realisasi = 0;
           $achievement = 0;
           $persetasi_bobot = 0;
           $perfomance = 0;
+          $satuan = '%';
         }
         if ($key) {
           $target = optional($key)->target_number;
@@ -1024,7 +1034,7 @@ class HomeController extends Controller
           $progress_bar .= '<div class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width: '.$progress_bar_width1.'%">';
           $progress_bar .= '<span>'.$progress_bar_width1.'% OK</span></div>';
           $progress_bar .= '<div class="progress-bar progress-bar-striped progress-bar-animated bg-'.$progress_bar_color.'" style="width: '.$progress_bar_width.'%">';
-          $progress_bar .= '<span>'.round($realisasi).'% NOK</span></div></div></li>';
+          $progress_bar .= '<span>'.round($realisasi).''.$satuan.' NOK</span></div></div></li>';
         }
         else{
           $progress_bar .= '<div class="d-flex align-items-center mb-1">'.$key->parameter_desc.' <span class="text-muted ml-auto">Target '.$key->target.' | Bobot '.$key->bobot.'</span></div>';
@@ -1033,7 +1043,11 @@ class HomeController extends Controller
           $progress_bar_width = round(($realisasi/$target)*100);
           //$progress_bar_width = 0;
           $progress_bar .= '<div class="progress-bar progress-bar-striped progress-bar-animated bg-'.$progress_bar_color.'" style="width: '.$progress_bar_width.'%">';
-          $progress_bar .= '<span>'.round($realisasi).'% Complete</span></div></div></li>';
+          $progress_bar .= '<span>'.round($realisasi);
+          if ($key->id != 15 AND $key->id != 16) {
+            $progress_bar .= $satuan;
+          }
+          $progress_bar .= ' Complete</span></div></div></li>';
         }
 
         $tempArr[] = [
@@ -1102,13 +1116,26 @@ class HomeController extends Controller
       // Looping per tempArr untuk dapat hasil counting formulasi per parameter
       for ($i=0; $i < count($tempArr) ; $i++) {
         // Total Input Daily per Formulasi berdasarkan Parameter
-        $total_input = DB::table('daily_transaksis')->selectRaw('
-          id_formulasi
-          , SUM(nilai) AS total
-          ')
-        //->whereRaw('MONTH(tanggal) = MONTH(CURDATE()) AND YEAR(tanggal) = YEAR(CURDATE()) AND id_layanan = 1')
-        ->whereRaw('MONTH(tanggal) = '.$request->month.' AND YEAR(tanggal) = '.$request->year.' AND id_layanan = '.auth()->user()->layanan)
-        ->groupBy('id_formulasi');
+        # Kalo parameternya Download Apps dan Rating Playstore maka total input hitungannya berikut
+        if ($tempArr[$i]['paramater_id'] == 15 OR $tempArr[$i]['paramater_id'] == 17) {
+            $total_input = DB::table('daily_transaksis')->selectRaw('
+              id_formulasi
+              , nilai AS total
+              ')
+            //->whereRaw('MONTH(tanggal) = MONTH(CURDATE()) AND YEAR(tanggal) = YEAR(CURDATE()) AND id_layanan = 1')
+            ->whereRaw('MONTH(tanggal) = '.$request->month.' AND YEAR(tanggal) = '.$request->year.' AND id_layanan = '.auth()->user()->layanan.' AND id_parameter = '.$tempArr[$i]['paramater_id'])
+            ->orderBy('tanggal', 'desc')->limit(1);
+        }
+        else{
+            $total_input = DB::table('daily_transaksis')->selectRaw('
+              id_formulasi
+              , SUM(nilai) AS total
+              ')
+            //->whereRaw('MONTH(tanggal) = MONTH(CURDATE()) AND YEAR(tanggal) = YEAR(CURDATE()) AND id_layanan = 1')
+            ->whereRaw('MONTH(tanggal) = '.$request->month.' AND YEAR(tanggal) = '.$request->year.' AND id_layanan = '.auth()->user()->layanan)
+            ->groupBy('id_formulasi');
+        }
+
         $total_input_per_formulasi = DB::table('formulasis')
         ->selectRaw('
           formulasis.id_parameter,
