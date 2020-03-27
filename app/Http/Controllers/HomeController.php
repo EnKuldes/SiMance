@@ -1126,7 +1126,7 @@ class HomeController extends Controller
             ->whereRaw('MONTH(tanggal) = '.$request->month.' AND YEAR(tanggal) = '.$request->year.' AND id_layanan = '.auth()->user()->layanan.' AND id_parameter = '.$tempArr[$i]['paramater_id'])
             ->orderBy('tanggal', 'desc')->limit(1);
         }
-        elseif ( $tempArr[$i]['paramater_id'] == 6 ) {
+        elseif ( $tempArr[$i]['paramater_id'] == 6 OR $tempArr[$i]['paramater_id'] == 12 ) {
             $total_input = DB::table('daily_transaksis')->selectRaw('
               id_formulasi
               , AVG(nilai) AS total
