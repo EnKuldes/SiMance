@@ -595,7 +595,7 @@ class HomeController extends Controller
           $param_compare = '>=';
           break;
         case 16:
-          $qWhere .= 'SUM(nilai)';
+          $qWhere .= 'nilai';
           $param_compare = '>=';
           break;
         case 17:
@@ -614,7 +614,7 @@ class HomeController extends Controller
       $qWhere .= ", 0) as realisasi";
       $dt->selectRaw($qWhere);
       $dt->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH("'.$request->input_date.'") AND YEAR(daily_transaksis.tanggal) = YEAR("'.$request->input_date.'")');
-      if ($id_parameter == 15 OR $id_parameter == 17) {
+      if ($id_parameter == 15 OR $id_parameter == 16 OR $id_parameter == 17) {
           $dt->orderBy('daily_transaksis.tanggal', 'desc');
       }
       $dt = $dt->first();
@@ -808,7 +808,7 @@ class HomeController extends Controller
             $param_compare = '>=';
             break;
           case 5:
-            $qWhere .= 'SUM(CASE WHEN id_formulasi = 15 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 14 THEN nilai ELSE 0 END)/SUM(nilai)*100'; // khusus untuk di yg di chart, di tampulkannya jumlah OK/Total
             $param_compare = '<=';
             break;
           // Digital Media
@@ -855,7 +855,7 @@ class HomeController extends Controller
             $param_compare = '>=';
             break;
           case 16:
-            $qWhere .= 'SUM(nilai)';
+            $qWhere .= 'nilai';
             $param_compare = '>=';
             break;
           case 17:
@@ -874,7 +874,7 @@ class HomeController extends Controller
         $qWhere .= ", 0) as realisasi";
         $dt->selectRaw($qWhere);
         $dt->whereRaw('daily_transaksis.tanggal = "'.$date_value->date.'"');
-        if ($request->id_parameter == 15 OR $request->id_parameter == 17) {
+        if ($request->id_parameter == 15 OR $request->id_parameter == 16 OR $request->id_parameter == 17) {
             $dt->orderBy('daily_transaksis.tanggal', 'desc');
         }
         $dt = $dt->first();
@@ -1117,7 +1117,7 @@ class HomeController extends Controller
       for ($i=0; $i < count($tempArr) ; $i++) {
         // Total Input Daily per Formulasi berdasarkan Parameter
         # Kalo parameternya Download Apps dan Rating Playstore maka total input hitungannya berikut
-        if ($tempArr[$i]['paramater_id'] == 15 OR $tempArr[$i]['paramater_id'] == 17) {
+        if ($tempArr[$i]['paramater_id'] == 15 OR $tempArr[$i]['paramater_id'] == 16 OR $tempArr[$i]['paramater_id'] == 17) {
             $total_input = DB::table('daily_transaksis')->selectRaw('
               id_formulasi
               , nilai AS total
@@ -1125,6 +1125,15 @@ class HomeController extends Controller
             //->whereRaw('MONTH(tanggal) = MONTH(CURDATE()) AND YEAR(tanggal) = YEAR(CURDATE()) AND id_layanan = 1')
             ->whereRaw('MONTH(tanggal) = '.$request->month.' AND YEAR(tanggal) = '.$request->year.' AND id_layanan = '.auth()->user()->layanan.' AND id_parameter = '.$tempArr[$i]['paramater_id'])
             ->orderBy('tanggal', 'desc')->limit(1);
+        }
+        elseif ( $tempArr[$i]['paramater_id'] == 6 ) {
+            $total_input = DB::table('daily_transaksis')->selectRaw('
+              id_formulasi
+              , AVG(nilai) AS total
+              ')
+            //->whereRaw('MONTH(tanggal) = MONTH(CURDATE()) AND YEAR(tanggal) = YEAR(CURDATE()) AND id_layanan = 1')
+            ->whereRaw('MONTH(tanggal) = '.$request->month.' AND YEAR(tanggal) = '.$request->year.' AND id_layanan = '.auth()->user()->layanan)
+            ->groupBy('id_formulasi');
         }
         else{
             $total_input = DB::table('daily_transaksis')->selectRaw('

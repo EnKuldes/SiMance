@@ -67,7 +67,7 @@ class DatabaseSeeder extends Seeder
         	array('parameter_desc' => 'RASIO SALES', 'id_layanan' => 1, 'id' => 3),
         	array('parameter_desc' => 'CES ( by Customer )', 'id_layanan' => 1, 'id' => 4),
         	array('parameter_desc' => 'Quality Layanan', 'id_layanan' => 1, 'id' => 5),
-        	array('parameter_desc' => 'SERVICE LEVEL', 'id_layanan' => 2, 'id' => 6),
+        	array('parameter_desc' => 'Response Time', 'id_layanan' => 2, 'id' => 6),
         	array('parameter_desc' => 'FCR', 'id_layanan' => 2, 'id' => 7),
         	array('parameter_desc' => 'RASIO SALES', 'id_layanan' => 2, 'id' => 8),
         	array('parameter_desc' => 'CES ( by Customer )', 'id_layanan' => 2, 'id' => 9),
