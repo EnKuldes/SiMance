@@ -144,9 +144,9 @@
             }
             content += '</div></div></div></td>';
             content += '<td>';
-            if (data[i]['paramater_id'] == 3) {
+            if (data[i]['paramater_id'] == 3 || data[i]['paramater_id'] == 8) {
               content += '<p class="font-weight-bold font-size-sm text-center mb-0 mt-3 '
-              content += 'text-success">'+new Intl.NumberFormat().format(data[i]['realisasi_per_formulasi'][0]['formulasi_total']+data[i]['realisasi_per_formulasi'][1]['formulasi_total'])+'</p>';
+              content += 'text-success">'+new Intl.NumberFormat().format( parseFloat(data[i]['realisasi_per_formulasi'][0]['formulasi_total']) + parseFloat(data[i]['realisasi_per_formulasi'][1]['formulasi_total']) )+'</p>';
               content += '<p class="font-weight-bold font-size-sm text-center mb-0 text-success">'+new Intl.NumberFormat().format(data[i]['realisasi_per_formulasi'][2]['formulasi_total'])+'</p>';
             }
             else{
