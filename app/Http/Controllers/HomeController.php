@@ -1167,7 +1167,7 @@ class HomeController extends Controller
           $tempArr1[] = [
             "formulasi_id" => $total_per_formulasi->id
             , "formulasi_desc" => $total_per_formulasi->formulasi_desc
-            , "formulasi_total" => $total_per_formulasi->total
+            , "formulasi_total" => ($total_per_formulasi->total == null ? 0 : $total_per_formulasi->total )
           ];
         }
         $tempArr[$i]['realisasi_per_formulasi'] = $tempArr1;
