@@ -599,11 +599,11 @@ class HomeController extends Controller
           $param_compare = '>=';
           break;
         case 17:
-          $qWhere .= 'nilai'; // ini belum bener itungannya
+          $qWhere .= 'nilai'; 
           $param_compare = '>=';
           break;
         case 18:
-          $qWhere .= 'SUM(nilai)*100'; // ini belum bener itungannya
+          $qWhere .= 'SUM(nilai)'; 
           $param_compare = '>=';
           break;
 
@@ -863,7 +863,7 @@ class HomeController extends Controller
             $param_compare = '>=';
             break;
           case 18:
-            $qWhere .= 'SUM(nilai)*100'; // ini belum bener itungannya
+            $qWhere .= 'SUM(nilai)'; // ini belum bener itungannya
             $param_compare = '>=';
             break;
 
