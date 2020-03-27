@@ -133,7 +133,7 @@
           for (var i = 0; i < data.length; i++) {
             content += '<tr><td><div class="d-flex align-items-center"><div>';
             content += '<a href="#" class="text-default font-weight-semibold letter-icon-title">'+ data[i]['parameter_desc'] +'</a>';
-            if (data[i]['paramater_id'] == 3) {
+            if (data[i]['paramater_id'] == 3 || data[i]['paramater_id'] == 8) {
               content += '<div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Total Transaksi';
               content += '<div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> '+data[i]['realisasi_per_formulasi'][2]['formulasi_desc'];
             }
