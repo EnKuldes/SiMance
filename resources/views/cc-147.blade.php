@@ -810,7 +810,7 @@
         }
       }
     }
-    if (id_parameter != 12) {
+    if (id_parameter != 12 && id_parameter != 15 && id_parameter != 16 && id_parameter != 17 && id_parameter != 18 ) {
       tempArr.push({
         name: "Realisasi",
         type: 'line',
