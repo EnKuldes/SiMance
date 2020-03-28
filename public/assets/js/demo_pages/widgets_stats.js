@@ -114,35 +114,13 @@ var StatisticWidgets = function() {
                     .on('mouseout', tip.hide);
             }
 
-            // Daily meetings tooltip content
-            if(tooltip == "hours") {
-                tip.html(function (d, i) {
-                    return "<div class='text-center'>" +
-                            "<h6 class='mb-0'>" + d + "</h6>" +
-                            "<span class='font-size-sm'>meetings</span>" +
-                            "<div class='font-size-sm'>" + i + ":00" + "</div>" +
-                        "</div>";
-                });
-            }
-
-            // Statements tooltip content
-            if(tooltip == "goal") {
-                tip.html(function (d, i) {
-                    return "<div class='text-center'>" +
-                            "<h6 class='mb-0'>" + d + "</h6>" +
-                            "<span class='font-size-sm'>statements</span>" +
-                            "<div class='font-size-sm'>" + i + ":00" + "</div>" +
-                        "</div>";
-                });
-            }
-
             // Online members tooltip content
             if(tooltip == "members") {
                 tip.html(function (d, i) {
                     return "<div class='text-center'>" +
                             "<h6 class='mb-0'>" + d + "0" + "</h6>" +
                             "<span class='font-size-sm'>members</span>" +
-                            "<div class='font-size-sm'>" + i + ":00" + "</div>" +
+                            "<div class='font-size-sm'>" + i + "</div>" +
                         "</div>";
                 });
             }

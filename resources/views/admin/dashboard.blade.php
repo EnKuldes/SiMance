@@ -104,7 +104,7 @@
             <div class="ml-3" style="border-top:1px solid #666;">
               <div class="col-md-12 mb-2">
                 <div class="d-flex">
-                  <h3 class="font-weight-semibold mb-0">YTD</h3>
+                  <h5 class="font-weight-semibold mb-0">YTD</h5>
                   <span class="badge bg-danger-800 badge-pill align-self-center ml-auto">sum/avg</span>
                 </div>
               </div>
