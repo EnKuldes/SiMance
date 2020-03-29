@@ -756,6 +756,7 @@ class HomeController extends Controller
         ->where([
           ['parameters.id_layanan', '=', auth()->user()->layanan]
           , ['parameters.id', '=', $request->id_parameter]
+          , ['formulasis.is_enabled', '=', '1']
         ])
         ->selectRaw('
           parameters.parameter_desc AS parameter_desc
