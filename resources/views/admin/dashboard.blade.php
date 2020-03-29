@@ -59,6 +59,11 @@
     'lay_{{ $layanan->id }}_chart_bar',
   @endforeach
   ];
+  var layanan_avg_perf = [
+  @foreach ($list_layanan as $layanan)
+    'lay_{{ $layanan->id }}_avg_perf',
+  @endforeach
+  ];
   //Inisiasi BlockUI
   $('.card-body').block({
       message: '<i class="icon-spinner4 spinner"></i>',
@@ -214,6 +219,13 @@
          success: function(data){
           console.log(data)
           _barChartWidget('#'+layanan_chart_bar[idx], 24, 50, true, "elastic", 1200, 50, "#EF5350", "months", data);
+          var total = 0;
+          for (var i = 0; i < data.length; i++) {
+            total += data[i]['total_perfomance'];
+          }
+          if (total == 0) {avg = 0;}
+          else{avg = parseFloat(total/12).toFixed(2);}
+          $('#'+layanan_avg_perf[idx]).html(avg+'%')
           // var list_xAxis = trans_val(data, 'desc');
           // columns_basic1_option.xAxis[0].data = list_xAxis
           // var list_perfomance = trans_val(data, 'total_perfomance');
@@ -729,7 +741,7 @@
               <div class="col-md-12 mb-2">
                 <div class="d-flex">
                   <h5 class="font-weight-semibold mb-0">YTD</h5>
-                  <span class="badge bg-danger-800 badge-pill align-self-center ml-auto">Perf</span>
+                  <span class="badge bg-danger-800 badge-pill align-self-center ml-auto" id="lay_{{ $layanan->id }}_avg_perf">Perf</span>
                 </div>
               </div>
             </div>
