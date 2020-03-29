@@ -395,7 +395,7 @@ var StatisticWidgets = function() {
 
             // Update values
             function update() {
-                var ratio = scale(68);
+                var ratio = scale(31);
                 var newAngle = minAngle + (ratio * range);
                 pointer.transition()
                     .duration(2500)
@@ -418,8 +418,8 @@ var StatisticWidgets = function() {
 
     return {
         init: function() {
-            _barChartWidget("#chart_bar_basic", 24, 50, true, "elastic", 1200, 50, "#EF5350", "members");
-            _segmentedGauge("#segmented_gauge", 200, 0, 100, 5);
+            _barChartWidget("#lay_1_chart_bar", 24, 50, true, "elastic", 1200, 50, "#EF5350", "members");
+            _segmentedGauge("#lay_1_segmented_gauge", 200, 0, 100, 5);
         }
     }
 }();

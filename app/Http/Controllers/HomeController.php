@@ -414,7 +414,10 @@ class HomeController extends Controller
     // Func Admin Start
     public function dashboard_admin()
     {
-        return view('admin.dashboard');
+        $list_layanan = DB::table('layanans')->where([
+            ['is_enabled', '=', '1']
+        ])->get();
+        return view('admin.dashboard',['list_layanan' => $list_layanan]);
     }
     public function daily_admin()
     {
@@ -894,6 +897,9 @@ class HomeController extends Controller
     # Perfomance Comparation Monthly
     public function get_perfomance_comparation(Request $request)
     {
+      if (auth()->user()->layanan == 0) {
+          return $this->get_perfomance_comparation_admin($request);
+      }
       $list_parameter = DB::table('parameters')->where([
         ['id_layanan', '=', auth()->user()->layanan]
         , ['is_enabled', '=', '1']
@@ -918,6 +924,39 @@ class HomeController extends Controller
           $tempVal += optional($tempArr[$j])->perfomance;
         }
         $total_perfomance[] = (object) ["desc"=>$name_desc[$i], "total_perfomance"=>$tempVal];
+      }
+
+      return response()->json($total_perfomance);
+    }
+
+    public function get_perfomance_comparation_admin(Request $request)
+    {
+      $list_parameter = DB::table('parameters')->where([
+        ['id_layanan', '=', $request->layanan], 
+        ['is_enabled', '=', '1']
+      ])->get();
+      $total_perfomance = [];
+      $req_date = date("Y-m-d" ,strtotime($request->year."-".$request->month."-1"));
+      //$qWhere = ['MONTH(log_transaksis.log_date) = MONTH(CURRENT_DATE() - INTERVAL 1 MONTH) AND YEAR(log_transaksis.log_date) = YEAR(CURRENT_DATE() - INTERVAL 1 MONTH)', 'MONTH(log_transaksis.log_date) = MONTH(CURRENT_DATE()) AND YEAR(log_transaksis.log_date) = YEAR(CURRENT_DATE())'];
+      // $qWhere = ['MONTH(log_transaksis.log_date) = MONTH("'.$req_date.'" - INTERVAL 1 MONTH) AND YEAR(log_transaksis.log_date) = YEAR("'.$req_date.'" - INTERVAL 1 MONTH)', 'MONTH(log_transaksis.log_date) = MONTH("'.$req_date.'") AND YEAR(log_transaksis.log_date) = YEAR("'.$req_date.'")'];
+      // $name_desc = ['Last Month', 'This Month'];
+      for ($i=1; $i < 13 ; $i++) {
+        $tempArr = [];
+        $tempVal = 0;
+        foreach ($list_parameter as $key) {
+          $tempArr[] = DB::table('log_transaksis')->where([
+            ['layanan', '=', $key->id_layanan]
+            , ['parameter', '=', $key->id]
+          ])
+          ->whereRaw('MONTH(log_transaksis.log_date) = '.$i.' AND YEAR(log_transaksis.log_date) = YEAR("'.$req_date.'")')
+          ->orderBy('created_at', 'desc')->first();
+        }
+        for ($j=0; $j < count($tempArr); $j++) {
+          $tempVal += optional($tempArr[$j])->perfomance;
+        }
+        $monthNum  = $i;
+        $monthName = date('F', mktime(0, 0, 0, $monthNum, 10));
+        $total_perfomance[] = (object) ["desc"=>$monthName, "total_perfomance"=>$tempVal];
       }
 
       return response()->json($total_perfomance);
@@ -963,9 +1002,27 @@ class HomeController extends Controller
       // Buat Variable yang nampung kpi bobot dan target per paramater
       $kpi = DB::table('kpi')->where([
         //['id_layanan', '=', 1]
-        ['id_layanan', '=', auth()->user()->layanan]
-        , ['active', '=', 'current']
+        //['id_layanan', '=', auth()->user()->layanan], 
+        ['active', '=', 'current']
       ]);
+      if (auth()->user()->layanan == 0) {
+          if ( request()->ajax() ) {
+            if (!empty($request->layanan)) {
+              $kpi->where([
+                ['id_layanan', '=', $request->layanan]
+              ]);
+            }
+            else{
+                abort(500, "No request value for layanan.");
+            }
+          }
+      }
+      else{
+        $kpi->where([
+            ['id_layanan', '=', auth()->user()->layanan]
+          ]);
+      }
+
       $parameter = DB::table('parameters')
       ->leftJoinSub($kpi, 'kpi', function ($join) {
         $join->on('kpi.id_parameter', '=', 'parameters.id');
@@ -981,20 +1038,55 @@ class HomeController extends Controller
       ->where([
         ['parameters.is_enabled', '=', '1']
         //, ['parameters.id_layanan', '=', 1]
-        , ['parameters.id_layanan', '=', auth()->user()->layanan]
-      ])
-      ->orderBy('parameters.id')->get();
+        //, ['parameters.id_layanan', '=', auth()->user()->layanan]
+      ]);
+      if (auth()->user()->layanan == 0) {
+          if ( request()->ajax() ) {
+            if (!empty($request->layanan)) {
+              $parameter->where([
+                ['parameters.id_layanan', '=', $request->layanan]
+              ]);
+            }
+            else{
+                abort(500, "No request value for layanan.");
+            }
+          }
+      }
+      else{
+        $parameter->where([
+            ['parameters.id_layanan', '=', auth()->user()->layanan]
+          ]);
+      }
+      
+      $parameter = $parameter->orderBy('parameters.id')->get();
 
       // Variable Temp buat nampiungs
       $tempArr = [];
 
       foreach ($parameter as $key) {
         $lt = DB::table('log_transaksis')->where([
-            ['layanan', '=', auth()->user()->layanan]
-            , ['parameter', '=', $key->id]
-        ])
+            ['parameter', '=', $key->id]
+            //, ['layanan', '=', auth()->user()->layanan]
+        ]);
+        if (auth()->user()->layanan == 0) {
+              if ( request()->ajax() ) {
+                if (!empty($request->layanan)) {
+                  $lt->where([
+                    ['layanan', '=', $request->layanan]
+                  ]);
+                }
+                else{
+                    abort(500, "No request value for layanan.");
+                }
+              }
+          }
+          else{
+            $lt->where([
+                ['layanan', '=', auth()->user()->layanan]
+              ]);
+          }
         //->whereRaw('MONTH(log_date) = MONTH(CURDATE()) AND YEAR(log_date) = YEAR(CURDATE())')
-        ->whereRaw('MONTH(log_date) = '.$request->month.' AND YEAR(log_date) = '.$request->year.'')
+        $lt = $lt->whereRaw('MONTH(log_date) = '.$request->month.' AND YEAR(log_date) = '.$request->year.'')
         ->orderBy('created_at', 'desc')->first();
         if ($lt) {
           $realisasi = optional($lt)->realisasi;
@@ -1070,18 +1162,53 @@ class HomeController extends Controller
     {
       // Fetch Parameter berdasarkan Layanan
       $list_parameter = DB::table('parameters')->where([
-        ['id_layanan', '=', auth()->user()->layanan]
-        , ['is_enabled', '=', '1']
-      ])->get();
+        //['id_layanan', '=', auth()->user()->layanan], 
+        ['is_enabled', '=', '1']
+      ]);
+      if (auth()->user()->layanan == 0) {
+          if ( request()->ajax() ) {
+            if (!empty($request->layanan)) {
+              $list_parameter->where([
+                ['id_layanan', '=', $request->layanan]
+              ]);
+            }
+            else{
+                abort(500, "No request value for layanan.");
+            }
+          }
+      }
+      else{
+        $list_parameter->where([
+            ['id_layanan', '=', auth()->user()->layanan]
+          ]);
+      }
+      $list_parameter = $list_parameter->get();
       $tempArr = [];
       foreach ($list_parameter as $parameter) {
         // Fetch Nilai Summary Bulanan dari Log Transaksi
         $summary_per_parameter = DB::table('log_transaksis')->where([
-          ['layanan', '=', auth()->user()->layanan]
-          , ['parameter', '=', $parameter->id]
-        ])
+          //['layanan', '=', auth()->user()->layanan], 
+          ['parameter', '=', $parameter->id]
+        ]);
+        if (auth()->user()->layanan == 0) {
+              if ( request()->ajax() ) {
+                if (!empty($request->layanan)) {
+                  $summary_per_parameter->where([
+                    ['layanan', '=', $request->layanan]
+                  ]);
+                }
+                else{
+                    abort(500, "No request value for layanan.");
+                }
+              }
+          }
+          else{
+            $summary_per_parameter->where([
+                ['layanan', '=', auth()->user()->layanan]
+              ]);
+          }
         //->whereRaw('MONTH(log_date) = MONTH(CURDATE()) AND YEAR(log_date) = YEAR(CURDATE())')
-        ->whereRaw('MONTH(log_date) = '.$request->month.' AND YEAR(log_date) = '.$request->year.'')
+        $summary_per_parameter = $summary_per_parameter->whereRaw('MONTH(log_date) = '.$request->month.' AND YEAR(log_date) = '.$request->year.'')
         ->orderBy('created_at', 'desc')->first();
         if ($summary_per_parameter) {
           $realisasi = round(optional($summary_per_parameter)->realisasi);
@@ -1207,9 +1334,14 @@ class HomeController extends Controller
     }
     public function list_date(Request $request)
     {
-      $datas = DB::table('daily_transaksis')->where([
-        ['id_layanan','=',auth()->user()->layanan]
-      ]);
+      if (auth()->user()->layanan == 0) {
+          $datas = DB::table('daily_transaksis');
+      }
+      else{
+          $datas = DB::table('daily_transaksis')->where([
+            ['id_layanan','=',auth()->user()->layanan]
+          ]);
+      }
       if ( request()->ajax() ) {
         if (!empty($request->select_year)) {
           $datas->whereYear('tanggal', '=', $request->select_year)->select(DB::raw('MONTH(tanggal) as month'))->distinct()->orderBy('month', 'asc');
