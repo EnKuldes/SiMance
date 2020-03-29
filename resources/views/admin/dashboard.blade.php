@@ -60,7 +60,7 @@
   @endforeach
   ];
   //Inisiasi BlockUI
-  $('.card-body').block({ 
+  $('.card-body').block({
       message: '<i class="icon-spinner4 spinner"></i>',
       overlayCSS: {
           backgroundColor: '#fff',
@@ -173,7 +173,7 @@
           });
         }
       }).done(function(){
-        $('.card-body').unblock(); 
+        $('.card-body').unblock();
       });
   }
 
@@ -642,10 +642,10 @@
 <div class="row">
   {{-- Iterasi disini mulainya --}}
   @php
-  $border_color = ['danger', 'primary', 'success', 'secondary', 'orange', 'info', 'dark'];
+  $border_color = ['danger', 'primary', 'success', 'orange', 'info'];
   $x = 0;
   @endphp
-  @foreach ($list_layanan as $layanan)  
+  @foreach ($list_layanan as $layanan)
   <div class="col-lg-6">
     <div class="card border-left-3 border-left-@php echo $border_color[$x]; $x++; @endphp rounded-left-0">
       <div class="card-header bg-white header-elements-inline p-2">
@@ -653,7 +653,7 @@
         <div class="header-elements">
           <ul class="list-inline list-inline-dotted mb-0">
             <li class="list-inline-item"><span class="font-size-lg font-weight-bold">Total Perf</span></li>
-            <li class="list-inline-item"><span class="badge badge-danger font-size-lg" id="lay_{{ $layanan->id }}_tperf">0</span>%</li>
+            <li class="list-inline-item"><span class="badge badge-danger font-size-lg"><span id="lay_{{ $layanan->id }}_tperf">0</span>%</span></li>
           </ul>
         </div>
       </div>
