@@ -168,7 +168,7 @@
             content += '<td>';
             content += '<p class="font-weight-bold font-size-lg text-center text-info mb-0">'+data[i]['perfomance']+'%</p>';
             content += '</td>';
-            content += '<td>';
+            content += '<td style="display:none;">';
             content += '<p class="font-weight-bold font-size-lg text-center text-purple mb-0">'+data[i]['persetasi_bobot']+'%</p>';
             content += '</td>';
             content += '</tr>';
@@ -424,7 +424,7 @@
       <div class="card-header header-elements-inline">
         <h5 class="card-title font-weight-bold">{{-- CC 147 --}}{{ Auth::user()->layanans->layanan_desc }}</h5>
         <div class="header-elements">
-          <span class="font-weight-bold font-size-lg text-info-600 ml-2">TOTAL BOBOT | <span id="t_bobot">{{ round($t_bobot ?? 0) }}</span>%</span>
+          <span class="font-weight-bold font-size-lg text-info-600 ml-2" style="display:none;">TOTAL BOBOT | <span id="t_bobot">{{ round($t_bobot ?? 0) }}</span>%</span>
         </div>
       </div>
 
@@ -500,7 +500,7 @@
                     <td align="center" class="font-weight-bold">Real (%)</td>
                     <td align="center" class="font-weight-bold">Achv (%)</td>
                     <td align="center" class="font-weight-bold">Perf (%)</td>
-                    <td align="center" class="font-weight-bold">Bobot (%)</td>
+                    <td align="center" class="font-weight-bold" style="display:none;">Bobot (%)</td>
                   </tr>
                 </thead>
                 <tbody>

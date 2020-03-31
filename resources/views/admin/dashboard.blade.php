@@ -165,8 +165,10 @@
           }
           $('#'+ layanan_summary[idx] +' tbody').html(content);
           $('#'+ layanan_tperf[idx] ).html(t_perf_val);
-          $('#'+ layanan_tbobot[idx] ).html(t_bobot_val);
-          _segmentedGauge('#'+layanan_segmented_gauge[idx], 200, 0, 100, 5, t_bobot_val);
+          // $('#'+ layanan_tbobot[idx] ).html(t_bobot_val);
+          // _segmentedGauge('#'+layanan_segmented_gauge[idx], 200, 0, 100, 5, t_bobot_val);
+          $('#'+ layanan_tbobot[idx] ).html(t_perf_val);
+          _segmentedGauge('#'+layanan_segmented_gauge[idx], 200, 0, 100, 5, t_perf_val);
         },
         error: function(jqXhr, json, errorThrown){// this are default for ajax errors
           var errors = jqXhr.responseJSON;
@@ -673,7 +675,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="svg-center" id="lay_{{ $layanan->id }}_segmented_gauge" style="border-bottom:1px solid #999;"></div>
-            <h4 class="text-center">Achv after bobot <span id="lay_{{ $layanan->id }}_tbobot">0</span>%</h4>
+            <h4 class="text-center">Achv <span id="lay_{{ $layanan->id }}_tbobot">0</span>%</h4>
             <div class="d-sm-flex align-item-sm-center flex-sm-nowrap">
               <div>
                 <ul class="list list-unstyled mb-0" id="lay_{{ $layanan->id }}_kpi_name">
