@@ -96,7 +96,7 @@
 
         @elseif (Auth::user()->layanan == 0)
         <li class="nav-item">
-          <a href="/myindihome" class="navbar-nav-link">
+          <a href="/report" class="navbar-nav-link">
             <i class="icon-printer2 mr-2"></i>
             Report
           </a>

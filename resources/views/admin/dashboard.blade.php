@@ -656,18 +656,18 @@
 <div class="row">
   {{-- Iterasi disini mulainya --}}
   @php
-  $border_color = ['danger', 'primary', 'success', 'orange', 'info'];
+  $border_color = ['danger', 'primary', 'success', 'warning', 'info'];
   $x = 0;
   @endphp
   @foreach ($list_layanan as $layanan)
   <div class="col-lg-6">
-    <div class="card border-left-3 border-left-@php echo $border_color[$x]; $x++; @endphp rounded-left-0">
+    <div class="card border-left-3 border-left-@php echo $border_color[$x]; @endphp rounded-left-0">
       <div class="card-header bg-white header-elements-inline p-2">
         <h4 class="card-title font-weight-semibold">Layanan {{ $layanan->layanan_desc }}</h4>
         <div class="header-elements">
           <ul class="list-inline list-inline-dotted mb-0">
             <li class="list-inline-item"><span class="font-size-lg font-weight-bold">Total Perf</span></li>
-            <li class="list-inline-item"><span class="badge badge-danger font-size-lg"><span id="lay_{{ $layanan->id }}_tperf">0</span>%</span></li>
+            <li class="list-inline-item"><span class="badge badge-@php echo $border_color[$x]; $x++; @endphp font-size-lg"><span id="lay_{{ $layanan->id }}_tperf">0</span>%</span></li>
           </ul>
         </div>
       </div>
@@ -675,7 +675,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="svg-center" id="lay_{{ $layanan->id }}_segmented_gauge" style="border-bottom:1px solid #999;"></div>
-            <h4 class="text-center">Achv <span id="lay_{{ $layanan->id }}_tbobot">0</span>%</h4>
+            <h4 class="text-center">Achivment Rate <span id="lay_{{ $layanan->id }}_tbobot">0</span>%</h4>
             <div class="d-sm-flex align-item-sm-center flex-sm-nowrap">
               <div>
                 <ul class="list list-unstyled mb-0" id="lay_{{ $layanan->id }}_kpi_name">

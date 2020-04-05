@@ -428,6 +428,11 @@ class HomeController extends Controller
     }
     public function report(Request $request)
     {
+        $list_layanan = DB::table('layanans')->where([
+            ['is_enabled', '=', '1']
+        ])->get();
+        return view('admin.report',['list_layanan' => $list_layanan]);
+
         if ( auth()->user()->layanan != 0 ) {
             abort(401);
         }
@@ -602,11 +607,11 @@ class HomeController extends Controller
           $param_compare = '>=';
           break;
         case 17:
-          $qWhere .= 'nilai'; 
+          $qWhere .= 'nilai';
           $param_compare = '>=';
           break;
         case 18:
-          $qWhere .= 'SUM(nilai)'; 
+          $qWhere .= 'SUM(nilai)';
           $param_compare = '>=';
           break;
 
@@ -933,7 +938,7 @@ class HomeController extends Controller
     public function get_perfomance_comparation_admin(Request $request)
     {
       $list_parameter = DB::table('parameters')->where([
-        ['id_layanan', '=', $request->layanan], 
+        ['id_layanan', '=', $request->layanan],
         ['is_enabled', '=', '1']
       ])->get();
       $total_perfomance = [];
@@ -1003,7 +1008,7 @@ class HomeController extends Controller
       // Buat Variable yang nampung kpi bobot dan target per paramater
       $kpi = DB::table('kpi')->where([
         //['id_layanan', '=', 1]
-        //['id_layanan', '=', auth()->user()->layanan], 
+        //['id_layanan', '=', auth()->user()->layanan],
         ['active', '=', 'current']
       ]);
       if (auth()->user()->layanan == 0) {
@@ -1058,7 +1063,7 @@ class HomeController extends Controller
             ['parameters.id_layanan', '=', auth()->user()->layanan]
           ]);
       }
-      
+
       $parameter = $parameter->orderBy('parameters.id')->get();
 
       // Variable Temp buat nampiungs
@@ -1163,7 +1168,7 @@ class HomeController extends Controller
     {
       // Fetch Parameter berdasarkan Layanan
       $list_parameter = DB::table('parameters')->where([
-        //['id_layanan', '=', auth()->user()->layanan], 
+        //['id_layanan', '=', auth()->user()->layanan],
         ['is_enabled', '=', '1']
       ]);
       if (auth()->user()->layanan == 0) {
@@ -1188,7 +1193,7 @@ class HomeController extends Controller
       foreach ($list_parameter as $parameter) {
         // Fetch Nilai Summary Bulanan dari Log Transaksi
         $summary_per_parameter = DB::table('log_transaksis')->where([
-          //['layanan', '=', auth()->user()->layanan], 
+          //['layanan', '=', auth()->user()->layanan],
           ['parameter', '=', $parameter->id]
         ]);
         if (auth()->user()->layanan == 0) {
