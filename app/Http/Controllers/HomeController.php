@@ -1036,6 +1036,7 @@ class HomeController extends Controller
       ->selectRaw('
         parameters.`id`
         , parameters.`parameter_desc`
+        , kpi.`satuan` as satuan
         , IFNULL(CONCAT(ROUND(kpi.`target`), kpi.`satuan`), "Undefined") AS target
         , IFNULL(CONCAT(kpi.`bobot`, "%"), "Undefined") AS bobot
         , IFNULL(ROUND(kpi.`target`), 0) AS target_number
@@ -1139,6 +1140,15 @@ class HomeController extends Controller
           $progress_bar .= '<div class="progress" style="height: 1.5rem;">';
           $progress_bar_color = ($realisasi > $target ? 'success' : 'danger');
           $progress_bar_width = round(($realisasi/$target)*100);
+          if ($key->id == 6) {
+              $progress_bar_color = ($realisasi < $target ? 'success' : 'danger');
+              if ($realisasi == 0) {
+                $progress_bar_width = 0;
+              }
+              else{
+                $progress_bar_width = (($target/60)/($realisasi/60)*100);
+            }
+          }
           //$progress_bar_width = 0;
           $progress_bar .= '<div class="progress-bar progress-bar-striped progress-bar-animated bg-'.$progress_bar_color.'" style="width: '.$progress_bar_width.'%">';
           $progress_bar .= '<span>'.round($realisasi);
@@ -1151,6 +1161,7 @@ class HomeController extends Controller
         $tempArr[] = [
           "parameter_id" => $key->id
           , "parameter_desc" => $key->parameter_desc
+          , "satuan" => optional($key)->satuan
           , "target" => optional($key)->target
           , "bobot" => optional($key)->bobot
           , "realisasi" => $realisasi

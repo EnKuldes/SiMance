@@ -11,11 +11,149 @@
 
 @section('extra-liblary')
 <script src="assets/js/demo_pages/picker_date.js"></script>
+<script src="assets/js/demo_pages/form_select2.js"></script>
+<script src="assets/js/demo_pages/form_layouts.js"></script>
 @endsection
 
 @section('script')
-<script src="assets/js/demo_pages/form_select2.js"></script>
-<script src="assets/js/demo_pages/form_layouts.js"></script>
+<script type="text/javascript">
+  var id_layanan = [
+  @foreach ($list_layanan as $layanan)
+    {{ $layanan->id }},
+  @endforeach
+  ];
+  var layanan_kpi_param = [
+  @foreach ($list_layanan as $layanan)
+    'lay_{{ $layanan->id }}_kpi_param',
+  @endforeach
+  ];
+  var layanan_summary = [
+  @foreach ($list_layanan as $layanan)
+    'lay_{{ $layanan->id }}_summary',
+  @endforeach
+  ];
+
+  $('tbody').block({
+      message: '<i class="icon-spinner4 spinner"></i>',
+      overlayCSS: {
+          backgroundColor: '#fff',
+          opacity: 0.95,
+          cursor: 'wait'
+      },
+      css: {
+          border: 0,
+          padding: 0,
+          backgroundColor: 'transparent'
+      }
+  });
+
+  // Func
+  function get_kpi_information_progress(year_value, month_value, id_layanan, idx) {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    $.ajax({
+     type:"post",
+     url:'/get-kpi-information-progress',
+         data: {year: year_value, month: month_value, layanan: id_layanan},
+         success: function(data){
+          content = '';
+          for (var i = 0; i < data.length; i++) {
+            content += '<tr><td><h6 class="mb-0">'+ data[i]['parameter_desc'] +'</h6></td>';
+            content += '<td>'+ data[i]['satuan'] +'</td>';
+            content += '<td><span class="font-weight-semibold">'+ data[i]['target'] +'</span></td>';
+            content += '<td><span class="font-weight-semibold">'+ data[i]['bobot'] +'</span></td></tr>';
+          }
+          $('#'+ layanan_kpi_param[idx] +' tbody').html(content)
+        },
+        error: function(jqXhr, json, errorThrown){// this are default for ajax errors
+          var errors = jqXhr.responseJSON;
+          var errorsHtml = '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Error ' + jqXhr.status + ': ' + errorThrown + '</div>';
+          notificationScript("error", "Error " + jqXhr.status, errorThrown);
+          $.each(errors['errors'], function (index, value) {
+            errorsHtml += '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + value + '</div>';
+            notificationScript("error", "Error Field", value);
+          });
+        }
+      }).done(function(){
+
+      });
+  }
+
+  function get_summary_layanan(year_value, month_value, id_layanan, idx) {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    $.ajax({
+     type:"post",
+     url:'/get-summary-layanan',
+         data: {year: year_value, month: month_value, layanan: id_layanan},
+         success: function(data){
+          //console.log(data[0])
+          var content = '';
+          for (var i = 0; i < data.length; i++) {
+            content += '<tr><td><h6 class="mb-0">'+ data[i]['parameter_desc'] +'</h6></td>';
+            content += '<td><span class="font-weight-semibold">'+ data[i]['realisasi'] + data[i]['satuan'] +'</span></td>';
+            content += '<td><span class="font-weight-semibold">'+ data[i]['achievement'] +'%</span></td>';
+            content += '<td><span class="font-weight-semibold">'+ data[i]['perfomance'] +'%</span></td>';
+            content += '</tr>';
+          }
+          $('#'+ layanan_summary[idx] +' tbody').html(content)
+        },
+        error: function(jqXhr, json, errorThrown){// this are default for ajax errors
+          var errors = jqXhr.responseJSON;
+          var errorsHtml = '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Error ' + jqXhr.status + ': ' + errorThrown + '</div>';
+          notificationScript("error", "Error " + jqXhr.status, errorThrown);
+          $.each(errors['errors'], function (index, value) {
+            errorsHtml += '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + value + '</div>';
+            notificationScript("error", "Error Field", value);
+          });
+        }
+      }).done(function(){
+        $('tbody').unblock();
+      });
+  }
+
+  // On change events
+  $("#list_month").change(function() {
+    var id = $(this).val();
+    tempMonth = id;
+    if (id != "" && id != null)
+    {
+      $('#report_date').html( moment().set({'year': $('#list_year'), 'month': id-1}).format("MMMM YYYY") )
+      setTimeout(re_init(), 5000);
+    }
+  });
+
+  // Func re inisiasi tampulan
+  function re_init() {
+    $('tbody').block({
+        message: '<i class="icon-spinner4 spinner"></i>',
+        overlayCSS: {
+            backgroundColor: '#fff',
+            opacity: 0.95,
+            cursor: 'wait'
+        },
+        css: {
+            border: 0,
+            padding: 0,
+            backgroundColor: 'transparent'
+        }
+    });
+    for (var i = 0; i < id_layanan.length; i++) {
+      get_kpi_information_progress( $("#list_year").val(), $("#list_month").val(), id_layanan[i], i );
+      get_summary_layanan( $("#list_year").val(), $("#list_month").val(), id_layanan[i], i );
+    }
+  }
+  $(document).ready(function() {
+    chain3();
+  });
+  
+</script>
 @endsection
 
 @section('content')
@@ -40,10 +178,10 @@
       <div class="col-sm-6">
         <div class="mb-4">
           <div class="text-sm-right">
-            <h4 class="text-primary mb-2 mt-md-2">Invoice #49029</h4>
+            <h4 class="text-primary mb-2 mt-md-2">Report #49029</h4>
             <ul class="list list-unstyled mb-0">
-              <li>Date: <span class="font-weight-semibold">January 12, 2015</span></li>
-              <li>Due date: <span class="font-weight-semibold">May 12, 2015</span></li>
+              <li>Month: <span class="font-weight-semibold" id="report_date"></span></li>
+              {{--<li>Due date: <span class="font-weight-semibold">May 12, 2015</span></li>--}}
             </ul>
           </div>
         </div>
@@ -60,7 +198,7 @@
   <div class="row mb-2">
     <div class="col-md-5">
       <div class="table-responsive">
-        <table class="table table-sm table-bordered">
+        <table class="table table-sm table-bordered" id="lay_{{ $layanan->id }}_kpi_param">
           <thead>
             <tr>
               <th colspan="4">Target KPI</th>
@@ -73,33 +211,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>
-                <h6 class="mb-0">Create UI design model</h6>
-                <span class="text-muted">One morning, when Gregor Samsa woke from troubled.</span>
-              </td>
-              <td>57</td>
-              <td><span class="font-weight-semibold">$3,990</span></td>
-              <td><span class="font-weight-semibold">$3,990</span></td>
-            </tr>
-            <tr>
-              <td>
-                <h6 class="mb-0">Support tickets list doesn't support commas</h6>
-                <span class="text-muted">I'd have gone up to the boss and told him just what i think.</span>
-              </td>
-              <td>12</td>
-              <td><span class="font-weight-semibold">$840</span></td>
-              <td><span class="font-weight-semibold">$840</span></td>
-            </tr>
-            <tr>
-              <td>
-                <h6 class="mb-0">Fix website issues on mobile</h6>
-                <span class="text-muted">I am so happy, my dear friend, so absorbed in the exquisite.</span>
-              </td>
-              <td>31</td>
-              <td><span class="font-weight-semibold">$2,170</span></td>
-              <td><span class="font-weight-semibold">$2,170</span></td>
-            </tr>
+            
           </tbody>
         </table>
       </div>
@@ -107,7 +219,7 @@
 
     <div class="col-md-7">
       <div class="table-responsive">
-        <table class="table table-sm table-bordered">
+        <table class="table table-sm table-bordered" id="lay_{{ $layanan->id }}_summary">
           <thead>
             <tr>
               <th colspan="4">Performance</th>
@@ -120,105 +232,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>
-                <h6 class="mb-0">Create UI design model</h6>
-                <span class="text-muted">One morning, when Gregor Samsa woke from troubled.</span>
-              </td>
-              <td>57</td>
-              <td><span class="font-weight-semibold">$3,990</span></td>
-              <td><span class="font-weight-semibold">$3,990</span></td>
-            </tr>
-            <tr>
-              <td>
-                <h6 class="mb-0">Support tickets list doesn't support commas</h6>
-                <span class="text-muted">I'd have gone up to the boss and told him just what i think.</span>
-              </td>
-              <td>12</td>
-              <td><span class="font-weight-semibold">$3,990</span></td>
-              <td><span class="font-weight-semibold">$3,990</span></td>
-            </tr>
-            <tr>
-              <td>
-                <h6 class="mb-0">Fix website issues on mobile</h6>
-                <span class="text-muted">I am so happy, my dear friend, so absorbed in the exquisite.</span>
-              </td>
-              <td>31</td>
-              <td><span class="font-weight-semibold">$2,170</span></td>
-              <td><span class="font-weight-semibold">$3,990</span></td>
-            </tr>
+            
           </tbody>
         </table>
       </div>
     </div>
   </div>
   @endforeach
-
-  {{-- <div class="card-body">
-    <div class="d-md-flex flex-md-wrap">
-
-      <div class="pt-2 mb-3 wmin-md-300 ml-auto">
-        <div class="pt-2 mb-3 pr-2">
-          <h6 class="mb-3 text-center">Authorized person</h6>
-          <div class="mb-3 text-center">
-            <img src="assets/images/signature.png" width="150" alt="">
-          </div>
-
-          <ul class="list-unstyled text-muted">
-            <li class="text-center">Eugene Kopyov</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="pt-2 mb-3 wmin-md-300 ml-auto">
-        <div class="pt-2 mb-3 pr-2">
-          <h6 class="mb-3 text-center">Authorized person</h6>
-          <div class="mb-3 text-center">
-            <img src="assets/images/signature.png" width="150" alt="">
-          </div>
-
-          <ul class="list-unstyled text-muted">
-            <li class="text-center">Eugene Kopyov</li>
-          </ul>
-        </div>
-      </div>
-
-
-      <div class="pt-2 mb-3 wmin-md-300 ml-auto">
-        <div class="pt-2 mb-3 pr-2">
-          <h6 class="mb-3 text-center">Authorized person</h6>
-          <div class="mb-3 text-center">
-            <img src="assets/images/signature.png" width="150" alt="">
-          </div>
-
-          <ul class="list-unstyled text-muted">
-            <li class="text-center">Eugene Kopyov</li>
-          </ul>
-        </div>
-      </div>
-
-
-      <div class="pt-2 mb-3 wmin-md-300 ml-auto">
-        <div class="pt-2 mb-3 pr-2">
-          <h6 class="mb-3 text-center">Authorized person</h6>
-          <div class="mb-3 text-center">
-            <img src="assets/images/signature.png" width="150" alt="">
-          </div>
-
-          <ul class="list-unstyled text-muted">
-            <li class="text-center">Eugene Kopyov</li>
-          </ul>
-        </div>
-      </div>
-
-    </div>
-  </div> --}}
-
-  {{-- <div class="card-footer">
-    <span class="text-muted">Thank you for using Limitless. This invoice can be paid via PayPal, Bank transfer, Skrill
-      or Payoneer. Payment is due within 30 days from the date of delivery. Late payment is possible, but with with a
-      fee of 10% per month. Company registered in England and Wales #6893003, registered office: 3 Goodman Street,
-      London E1 8BF, United Kingdom. Phone number: 888-555-2311</span>
-  </div> --}}
 </div>
 @endsection
