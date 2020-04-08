@@ -222,7 +222,7 @@
      data: {year: year_value, month: month_value, layanan: id_layanan},
          success: function(data){
           console.log(data)
-          _barChartWidget('#'+layanan_chart_bar[idx], 24, 50, true, "elastic", 1200, 50, "#EF5350", "months", data);
+          _barChartWidget('#'+layanan_chart_bar[idx], 24, 50, true, "elastic", 1200, 50, "#3F51B5", "months", data);
           var total = 0;
           for (var i = 0; i < data.length; i++) {
             total += data[i]['total_perfomance'];
@@ -663,8 +663,8 @@
       <div class="card-body pl-2 pt-2 pr-2 pb-0">
         <div class="row">
           <div class="col-md-4">
-            
-            <div class="svg-center" id="lay_{{ $layanan->id }}_segmented_gauge" style="border-bottom:1px solid #999;">
+
+            <div class="svg-center pt-4" id="lay_{{ $layanan->id }}_segmented_gauge">
             </div>
 
             <h4 class="text-center">Perfomance <span id="lay_{{ $layanan->id }}_tbobot">0</span>%</h4>
@@ -672,94 +672,89 @@
             <div class="d-sm-flex align-item-sm-center flex-sm-nowrap">
               <div>
                 <ul class="list list-unstyled mb-0" id="lay_{{ $layanan->id }}_kpi_name">
-                  <li><span class="font-weight-semibold">Target KPI</span></li>
-                  <li>Service Level</li>
-                  <li>FCR</li>
-                  <li>Rasio Sales</li>
-                  <li>CES</li>
-                  <li>Quality</li>
-                </ul>
-              </div>
-
-              <div class="text-sm-right mb-0 mt-3 mt-sm-0 ml-auto">
-                <ul class="list list-unstyled mb-0" id="lay_{{ $layanan->id }}_kpi_param">
-                  <li><span class="font-weight-semibold">Param</span></li>
-                  <li>>=95%</li>
-                  <li>>=90%</li>
-                  <li>>=15%</li>
-                  <li>>=90% Puas</li>
-                  <li>
-                    <=5% NOK</li> </ul> 
-                  </div> 
-            </div> 
-            --}}
-          </div> 
-          <div class="col-md-8">
-            <div class="table-responsive">
-              <table class="table text-nowrap table-xs table-borderless" id="lay_{{ $layanan->id }}_summary">
-                <thead>
-                  <tr>
-                    <td class="font-weight-bold font-size-lg w-100">KPI</td>
-                    <td class="font-weight-bold font-size-lg w-100">Target</td>
-                    <td class="font-weight-bold font-size-lg text-right">Real</td>
-                    <td class="font-weight-bold font-size-lg text-right">Achv</td>
-                    <td class="font-weight-bold font-size-lg text-right">Perf</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="font-weight-semibold">Service Level</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                  </tr>
-                  <tr>
-                    <td class="font-weight-semibold">FCR</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                  </tr>
-                  <tr>
-                    <td class="font-weight-semibold">Rasio Sales</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                  </tr>
-                  <tr>
-                    <td class="font-weight-semibold">CES (by Customer)</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                  </tr>
-                  <tr>
-                    <td class="font-weight-semibold">Quality Layanan</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <li><span class="font-weight-semibold">Target KPI</span></li>
+            <li>Service Level</li>
+            <li>FCR</li>
+            <li>Rasio Sales</li>
+            <li>CES</li>
+            <li>Quality</li>
+            </ul>
           </div>
-          <div class="container-fluid">
-            {{-- <div id="chart_bar_basic"></div> --}}
-            <div class="ml-3" style="border-top:1px solid #666;">
-              <div class="col-md-12 mb-2">
-                <div class="d-flex">
-                  <h5 class="font-weight-semibold mb-0">Year To Day</h5>
-                  <span class="badge bg-danger-800 badge-pill align-self-center ml-auto"
-                  id="lay_{{ $layanan->id }}_avg_perf">Perf</span>
-                </div>
-              </div>
-            </div>
-            <div id="lay_{{ $layanan->id }}_chart_bar"></div>
+
+          <div class="text-sm-right mb-0 mt-3 mt-sm-0 ml-auto">
+            <ul class="list list-unstyled mb-0" id="lay_{{ $layanan->id }}_kpi_param">
+              <li><span class="font-weight-semibold">Param</span></li>
+              <li>>=95%</li>
+              <li>>=90%</li>
+              <li>>=15%</li>
+              <li>>=90% Puas</li>
+              <li>
+                <=5% NOK</li> </ul> </div> </div> --}} </div> <div class="col-md-8">
+                  <div class="table-responsive">
+                    <table class="table text-nowrap table-xs table-borderless" id="lay_{{ $layanan->id }}_summary">
+                      <thead>
+                        <tr>
+                          <td class="font-weight-bold font-size-lg w-100">KPI</td>
+                          <td class="font-weight-bold font-size-lg w-100">Target</td>
+                          <td class="font-weight-bold font-size-lg text-right">Real</td>
+                          <td class="font-weight-bold font-size-lg text-right">Achv</td>
+                          <td class="font-weight-bold font-size-lg text-right">Perf</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="font-weight-semibold">Service Level</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                        </tr>
+                        <tr>
+                          <td class="font-weight-semibold">FCR</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                        </tr>
+                        <tr>
+                          <td class="font-weight-semibold">Rasio Sales</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                        </tr>
+                        <tr>
+                          <td class="font-weight-semibold">CES (by Customer)</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                        </tr>
+                        <tr>
+                          <td class="font-weight-semibold">Quality Layanan</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                          <td class="font-weight-semibold text-right">0%</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
           </div>
         </div>
+      </div>
+      <div class="card-footer bg-transparent d-flex justify-content-between p-0">
+
+<div class="container-fluid">
+  {{-- <div id="chart_bar_basic"></div> --}}
+    <div class="col-md-12 mb-2">
+      <div class="d-flex">
+        <h5 class="font-weight-semibold mb-0">Performance by Month</h5>
+        <h5 class="font-weight-semibold align-self-center ml-auto">Average Yearly | <span id="lay_{{ $layanan->id }}_avg_perf"></span></h5>
+      </div>
+    </div>
+  <div id="lay_{{ $layanan->id }}_chart_bar"></div>
+</div>
       </div>
     </div>
   </div>
