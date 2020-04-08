@@ -654,6 +654,156 @@
 
 @section('content')
 <div class="row">
+  <div class="col-lg-6">
+    <div class="card border-left-3 border-left-danger rounded-left-0">
+      <div class="card-header bg-white header-elements-inline p-2">
+        <h4 class="card-title font-weight-semibold">Layanan CC 147</h4>
+        <div class="header-elements">
+          <ul class="list-inline list-inline-dotted mb-0">
+            <li class="list-inline-item"><span class="font-size-lg font-weight-bold">Total Perf</span></li>
+            <li class="list-inline-item"><span class="badge badge-danger font-size-lg"><span
+                  id="lay_1_tperf">92</span>%</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="card-body pl-2 pt-2 pr-2 pb-0" style="position: static; zoom: 1;">
+        <div class="row">
+          <div class="col-md-4 mt-4">
+            <div class="svg-center" id="lay_1_segmented_gauge"><svg width="200"
+                height="120">
+                <g transform="translate(100,100)"
+                  style="stroke: rgb(255, 255, 255); stroke-width: 2; shape-rendering: crispedges;">
+                  <path fill="#ef5350"
+                    d="M-85,-1.0409497792752502e-14A85,85 0 0,1 -68.76644452187053,-49.961746444860225L-52.58610463437158,-38.20604139901076A65,65 0 0,0 -65,-7.960204194457796e-15Z">
+                  </path>
+                  <path fill="#e39f54"
+                    d="M-68.76644452187053,-49.961746444860225A85,85 0 0,1 -26.266444521870525,-80.83980388508806L-20.086104634371576,-61.81867355918499A65,65 0 0,0 -52.58610463437158,-38.20604139901076Z">
+                  </path>
+                  <path fill="#d3d759"
+                    d="M-26.266444521870525,-80.83980388508806A85,85 0 0,1 26.266444521870554,-80.83980388508805L20.086104634371598,-61.81867355918498A65,65 0 0,0 -20.086104634371576,-61.81867355918499Z">
+                  </path>
+                  <path fill="#90c95f"
+                    d="M26.266444521870554,-80.83980388508805A85,85 0 0,1 68.76644452187054,-49.96174644486022L52.58610463437159,-38.20604139901075A65,65 0 0,0 20.086104634371598,-61.81867355918498Z">
+                  </path>
+                  <path fill="#66bb6a"
+                    d="M68.76644452187054,-49.96174644486022A85,85 0 0,1 85,0L65,0A65,65 0 0,0 52.58610463437159,-38.20604139901075Z">
+                  </path>
+                </g>
+                <g transform="translate(100,100)"><text transform="rotate(-90) translate(0,-90)"
+                    style="text-anchor: middle; font-size: 11px; fill: rgb(153, 153, 153);">0%</text><text
+                    transform="rotate(-54) translate(0,-90)"
+                    style="text-anchor: middle; font-size: 11px; fill: rgb(153, 153, 153);">20%</text><text
+                    transform="rotate(-18) translate(0,-90)"
+                    style="text-anchor: middle; font-size: 11px; fill: rgb(153, 153, 153);">40%</text><text
+                    transform="rotate(18) translate(0,-90)"
+                    style="text-anchor: middle; font-size: 11px; fill: rgb(153, 153, 153);">60%</text><text
+                    transform="rotate(54) translate(0,-90)"
+                    style="text-anchor: middle; font-size: 11px; fill: rgb(153, 153, 153);">80%</text><text
+                    transform="rotate(90) translate(0,-90)"
+                    style="text-anchor: middle; font-size: 11px; fill: rgb(153, 153, 153);">100%</text></g>
+                <g transform="translate(100,100)">
+                  <path
+                    d="M5,0C4.9963126843657815,-0.05530973451327434,1.6666666666666667,-75,0,-75S-5,0,-5,0S-1.6666666666666667,5,0,5S4.583333333333333,0.4166666666666667,5,0"
+                    transform="rotate(75.59999847412108),scale(0.9999999999999999,0.9999999999999999)"></path>
+                </g>
+              </svg>
+            </div>
+            <h4 class="text-center">Performance <span id="lay_1_tbobot">92</span>%</h4>
+          </div>
+          <div class="col-md-8">
+            <div class="table-responsive">
+              <table class="table text-nowrap table-striped table-xs table-borderless" id="lay_1_summary">
+                <thead>
+                  <tr>
+                    <td class="font-weight-bold font-size-lg w-100">KPI</td>
+                    <td class="font-weight-bold font-size-lg w-100">Target</td>
+                    <td class="font-weight-bold font-size-lg text-right">Real</td>
+                    <td class="font-weight-bold font-size-lg text-right">Achv</td>
+                    <td class="font-weight-bold font-size-lg text-right">Perf</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="font-weight-semibold">SERVICE LEVEL</td>
+                    <td class="font-weight-semibold text-right">103%</td>
+                    <td class="font-weight-semibold text-right">21%</td>
+                    <td class="font-weight-semibold text-right">103%</td>
+                    <td class="font-weight-semibold text-right">21%</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-semibold">FCR</td>
+                    <td class="font-weight-semibold text-right">67%</td>
+                    <td class="font-weight-semibold text-right">17%</td>
+                    <td class="font-weight-semibold text-right">67%</td>
+                    <td class="font-weight-semibold text-right">17%</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-semibold">RASIO SALES</td>
+                    <td class="font-weight-semibold text-right">104%</td>
+                    <td class="font-weight-semibold text-right">10%</td>
+                    <td class="font-weight-semibold text-right">104%</td>
+                    <td class="font-weight-semibold text-right">10%</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-semibold">CES ( by Customer )</td>
+                    <td class="font-weight-semibold text-right">109%</td>
+                    <td class="font-weight-semibold text-right">27%</td>
+                    <td class="font-weight-semibold text-right">109%</td>
+                    <td class="font-weight-semibold text-right">27%</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-semibold">Quality Layanan</td>
+                    <td class="font-weight-semibold text-right">83%</td>
+                    <td class="font-weight-semibold text-right">17%</td>
+                    <td class="font-weight-semibold text-right">83%</td>
+                    <td class="font-weight-semibold text-right">17%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="container-fluid">
+
+            <div class="col-md-12 mb-2" style="border-top:1px solid #999;">
+              <div class="d-flex">
+                <h5 class="font-weight-semibold mb-0">Year To Day</h5>
+                <span class="badge bg-danger-800 badge-pill align-self-center ml-auto"
+                  id="lay_1_avg_perf">7.67%</span>
+              </div>
+            </div>
+            <div id="lay_1_chart_bar"><svg width="571.65625" height="50">
+                <g width="571.65625">
+                  <rect class="d3-random-bars" width="32.53328252032521" x="13.94283536585366" height="0" y="50"
+                    style="fill: rgb(239, 83, 80);"></rect>
+                  <rect class="d3-random-bars" width="32.53328252032521" x="60.41895325203253" height="0" y="50"
+                    style="fill: rgb(239, 83, 80);"></rect>
+                  <rect class="d3-random-bars" width="32.53328252032521" x="106.89507113821139" height="50" y="0"
+                    style="fill: rgb(239, 83, 80);"></rect>
+                  <rect class="d3-random-bars" width="32.53328252032521" x="153.37118902439025" height="0" y="50"
+                    style="fill: rgb(239, 83, 80);"></rect>
+                  <rect class="d3-random-bars" width="32.53328252032521" x="199.84730691056913" height="0" y="50"
+                    style="fill: rgb(239, 83, 80);"></rect>
+                  <rect class="d3-random-bars" width="32.53328252032521" x="246.32342479674801" height="0" y="50"
+                    style="fill: rgb(239, 83, 80);"></rect>
+                  <rect class="d3-random-bars" width="32.53328252032521" x="292.79954268292687" height="0" y="50"
+                    style="fill: rgb(239, 83, 80);"></rect>
+                  <rect class="d3-random-bars" width="32.53328252032521" x="339.27566056910575" height="0" y="50"
+                    style="fill: rgb(239, 83, 80);"></rect>
+                  <rect class="d3-random-bars" width="32.53328252032521" x="385.75177845528464" height="0" y="50"
+                    style="fill: rgb(239, 83, 80);"></rect>
+                  <rect class="d3-random-bars" width="32.53328252032521" x="432.2278963414635" height="0" y="50"
+                    style="fill: rgb(239, 83, 80);"></rect>
+                  <rect class="d3-random-bars" width="32.53328252032521" x="478.7040142276424" height="0" y="50"
+                    style="fill: rgb(239, 83, 80);"></rect>
+                  <rect class="d3-random-bars" width="32.53328252032521" x="525.1801321138212" height="0" y="50"
+                    style="fill: rgb(239, 83, 80);"></rect>
+                </g>
+              </svg></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   {{-- Iterasi disini mulainya --}}
   @php
   $border_color = ['danger', 'primary', 'success', 'warning', 'info'];
@@ -667,14 +817,17 @@
         <div class="header-elements">
           <ul class="list-inline list-inline-dotted mb-0">
             <li class="list-inline-item"><span class="font-size-lg font-weight-bold">Total Perf</span></li>
-            <li class="list-inline-item"><span class="badge badge-@php echo $border_color[$x]; $x++; @endphp font-size-lg"><span id="lay_{{ $layanan->id }}_tperf">0</span>%</span></li>
+            <li class="list-inline-item"><span
+                class="badge badge-@php echo $border_color[$x]; $x++; @endphp font-size-lg"><span
+                  id="lay_{{ $layanan->id }}_tperf">0</span>%</span></li>
           </ul>
         </div>
       </div>
       <div class="card-body pl-2 pt-2 pr-2 pb-0">
         <div class="row">
           <div class="col-md-4">
-            <div class="svg-center" id="lay_{{ $layanan->id }}_segmented_gauge" style="border-bottom:1px solid #999;"></div>
+            <div class="svg-center" id="lay_{{ $layanan->id }}_segmented_gauge" style="border-bottom:1px solid #999;">
+            </div>
             <h4 class="text-center">Achivment Rate <span id="lay_{{ $layanan->id }}_tbobot">0</span>%</h4>
             <div class="d-sm-flex align-item-sm-center flex-sm-nowrap">
               <div>
@@ -695,67 +848,64 @@
                   <li>>=90%</li>
                   <li>>=15%</li>
                   <li>>=90% Puas</li>
-                  <li><=5% NOK</li>
-                </ul>
+                  <li>
+                    <=5% NOK</li> </ul> </div> </div> </div> <div class="col-md-8">
+                      <div class="table-responsive">
+                        <table class="table text-nowrap table-xs table-borderless" id="lay_{{ $layanan->id }}_summary">
+                          <thead>
+                            <tr>
+                              <td class="font-weight-bold font-size-lg w-100">KPI</td>
+                              <td class="font-weight-bold font-size-lg text-right">Achv</td>
+                              <td class="font-weight-bold font-size-lg text-right">Perf</td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td class="font-weight-semibold">Service Level</td>
+                              <td class="font-weight-semibold text-right">0%</td>
+                              <td class="font-weight-semibold text-right">0%</td>
+                            </tr>
+                            <tr>
+                              <td class="font-weight-semibold">FCR</td>
+                              <td class="font-weight-semibold text-right">0%</td>
+                              <td class="font-weight-semibold text-right">0%</td>
+                            </tr>
+                            <tr>
+                              <td class="font-weight-semibold">Rasio Sales</td>
+                              <td class="font-weight-semibold text-right">0%</td>
+                              <td class="font-weight-semibold text-right">0%</td>
+                            </tr>
+                            <tr>
+                              <td class="font-weight-semibold">CES (by Customer)</td>
+                              <td class="font-weight-semibold text-right">0%</td>
+                              <td class="font-weight-semibold text-right">0%</td>
+                            </tr>
+                            <tr>
+                              <td class="font-weight-semibold">Quality Layanan</td>
+                              <td class="font-weight-semibold text-right">0%</td>
+                              <td class="font-weight-semibold text-right">0%</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="ml-3" style="border-top:1px solid #666;">
+                        <div class="col-md-12 mb-2">
+                          <div class="d-flex">
+                            <h5 class="font-weight-semibold mb-0">YTD</h5>
+                            <span class="badge bg-danger-800 badge-pill align-self-center ml-auto"
+                              id="lay_{{ $layanan->id }}_avg_perf">Perf</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="container-fluid">
+                        {{-- <div id="chart_bar_basic"></div> --}}
+                        <div id="lay_{{ $layanan->id }}_chart_bar"></div>
+                      </div>
               </div>
-            </div>
-          </div>
-          <div class="col-md-8">
-            <div class="table-responsive">
-              <table class="table text-nowrap table-xs table-borderless" id="lay_{{ $layanan->id }}_summary">
-                <thead>
-                  <tr>
-                    <td class="font-weight-bold font-size-lg w-100">KPI</td>
-                    <td class="font-weight-bold font-size-lg text-right">Achv</td>
-                    <td class="font-weight-bold font-size-lg text-right">Perf</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="font-weight-semibold">Service Level</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                  </tr>
-                  <tr>
-                    <td class="font-weight-semibold">FCR</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                  </tr>
-                  <tr>
-                    <td class="font-weight-semibold">Rasio Sales</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                 </tr>
-                  <tr>
-                    <td class="font-weight-semibold">CES (by Customer)</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                  </tr>
-                  <tr>
-                    <td class="font-weight-semibold">Quality Layanan</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                    <td class="font-weight-semibold text-right">0%</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="ml-3" style="border-top:1px solid #666;">
-              <div class="col-md-12 mb-2">
-                <div class="d-flex">
-                  <h5 class="font-weight-semibold mb-0">YTD</h5>
-                  <span class="badge bg-danger-800 badge-pill align-self-center ml-auto" id="lay_{{ $layanan->id }}_avg_perf">Perf</span>
-                </div>
-              </div>
-            </div>
-            <div class="container-fluid">
-              {{-- <div id="chart_bar_basic"></div> --}}
-              <div id="lay_{{ $layanan->id }}_chart_bar"></div>
             </div>
           </div>
         </div>
       </div>
+      @endforeach
     </div>
-  </div>
-  @endforeach
-</div>
-@endsection
+    @endsection
