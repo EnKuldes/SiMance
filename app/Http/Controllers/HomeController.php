@@ -209,7 +209,7 @@ class HomeController extends Controller
           break;
         // Digital Media
         case 6:
-          $qWhere .= '(AVG(CASE WHEN id_formulasi=16 THEN nilai ELSE NULL END) + AVG(CASE WHEN id_formulasi=17 THEN nilai ELSE NULL END) + AVG(CASE WHEN id_formulasi=18 THEN nilai ELSE NULL END) + AVG(CASE WHEN id_formulasi=19 THEN nilai ELSE NULL END) + AVG(CASE WHEN id_formulasi=20 THEN nilai ELSE NULL END))/5';
+          $qWhere .= '(ifnull(AVG(CASE WHEN id_formulasi=16 THEN nilai ELSE NULL END), 0) +  ifnull(AVG(CASE WHEN id_formulasi=17 THEN nilai ELSE NULL END), 0) +  ifnull(AVG(CASE WHEN id_formulasi=18 THEN nilai ELSE NULL END), 0) +  ifnull(AVG(CASE WHEN id_formulasi=19 THEN nilai ELSE NULL END), 0) +  ifnull(AVG(CASE WHEN id_formulasi=20 THEN nilai ELSE NULL END), 0))/5';
           $param_compare = '<=';
           break;
         case 7:
@@ -470,7 +470,7 @@ class HomeController extends Controller
             break;
           // Digital Media
           case 6:
-            $qWhere .= '(AVG(CASE WHEN id_formulasi=16 THEN nilai ELSE NULL END) + AVG(CASE WHEN id_formulasi=17 THEN nilai ELSE NULL END) + AVG(CASE WHEN id_formulasi=18 THEN nilai ELSE NULL END) + AVG(CASE WHEN id_formulasi=19 THEN nilai ELSE NULL END) + AVG(CASE WHEN id_formulasi=20 THEN nilai ELSE NULL END))/5'; // Average beluus
+            $qWhere .= '(ifnull(AVG(CASE WHEN id_formulasi=16 THEN nilai ELSE NULL END), 0) +  ifnull(AVG(CASE WHEN id_formulasi=17 THEN nilai ELSE NULL END), 0) +  ifnull(AVG(CASE WHEN id_formulasi=18 THEN nilai ELSE NULL END), 0) +  ifnull(AVG(CASE WHEN id_formulasi=19 THEN nilai ELSE NULL END), 0) +  ifnull(AVG(CASE WHEN id_formulasi=20 THEN nilai ELSE NULL END), 0))/5'; 
             $param_compare = '<=';
             break;
           case 7:
