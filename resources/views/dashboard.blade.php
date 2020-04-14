@@ -362,15 +362,23 @@
          success: function(data){
           var list_xAxis = trans_val(data, 'desc');
           columns_basic1_option.xAxis[0].data = list_xAxis
-          var list_perfomance = trans_val(data, 'total_perfomance');
+          //var list_perfomance = trans_val(data, 'total_perfomance');
           var tempArr = [];
           var colors = ['#b6a2de', '#2ec7c9']
-          for (var i = 0; i < list_perfomance.length; i++) {
+          /*for (var i = 0; i < list_perfomance.length; i++) {
             tempArr.push({
               itemStyle: {
                 color: colors[i]
               },
               value: list_perfomance[i]
+            })
+          }*/
+          for (var i = 0; i < data.length; i++) {
+            tempArr.push({
+              itemStyle: {
+                color: colors[i]
+              },
+              value: data[i]['total_perfomance']
             })
           }
           columns_basic1_option.series[0].data = tempArr
