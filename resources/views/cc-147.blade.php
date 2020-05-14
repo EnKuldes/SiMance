@@ -1175,8 +1175,10 @@
         <div class="card-header header-elements-inline">
           <h5 class="card-title">{{ $record->parameter_desc }} [<span class="date_label"></span>]</h5>
           <div class="header-elements">
+            @if (Auth::user()->level == 1)
             <button type="button" class="btn bg-info btn-icon ml-3 legitRipple" data-toggle="modal"
               data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
+            @endif
           </div>
         </div>
 
