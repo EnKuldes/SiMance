@@ -68,6 +68,7 @@
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        , 'dashboard-type': 1
       }
     });
     $.ajax({
@@ -120,6 +121,7 @@
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        , 'dashboard-type': 1
       }
     });
     $.ajax({
@@ -353,6 +355,7 @@
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        , 'dashboard-type': 1
       }
     });
     $.ajax({
@@ -430,7 +433,7 @@
     <!-- Daily sales -->
     <div class="card">
       <div class="card-header header-elements-inline">
-        <h5 class="card-title font-weight-bold">{{-- CC 147 --}}{{ Auth::user()->layanans->layanan_desc }} Realtime</h5>
+        <h5 class="card-title font-weight-bold">{{-- CC 147 --}}{{ Auth::user()->layanans->layanan_desc }} Verifikasi</h5>
         <div class="header-elements">
           <span class="font-weight-bold font-size-lg text-info-600 ml-2" style="display:none;">TOTAL BOBOT | <span id="t_bobot">{{ round($t_bobot ?? 0) }}</span>%</span>
         </div>

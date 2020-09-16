@@ -54,9 +54,16 @@ class HomeController extends Controller
           break;
       }
     }
+
+    // Menampilkan Dashboard Real
     public function dashboard($value='')
     {
        return view('dashboard');
+    }
+    // Menampilkan Dashboard Justifikasi
+    public function dashboard_verifikasi($value='')
+    {
+      return view('dashboard-verifikasi');
     }
 
     // Func Admin Start
@@ -556,20 +563,24 @@ class HomeController extends Controller
       if (auth()->user()->layanan == 0) {
           return $this->get_perfomance_comparation_admin($request);
       }
+      $table_name = 'log_transaksis';
+      if ($request->headers->has('dashboard-type') && $request->header('dashboard-type', 'default_value') == 1) {
+        $table_name = 'log_transaksis_justifikasi';
+      }
       $list_parameter = DB::table('parameters')->where([
         ['id_layanan', '=', auth()->user()->layanan]
         , ['is_enabled', '=', '1']
       ])->get();
       $total_perfomance = [];
       $req_date = date("Y-m-d" ,strtotime($request->year."-".$request->month."-1"));
-      //$qWhere = ['MONTH(log_transaksis.log_date) = MONTH(CURRENT_DATE() - INTERVAL 1 MONTH) AND YEAR(log_transaksis.log_date) = YEAR(CURRENT_DATE() - INTERVAL 1 MONTH)', 'MONTH(log_transaksis.log_date) = MONTH(CURRENT_DATE()) AND YEAR(log_transaksis.log_date) = YEAR(CURRENT_DATE())'];
-      $qWhere = ['MONTH(log_transaksis.log_date) = MONTH("'.$req_date.'" - INTERVAL 1 MONTH) AND YEAR(log_transaksis.log_date) = YEAR("'.$req_date.'" - INTERVAL 1 MONTH)', 'MONTH(log_transaksis.log_date) = MONTH("'.$req_date.'") AND YEAR(log_transaksis.log_date) = YEAR("'.$req_date.'")'];
+      //$qWhere = ['MONTH('.$table_name.'.log_date) = MONTH(CURRENT_DATE() - INTERVAL 1 MONTH) AND YEAR('.$table_name.'.log_date) = YEAR(CURRENT_DATE() - INTERVAL 1 MONTH)', 'MONTH('.$table_name.'.log_date) = MONTH(CURRENT_DATE()) AND YEAR('.$table_name.'.log_date) = YEAR(CURRENT_DATE())'];
+      $qWhere = ['MONTH('.$table_name.'.log_date) = MONTH("'.$req_date.'" - INTERVAL 1 MONTH) AND YEAR('.$table_name.'.log_date) = YEAR("'.$req_date.'" - INTERVAL 1 MONTH)', 'MONTH('.$table_name.'.log_date) = MONTH("'.$req_date.'") AND YEAR('.$table_name.'.log_date) = YEAR("'.$req_date.'")'];
       $name_desc = ['Last Month', 'This Month'];
       for ($i=0; $i < count($qWhere) ; $i++) {
         $tempArr = [];
         $tempVal = 0;
         foreach ($list_parameter as $key) {
-          $tempArr[] = DB::table('log_transaksis')->where([
+          $tempArr[] = DB::table($table_name)->where([
             ['layanan', '=', $key->id_layanan]
             , ['parameter', '=', $key->id]
           ])
@@ -655,6 +666,10 @@ class HomeController extends Controller
     # Get KPI Information dan Progress Monthly
     public function get_kpi_information_progress(Request $request)
     {
+      $table_name = 'log_transaksis';
+      if ($request->headers->has('dashboard-type') && $request->header('dashboard-type', 'default_value') == 1) {
+        $table_name = 'log_transaksis_justifikasi';
+      }
       // Buat Variable yang nampung kpi bobot dan target per paramater
       $kpi = DB::table('kpi')->where([
         //['id_layanan', '=', 1]
@@ -721,7 +736,7 @@ class HomeController extends Controller
       $tempArr = [];
 
       foreach ($parameter as $key) {
-        $lt = DB::table('log_transaksis')->where([
+        $lt = DB::table($table_name)->where([
             ['parameter', '=', $key->id]
             //, ['layanan', '=', auth()->user()->layanan]
         ]);
@@ -827,6 +842,12 @@ class HomeController extends Controller
 
     public function get_summary_layanan(Request $request)
     {
+      $table_name = 'log_transaksis';
+      $table_name1 = 'daily_transaksis';
+      if ($request->headers->has('dashboard-type') && $request->header('dashboard-type', 'default_value') == 1) {
+        $table_name = 'log_transaksis_justifikasi';
+        $table_name1 = 'daily_transaksis_justifikasi';
+      }
       // Fetch Parameter berdasarkan Layanan
       $list_parameter = DB::table('parameters')->where([
         //['id_layanan', '=', auth()->user()->layanan],
@@ -853,7 +874,7 @@ class HomeController extends Controller
       $tempArr = [];
       foreach ($list_parameter as $parameter) {
         // Fetch Nilai Summary Bulanan dari Log Transaksi
-        $summary_per_parameter = DB::table('log_transaksis')->where([
+        $summary_per_parameter = DB::table($table_name)->where([
           //['layanan', '=', auth()->user()->layanan],
           ['parameter', '=', $parameter->id]
         ]);
@@ -915,7 +936,7 @@ class HomeController extends Controller
         // Total Input Daily per Formulasi berdasarkan Parameter
         # Kalo parameternya Download Apps dan Rating Playstore maka total input hitungannya berikut
         if ($tempArr[$i]['paramater_id'] == 15 OR $tempArr[$i]['paramater_id'] == 16 OR $tempArr[$i]['paramater_id'] == 17) {
-            $total_input = DB::table('daily_transaksis')->selectRaw('
+            $total_input = DB::table($table_name1)->selectRaw('
               id_formulasi
               , nilai AS total
               ')
@@ -924,7 +945,7 @@ class HomeController extends Controller
             ->orderBy('tanggal', 'desc')->limit(1);
         }
         elseif ( $tempArr[$i]['paramater_id'] == 6 OR $tempArr[$i]['paramater_id'] == 12 ) {
-            $total_input = DB::table('daily_transaksis')->selectRaw('
+            $total_input = DB::table($table_name1)->selectRaw('
               id_formulasi
               , AVG(nilai) AS total
               ')
@@ -933,7 +954,7 @@ class HomeController extends Controller
             ->groupBy('id_formulasi');
         }
         else{
-            $total_input = DB::table('daily_transaksis')->selectRaw('
+            $total_input = DB::table($table_name1)->selectRaw('
               id_formulasi
               , SUM(nilai) AS total
               ')

@@ -53,6 +53,7 @@ Auth::routes([
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/dashboard', 'HomeController@index')->name('dashboard');
+Route::get('/dashboard-verifikasi', 'HomeController@dashboard_verifikasi')->name('dashboard-verifikasi');
 Route::get('/cc-147', 'HomeController@cc_147')->name('cc-147');
 Route::get('/digital-media', 'HomeController@digital_media')->name('digital-media');
 Route::get('/c4', 'HomeController@c4')->name('c4');
