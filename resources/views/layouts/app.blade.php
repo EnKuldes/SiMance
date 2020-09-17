@@ -61,6 +61,12 @@
             Dashboard
           </a>
         </li>
+        <li class="nav-item">
+          <a href="/dashboard-verifikasi" class="navbar-nav-link">
+            <i class="icon-meter-fast mr-2"></i>
+            Dashboard Verifikasi
+          </a>
+        </li>
 
         @if (Auth::user()->layanan == 1)
         <li class="nav-item">
@@ -102,6 +108,15 @@
           </a>
         </li>
 
+        @endif
+
+        @if (Auth::user()->layanan != 0)
+        <li class="nav-item">
+          <a href="#" class="navbar-nav-link">
+            <i class="icon-printer2 mr-2"></i>
+            Perfomance System: Verifikasi
+          </a>
+        </li>
         @endif
 
       </ul>
