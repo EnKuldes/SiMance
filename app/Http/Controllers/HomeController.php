@@ -1061,6 +1061,22 @@ class HomeController extends Controller
       return response()->json($tempArr);
     }
 
+    # Get List Notes Anomali 
+    public function get_list_anomaly(Request $request)
+    {
+      $datas = DB::table('anomaly_note')->join('formulasis', 'anomaly_note.id_formulasi', '=', 'formulasis.id')
+        ->where([
+          ['formulasis.is_enabled', '=', '1']
+          , ['anomaly_note.id_parameter', '=', $request->id_parameter]
+        ])
+        ->whereYear('anomaly_note.tanggal', $request->year)
+        ->whereMonth('anomaly_note.tanggal', $request->month)
+        ->orderBy('anomaly_note.tanggal')
+        ->select('formulasis.formulasi_desc', 'anomaly_note.tanggal', 'anomaly_note.note', 'anomaly_note.user_input')
+        ->get();
+      return response()->json($datas);
+    }
+
     # Chaining
     public function list_parameter(Request $request)
     {
