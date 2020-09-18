@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class daily_transaksi extends Model
 {
-	# Model untuk setiap transaksi input daily formulasi per parameter layanan
+    # Berubah dari Daily Transkasi menjadi Daily Transaksi Verifikasi
+    protected $table = 'daily_transaksis_justifikasi';
+	
+    # Model untuk setiap transaksi input daily formulasi per parameter layanan
     # Fillable field for mass assigning
     protected $fillable = [
         'id_layanan' , 'id_parameter', 'id_formulasi' , 'tanggal' , 'nilai' , 'user_input'
