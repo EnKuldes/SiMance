@@ -173,6 +173,21 @@ class HomeController extends Controller
         abort(500, 'Error while saving value.');
       }
 
+      if ($request->is_justifikasi != 1) {
+        DB::table('daily_transaksis')->updateOrInsert(
+            [
+              'id_layanan' => $saveResult->id_layanan
+            , 'id_parameter' => $saveResult->id_parameter
+            , 'id_formulasi' => $saveResult->id_formulasi
+            , 'tanggal' => $saveResult->tanggal
+            ],
+            [
+              'nilai' => $saveResult->nilai
+              , 'user_input' => $saveResult->user_input
+            ]
+        );
+      }
+
       $lt = new log_transaksi;
       $lt->layanan = $id_layanan;
       $lt->parameter = $id_parameter;
@@ -277,9 +292,9 @@ class HomeController extends Controller
       }
       $qWhere .= ", 0) as realisasi";
       $dt->selectRaw($qWhere);
-      $dt->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH("'.$request->input_date.'") AND YEAR(daily_transaksis.tanggal) = YEAR("'.$request->input_date.'")');
+      $dt->whereRaw('MONTH(daily_transaksis_justifikasi.tanggal) = MONTH("'.$request->input_date.'") AND YEAR(daily_transaksis_justifikasi.tanggal) = YEAR("'.$request->input_date.'")');
       if ($id_parameter == 15 OR $id_parameter == 16 OR $id_parameter == 17) {
-          $dt->orderBy('daily_transaksis.tanggal', 'desc');
+          $dt->orderBy('daily_transaksis_justifikasi.tanggal', 'desc');
       }
       $dt = $dt->first();
       $realisasi = $dt->realisasi;
@@ -321,6 +336,42 @@ class HomeController extends Controller
       $lt->persetasi_bobot = $persetasi_bobot;
       $lt->log_date = $input_date;//now()->subDays(1);
       $lt->save();
+
+      if ($request->is_justifikasi != 1) {
+        DB::table('log_transaksis')->insert(
+            [
+              'layanan' => $lt->layanan
+              , 'parameter' => $lt->parameter
+              , 'satuan' => $lt->satuan
+              , 'target' => $lt->target
+              , 'bobot' => $lt->bobot
+              , 'realisasi' => $lt->realisasi
+              , 'achievement' => $lt->achievement
+              , 'persetasi_bobot' => $lt->persetasi_bobot
+              , 'perfomance' => $lt->perfomance
+              , 'log_date' => $lt->log_date
+              , 'created_at' => $lt->created_at
+              , 'updated_at' => $lt->updated_at
+            ]
+        );
+      }
+
+      if ($request->is_justifikasi == 1 && $request->has('note_anomaly')) {
+        DB::table('anomaly_note')->updateOrInsert(
+            [
+              'id_layanan' => auth()->user()->layanan
+              , 'id_parameter' => $request->select_parameter
+              , 'id_formulasi' => $request->select_formulasi
+              , 'tanggal' => $input_date
+            ],
+            [
+              'note' => $request->note_anomaly
+              , 'user_input' => auth()->user()->username
+              , 'created_at' => now()
+              , 'updated_at' => now()
+            ]
+        );
+      }
 
       // Return hasilnya
       return response()->json(['success' => "success"], 200);
