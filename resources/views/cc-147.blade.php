@@ -14,6 +14,7 @@
 <script src="assets/js/demo_pages/form_layouts.js"></script>
 <script src="assets/js/plugins/pickers/pickadate/picker.js"></script>
 <script src="assets/js/plugins/pickers/pickadate/picker.date.js"></script>
+<script src="assets/js/plugins/forms/styling/switch.min.js"></script>
 @endsection
 
 @section('script')
@@ -21,6 +22,14 @@
 <script type="text/javascript">
   var tempYear = 0;
   var tempMonth = 0;
+  window['dashboard-type'] = 0; // Default nya Data Real
+
+  // Switchery
+  $('.form-check-input-switch').bootstrapSwitch({
+    size: 'mini'
+  });
+  // Text Area
+  $('#note-anomaly-div').hide();
 
   function numbersonly(e){
     var unicode=e.charCode? e.charCode : e.keyCode
@@ -137,6 +146,7 @@
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        , 'dashboard-type': window['dashboard-type']
       }
     });
     $.ajax({
@@ -236,12 +246,27 @@
       setTimeout(init_chart_value( $("#list_year").val(), $(this).val() ), 5000);
     }
   });
+  $('#parameter-desc').on('switchChange.bootstrapSwitch', function(event, state) {
+    /*console.log(this); // DOM element
+    console.log(event); // jQuery event
+    console.log(state); // true | false*/
+    if (state) { window['dashboard-type'] = 1; }
+    else{ window['dashboard-type'] = 0; }
+    refresh_charts();
+  });
+  $('#is_justifikasi').on('switchChange.bootstrapSwitch', function(event, state) {
+    $('#note_anomaly').prop('required',state);
+    $('#note-anomaly-div').toggle(100);
+  });
+  
   // Button On Click
   function reset_input() {
     $("#form-insert-daily").trigger("reset");
     //$("select").val('').trigger('change');
     $("#select_parameter").val('').trigger('change');
     $("#select_formulasi").html('');
+    $('#note_anomaly').prop('required',false);
+    $('#note_anomaly').html('');
   }
   // on Close Modal Event
   $('#insert-new-data').on('hidden.bs.modal', function () {
@@ -260,7 +285,7 @@
   var line_basic2 = echarts.init( document.getElementById("line_basic2") ); // quality layanan
   var line_stacked = echarts.init( document.getElementById("line_stacked") ); // rasio sales*/
 
-  // Variable penampung html tables
+  // Variable penampung html tables nilai daily
   var list_tables = [
   //"summary_table_sl", "summary_table_fcr", "summary_table_rs", "summary_table_ces", "summary_table_ql"
     @php
@@ -273,6 +298,21 @@
     }
     @endphp
     "summary_table_{{ $record->id }}",
+    @endforeach
+  ]
+
+  // Variable penampung html tables list notes anomaly
+  var list_tables_anomaly = [
+    @php
+    $temp_table_id = 0;
+    @endphp
+    @foreach ($data['parameters_tab'] as $record)
+    @php
+    if ($temp_table_id == 0){
+      $temp_table_id = $record->id;
+    }
+    @endphp
+    "list_notes_anomaly_{{ $record->id }}",
     @endforeach
   ]
 
@@ -864,6 +904,7 @@
     ];
     for (var i = 0; i < list_option_charts.length; i++) {
       get_monthly_data( $("#list_year").val(), $('#list_month').val(), param_id[i], charts[i], list_option_charts[i], list_type_charts[i], list_tables[i])
+      get_list_anomaly( $("#list_year").val(), $('#list_month').val(), param_id[i], list_tables_anomaly[i])
     }
     //get_monthly_data( $("#list_year").val(), $('#list_month').val(), 1, charts[0], list_option_charts[0], list_type_charts[0], list_tables[0])
   }
@@ -873,6 +914,7 @@
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        , 'dashboard-type': window['dashboard-type']
       }
     });
     $.ajax({
@@ -940,6 +982,53 @@
       }).done(function(){
 
       });
+    }
+  
+  // Get List Anomali
+  function get_list_anomaly(year_value, month_value, parameter_value, table_element) {
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          , 'dashboard-type': window['dashboard-type']
+        }
+      });
+      $.ajax({
+       type:"post",
+       url:'/get-list-anomaly',
+           data: {year: year_value, month: month_value, id_parameter: parameter_value},
+           success: function(data){
+            var thead_html = '<thead><tr><td style="width: 10%;">Formulasi</td><td style="width: 15%;">Date</td><td style="width: 60%;">Notes</td><td style="width: 15%;">Created by</td></tr></thead>';
+            var tbody_html = '<tbody>';
+            if (data.length > 0) {
+              for (var i = 0; i < data.length; i++) {
+                tbody_html += '<tr>';
+                tbody_html += '<td>'+ data[i]['formulasi_desc'] +'</td>';
+                tbody_html += '<td>'+ data[i]['tanggal'] +'</td>';
+                tbody_html += '<td>'+ data[i]['note'] +'</td>';
+                tbody_html += '<td>'+ data[i]['user_input'] +'</td>';
+                tbody_html += '</tr>';
+              }
+            }
+            else{
+              tbody_html += '<tr>';
+              tbody_html += '<td colspan="4">There is no anomaly.</td>';
+              tbody_html += '</tr>';
+            }
+            tbody_html += '</tbody>';
+            $('#'+table_element).html(thead_html + tbody_html);
+          },
+          error: function(jqXhr, json, errorThrown){// this are default for ajax errors
+            var errors = jqXhr.responseJSON;
+            var errorsHtml = '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Error ' + jqXhr.status + ': ' + errorThrown + '</div>';
+            notificationScript("error", "Error " + jqXhr.status, errorThrown);
+            $.each(errors['errors'], function (index, value) {
+              errorsHtml += '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + value + '</div>';
+              notificationScript("error", "Error Field", value);
+            });
+          }
+        }).done(function(){
+
+        });
     }
   // Refresh Charts
   function refresh_charts() {
@@ -1067,6 +1156,12 @@
       else { $('#'+list_tables[i]).show() }
     }
   }
+  function change_table_data_anomaly(table_id) {
+    for (var i = 0; i < list_tables_anomaly.length; i++) {
+      if (table_id != list_tables_anomaly[i]) { $('#'+list_tables_anomaly[i]).hide() }
+      else { $('#'+list_tables_anomaly[i]).show() }
+    }
+  }
 
   // Document Ready
     $(document).ready(function() {
@@ -1075,6 +1170,7 @@
       reset_input();
       //init_chart_element();
       change_table_data("summary_table_{{ $temp_table_id }}");
+      change_table_data_anomaly("list_notes_anomaly_{{ $temp_table_id }}");
       //get_realisasi_monthly()
       $('#input_date').pickadate({format: 'yyyy-mm-dd'});
     });
@@ -1096,14 +1192,16 @@
       <div class="card">
         <div class="card-body p-0">
           <ul class="nav nav-sidebar mb-2">
-            <li class="nav-item-header">Parameter</li>
+            <li class="nav-item-header">
+              Parameter <input type="checkbox" data-off-color="success" data-on-text="Verifikasi" data-off-text="Real" class="form-check-input-switch" id="parameter-desc" unchecked>
+              </li>
             {{-- <section id="parameter_side_bar"> --}}
               @php
               $i = 0;
               @endphp
               @foreach ($data['parameters_tab'] as $record)
               <li class="nav-item">
-                <a href="#pid_{{ $record->id }}" class="nav-link {{ $i == 0 ? 'active' : '' }}" data-toggle="tab" onclick="change_table_data('summary_table_{{ $record->id }}')">
+                <a href="#pid_{{ $record->id }}" class="nav-link {{ $i == 0 ? 'active' : '' }}" data-toggle="tab" onclick="change_table_data('summary_table_{{ $record->id }}'); change_table_data_anomaly('list_notes_anomaly_{{ $record->id }}');">
                   <i class="icon-cog"></i>
                   {{ $record->parameter_desc }}
                   <span class="badge bg-info badge-pill ml-auto" id="{{ $record->id }}_val">0%</span>
@@ -1429,6 +1527,14 @@
     --}}
   </div>
 </div>
+<div class="card">
+  <div class="table-responsive">
+    @foreach ($data['parameters_tab'] as $record)
+    <table class="table table-xs table-bordered" id="list_notes_anomaly_{{ $record->id }}">
+    </table>
+    @endforeach
+  </div>
+</div>
 
 <!-- Horizontal form modal -->
 <div id="insert-new-data" class="modal fade" tabindex="-1">
@@ -1470,7 +1576,19 @@
             <label class="col-form-label col-sm-5">Value</label>
             <div class="col-sm-7">
               <input type="text" class="form-control" autocomplete="off" name="value_formulasi" id="value_formulasi"
-                onkeypress="return numbersonly(event)">
+                onkeypress="return numbersonly(event)" required>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-sm-5">Justifikasi</label>
+            <div class="col-sm-7">
+              <input type="checkbox" data-off-color="success" data-on-text="Yes" data-off-text="No" class="form-check-input-switch" id="is_justifikasi" name="is_justifikasi" value="1" unchecked>
+            </div>
+          </div>
+          <div class="form-group row" id="note-anomaly-div">
+            <label class="col-form-label col-sm-5">Note</label>
+            <div class="col-sm-7">
+              <textarea rows="3" cols="3" class="form-control" placeholder="Note" style="resize:none" name="note_anomaly" id="note_anomaly"></textarea>
             </div>
           </div>
         </div>
