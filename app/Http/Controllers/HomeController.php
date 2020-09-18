@@ -433,31 +433,38 @@ class HomeController extends Controller
     # Get Monthly Data
     public function get_monthly_data(Request $request)
     {
-      $list_date = DB::table('daily_transaksis')->where([
-        ['daily_transaksis.id_parameter', '=', $request->id_parameter]
+      $table_name = 'log_transaksis';
+      $table_name1 = 'daily_transaksis';
+      if ($request->headers->has('dashboard-type') && $request->header('dashboard-type', 'default_value') == 1) {
+        $table_name = 'log_transaksis_justifikasi';
+        $table_name1 = 'daily_transaksis_justifikasi';
+      }
+
+      $list_date = DB::table($table_name1)->where([
+        [''.$table_name1.'.id_parameter', '=', $request->id_parameter]
       ])
-      ->whereRaw('MONTH(daily_transaksis.tanggal) = '.$request->month.' AND YEAR(daily_transaksis.tanggal) = '.$request->year)
+      ->whereRaw('MONTH('.$table_name1.'.tanggal) = '.$request->month.' AND YEAR('.$table_name1.'.tanggal) = '.$request->year)
       ->selectRaw('
-        DAY(daily_transaksis.tanggal) AS day
-        , daily_transaksis.tanggal AS date
+        DAY('.$table_name1.'.tanggal) AS day
+        , '.$table_name1.'.tanggal AS date
       ')
       ->orderBy('day')
       ->distinct()->get();
       $datas = [];
       foreach ($list_date as $date_value) {
-        $dataToJoin = DB::table('daily_transaksis')
+        $dataToJoin = DB::table($table_name1)
         ->where([
-          ['daily_transaksis.id_layanan', '=', auth()->user()->layanan]
-          , ['daily_transaksis.id_parameter', '=', $request->id_parameter]
+          [''.$table_name1.'.id_layanan', '=', auth()->user()->layanan]
+          , [''.$table_name1.'.id_parameter', '=', $request->id_parameter]
         ])
-        //->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH(CURRENT_DATE()) AND YEAR(daily_transaksis.tanggal) = YEAR(CURRENT_DATE())')
-        //->whereRaw('MONTH(daily_transaksis.tanggal) = '.$request->month.' AND YEAR(daily_transaksis.tanggal) = '.$request->year)
-        ->whereRaw('daily_transaksis.tanggal = "'.$date_value->date.'"')
+        //->whereRaw('MONTH('.$table_name1.'.tanggal) = MONTH(CURRENT_DATE()) AND YEAR('.$table_name1.'.tanggal) = YEAR(CURRENT_DATE())')
+        //->whereRaw('MONTH('.$table_name1.'.tanggal) = '.$request->month.' AND YEAR('.$table_name1.'.tanggal) = '.$request->year)
+        ->whereRaw(''.$table_name1.'.tanggal = "'.$date_value->date.'"')
         ->selectRaw(
-          'DAY(daily_transaksis.tanggal) AS DAY
-          , DATE_FORMAT(daily_transaksis.tanggal, "%Y-%m") AS DATE
-          , daily_transaksis.nilai AS value_item
-          , daily_transaksis.id_formulasi AS id_formulasi'
+          'DAY('.$table_name1.'.tanggal) AS DAY
+          , DATE_FORMAT('.$table_name1.'.tanggal, "%Y-%m") AS DATE
+          , '.$table_name1.'.nilai AS value_item
+          , '.$table_name1.'.id_formulasi AS id_formulasi'
         );
 
         $data = DB::table('formulasis')
@@ -484,25 +491,29 @@ class HomeController extends Controller
 
         /*
         // Penambahan buat ngambil nilai total per harinya
-        $total_data_daily = DB::table('daily_transaksis')
+        $total_data_daily = DB::table($table_name1)
         ->where([
-          ['daily_transaksis.id_layanan', '=', auth()->user()->layanan]
-          , ['daily_transaksis.id_parameter', '=', $request->id_parameter]
+          [''.$table_name1.'.id_layanan', '=', auth()->user()->layanan]
+          , [''.$table_name1.'.id_parameter', '=', $request->id_parameter]
         ])
-        //->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH(CURRENT_DATE()) AND YEAR(daily_transaksis.tanggal) = YEAR(CURRENT_DATE())')
-        //->whereRaw('MONTH(daily_transaksis.tanggal) = '.$request->month.' AND YEAR(daily_transaksis.tanggal) = '.$request->year)
-        ->whereRaw('daily_transaksis.tanggal = "'.$date_value->date.'"')
+        //->whereRaw('MONTH('.$table_name1.'.tanggal) = MONTH(CURRENT_DATE()) AND YEAR('.$table_name1.'.tanggal) = YEAR(CURRENT_DATE())')
+        //->whereRaw('MONTH('.$table_name1.'.tanggal) = '.$request->month.' AND YEAR('.$table_name1.'.tanggal) = '.$request->year)
+        ->whereRaw(''.$table_name1.'.tanggal = "'.$date_value->date.'"')
         ->selectRaw(
-          'IFNULL(daily_transaksis.tanggal, DAY("'.$date_value->date.'"))  AS day
-          , IFNULL(daily_transaksis.tanggal, "'.$date_value->date.'") AS date
-          , IFNULL(SUM(daily_transaksis.nilai), "") AS total_item'
-        )->groupBy('daily_transaksis.tanggal')->first();
+          'IFNULL('.$table_name1.'.tanggal, DAY("'.$date_value->date.'"))  AS day
+          , IFNULL('.$table_name1.'.tanggal, "'.$date_value->date.'") AS date
+          , IFNULL(SUM('.$table_name1.'.nilai), "") AS total_item'
+        )->groupBy(''.$table_name1.'.tanggal')->first();
         */
 
         // Realisasi daily
-        $dt = daily_transaksi::where([
+        /*$dt = daily_transaksi::where([
           ['daily_transaksis.id_layanan', '=', auth()->user()->layanan]
           , ['daily_transaksis.id_parameter', '=', $request->id_parameter]
+        ]);*/
+        $dt = DB::table($table_name1)->where([
+          [''.$table_name1.'.id_layanan', '=', auth()->user()->layanan]
+          , [''.$table_name1.'.id_parameter', '=', $request->id_parameter]
         ]);
         $qWhere = "IFNULL(";
         switch ($request->id_parameter) {
@@ -590,9 +601,9 @@ class HomeController extends Controller
         }
         $qWhere .= ", 0) as realisasi";
         $dt->selectRaw($qWhere);
-        $dt->whereRaw('daily_transaksis.tanggal = "'.$date_value->date.'"');
+        $dt->whereRaw(''.$table_name1.'.tanggal = "'.$date_value->date.'"');
         if ($request->id_parameter == 15 OR $request->id_parameter == 16 OR $request->id_parameter == 17) {
-            $dt->orderBy('daily_transaksis.tanggal', 'desc');
+            $dt->orderBy(''.$table_name1.'.tanggal', 'desc');
         }
         $dt = $dt->first();
         $realisasi = number_format((float)$dt->realisasi, 2, '.', '');
@@ -683,19 +694,23 @@ class HomeController extends Controller
     # Get Realiasi Monthly
     public function get_realisasi_monthly(Request $request)
     {
+      $table_name = 'log_transaksis';
+      if ($request->headers->has('dashboard-type') && $request->header('dashboard-type', 'default_value') == 1) {
+        $table_name = 'log_transaksis_justifikasi';
+      }
       $list_parameter = DB::table('parameters')->where([
         ['id_layanan', '=', auth()->user()->layanan]
         , ['is_enabled', '=', '1']
       ])->get();
       $list_realisasi = [];
-      //$qWhere = ['MONTH(log_transaksis.log_date) = MONTH(CURRENT_DATE()) AND YEAR(log_transaksis.log_date) = YEAR(CURRENT_DATE())'];
-      $qWhere = ['MONTH(log_transaksis.log_date) = "'.$request->month.'" AND YEAR(log_transaksis.log_date) = "'.$request->year.'"'];
+      //$qWhere = ['MONTH('.$table_name.'.log_date) = MONTH(CURRENT_DATE()) AND YEAR('.$table_name.'.log_date) = YEAR(CURRENT_DATE())'];
+      $qWhere = ['MONTH('.$table_name.'.log_date) = "'.$request->month.'" AND YEAR('.$table_name.'.log_date) = "'.$request->year.'"'];
       $name_desc = ['This Month'];
       for ($i=0; $i < count($qWhere) ; $i++) {
         $tempArr = [];
         $tempVal = 0;
         foreach ($list_parameter as $key) {
-          $tempArr[] = DB::table('log_transaksis')->where([
+          $tempArr[] = DB::table($table_name)->where([
             ['layanan', '=', $key->id_layanan]
             , ['parameter', '=', $key->id]
           ])
