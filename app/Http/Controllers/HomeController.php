@@ -60,10 +60,17 @@ class HomeController extends Controller
     {
        return view('dashboard');
     }
+
     // Menampilkan Dashboard Justifikasi
     public function dashboard_verifikasi($value='')
     {
       return view('dashboard-verifikasi');
+    }
+
+    // Menampilkan Dashboard Justifikasi
+    public function performance_system_verifikasi($value='')
+    {
+      return view('performance-system-verifikasi');
     }
 
     // Func Admin Start
@@ -1061,7 +1068,7 @@ class HomeController extends Controller
       return response()->json($tempArr);
     }
 
-    # Get List Notes Anomali 
+    # Get List Notes Anomali
     public function get_list_anomaly(Request $request)
     {
       $datas = DB::table('anomaly_note')->join('formulasis', 'anomaly_note.id_formulasi', '=', 'formulasis.id')

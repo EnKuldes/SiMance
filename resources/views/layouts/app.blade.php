@@ -112,8 +112,8 @@
 
         @if (Auth::user()->layanan != 0)
         <li class="nav-item">
-          <a href="#" class="navbar-nav-link">
-            <i class="icon-printer2 mr-2"></i>
+          <a href="/performance-system-verifikasi" class="navbar-nav-link">
+            <i class="icon-chart mr-2"></i>
             Perfomance System: Verifikasi
           </a>
         </li>

@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
     return view('login');
 });*/
 
-# Disable 
+# Disable
 /*Route::get('/', function () {
     return view('welcome');
 });
@@ -54,6 +54,7 @@ Auth::routes([
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/dashboard', 'HomeController@index')->name('dashboard');
 Route::get('/dashboard-verifikasi', 'HomeController@dashboard_verifikasi')->name('dashboard-verifikasi');
+Route::get('/performance-system-verifikasi', 'HomeController@performance_system_verifikasi')->name('performance-system-verifikasi');
 Route::get('/cc-147', 'HomeController@cc_147')->name('cc-147');
 Route::get('/digital-media', 'HomeController@digital_media')->name('digital-media');
 Route::get('/c4', 'HomeController@c4')->name('c4');
@@ -65,7 +66,7 @@ Route::post('/daily/save', 'HomeController@save_daily_input')->name('save_daily_
 Route::post('/list-parameter', 'HomeController@list_parameter')->name('chain');
 Route::post('/list-formulasi', 'HomeController@list_formulasi')->name('chain');
 Route::post('/list-date', 'HomeController@list_date')->name('chain');
-// 
+//
 Route::post('/get-current-kpi', 'HomeController@get_kpi')->name('get_information');
 Route::post('/get-monthly-data', 'HomeController@get_monthly_data')->name('get_information');
 Route::post('/get-perfomance-comparison', 'HomeController@get_perfomance_comparation')->name('get_information');
