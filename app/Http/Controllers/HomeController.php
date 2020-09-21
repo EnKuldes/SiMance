@@ -913,6 +913,7 @@ class HomeController extends Controller
       return response()->json( $tempArr);
     }
 
+    // Get Summary Layanan berupa nilai satuan, persentasi dan achievement parameter-nya serta nilai nilai formulasi
     public function get_summary_layanan(Request $request)
     {
       $table_name = 'log_transaksis';
@@ -1062,6 +1063,135 @@ class HomeController extends Controller
           ];
         }
         $tempArr[$i]['realisasi_per_formulasi'] = $tempArr1;
+      }
+
+
+      return response()->json($tempArr);
+    }
+
+    // Get Perfomance by System dan by Verifikasi Layanan yang berisi nilai satuan, persentasi dan achievement parameter-nya serta nilai nilai formulasi
+    public function get_perfomance_system_verifikasi_layanan(Request $request)
+    {
+      // Fetch Parameter berdasarkan Layanan
+      $list_parameter = DB::table('parameters')->where([
+        ['is_enabled', '=', '1']
+      ]);
+      if (auth()->user()->layanan == 0) {
+          if ( request()->ajax() ) {
+            if (!empty($request->layanan)) {
+              $list_parameter->where([
+                ['id_layanan', '=', $request->layanan]
+              ]);
+            }
+            else{
+                abort(500, "No request value for layanan.");
+            }
+          }
+      }
+      else{
+        $list_parameter->where([
+            ['id_layanan', '=', auth()->user()->layanan]
+          ]);
+      }
+      $list_parameter = $list_parameter->get();
+      $tempArr = [];
+      foreach ($list_parameter as $parameter) {
+        // Fetch Nilai Summary Bulanan dari Log Transaksi
+        $summary_per_parameter = DB::table('log_transaksis')->where([
+          //['layanan', '=', auth()->user()->layanan],
+          ['parameter', '=', $parameter->id]
+        ]);
+        $summary_per_parameter1 = DB::table('log_transaksis_justifikasi')->where([
+          //['layanan', '=', auth()->user()->layanan],
+          ['parameter', '=', $parameter->id]
+        ]);
+        if (auth()->user()->layanan == 0) {
+              if ( request()->ajax() ) {
+                if (!empty($request->layanan)) {
+                  $summary_per_parameter->where([
+                    ['layanan', '=', $request->layanan]
+                  ]);
+                }
+                else{
+                    abort(500, "No request value for layanan.");
+                }
+              }
+          }
+          else{
+            $summary_per_parameter->where([
+                ['layanan', '=', auth()->user()->layanan]
+              ]);
+            $summary_per_parameter1->where([
+                ['layanan', '=', auth()->user()->layanan]
+              ]);
+          }
+        $summary_per_parameter = $summary_per_parameter->whereRaw('MONTH(log_date) = '.$request->month.' AND YEAR(log_date) = '.$request->year.'')
+        ->orderBy('created_at', 'desc')->first();
+        $summary_per_parameter1 = $summary_per_parameter1->whereRaw('MONTH(log_date) = '.$request->month.' AND YEAR(log_date) = '.$request->year.'')
+        ->orderBy('created_at', 'desc')->first();
+        if ($summary_per_parameter) {
+          $realisasi = round(optional($summary_per_parameter)->realisasi);
+          if ($parameter->id == 6) { // kalo parameternya bebrnilai service level dari layanan digital media, buat realisasi nya ga di roound
+                $realisasi = optional($summary_per_parameter)->realisasi;
+          }
+          $achievement = optional($summary_per_parameter)->achievement;
+          $persetasi_bobot = optional($summary_per_parameter)->persetasi_bobot;
+          $perfomance = optional($summary_per_parameter)->perfomance;
+          $satuan = optional($summary_per_parameter)->satuan;
+          $target = optional($summary_per_parameter)->target;
+          $bobot = optional($summary_per_parameter)->bobot;
+        }
+        else{
+          $realisasi = 0;
+          $achievement = 0;
+          $persetasi_bobot = 0;
+          $perfomance = 0;
+          $satuan = '%';
+          $target = 0;
+          $bobot = 0;
+        }
+
+        if ($summary_per_parameter1) {
+          $realisasi1 = round(optional($summary_per_parameter1)->realisasi);
+          if ($parameter->id == 6) { // kalo parameternya bebrnilai service level dari layanan digital media, buat realisasi nya ga di roound
+                $realisasi1 = optional($summary_per_parameter1)->realisasi;
+          }
+          $achievement1 = optional($summary_per_parameter1)->achievement;
+          $persetasi_bobot1 = optional($summary_per_parameter1)->persetasi_bobot;
+          $perfomance1 = optional($summary_per_parameter1)->perfomance;
+          $satuan1 = optional($summary_per_parameter1)->satuan;
+          $target1 = optional($summary_per_parameter1)->target;
+          $bobot1 = optional($summary_per_parameter1)->bobot;
+        }
+        else{
+          $realisasi1 = 0;
+          $achievement1 = 0;
+          $persetasi_bobot1 = 0;
+          $perfomance1 = 0;
+          $satuan1 = '%';
+          $target1 = 0;
+          $bobot1 = 0;
+        }
+
+
+        $tempArr[] = [
+          "paramater_id" => $parameter->id
+          , "parameter_desc" => $parameter->parameter_desc
+          
+          , "realisasi" => $realisasi
+          , "achievement" => $achievement
+          , "persetasi_bobot" => $persetasi_bobot
+          , "perfomance" => $perfomance
+
+          , "realisasi_verifikasi" => $realisasi1
+          , "achievement_verifikasi" => $achievement1
+          , "persetasi_bobot_verifikasi" => $persetasi_bobot1
+          , "perfomance_verifikasi" => $perfomance1
+
+          , "satuan" => $satuan
+          , "target" => $target
+          , "bobot" => $bobot
+        ];
       }
 
 

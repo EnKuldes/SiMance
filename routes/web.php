@@ -74,6 +74,7 @@ Route::post('/get-realisasi-monthly', 'HomeController@get_realisasi_monthly')->n
 Route::post('/get-kpi-information-progress', 'HomeController@get_kpi_information_progress')->name('get_information');
 Route::post('/get-summary-layanan', 'HomeController@get_summary_layanan')->name('get_information');
 Route::post('/get-list-anomaly', 'HomeController@get_list_anomaly')->name('get_information');
+Route::post('/get-perfomance-system-verifikasi-layanan', 'HomeController@get_perfomance_system_verifikasi_layanan')->name('get_information');
 
 // Tes PHPOffice/PHPWord
 Route::get('generate-docx', 'HomeController@generateDocx');
