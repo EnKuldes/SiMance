@@ -857,7 +857,7 @@ class HomeController extends Controller
         }
         $progress_bar = '<li class="mt-4 mb-4">';
         if ($key->id == 5 OR $key->id == 10) {
-          $progress_bar .= '<div class="d-flex align-items-center mb-1">'.$key->parameter_desc.' <span class="text-muted ml-auto">Target NOK < '.$key->target.' | Bobot '.$key->bobot.'</span></div>';
+          $progress_bar .= '<div class="d-flex align-items-center mb-1">'.$key->parameter_desc.' <span class="text-muted ml-auto">Target OK => '.$key->target.' | Bobot '.$key->bobot.'</span></div>';
           $progress_bar .= '<div class="progress" style="height: 1.5rem;">';
           $progress_bar_color = ($realisasi < $target ? 'success' : 'danger');
           $progress_bar_width = round($realisasi);
@@ -1177,7 +1177,7 @@ class HomeController extends Controller
         $tempArr[] = [
           "paramater_id" => $parameter->id
           , "parameter_desc" => $parameter->parameter_desc
-          
+
           , "realisasi" => $realisasi
           , "achievement" => $achievement
           , "persetasi_bobot" => $persetasi_bobot
