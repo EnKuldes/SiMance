@@ -654,7 +654,8 @@ class HomeController extends Controller
             , ['parameter', '=', $key->id]
           ])
           ->whereRaw($qWhere[$i])
-          ->orderBy('created_at', 'desc')->first();
+          // ->orderBy('created_at', 'desc')->first();
+          ->orderBy('id', 'desc')->first();
         }
         for ($j=0; $j < count($tempArr); $j++) {
           $tempVal += optional($tempArr[$j])->perfomance;
@@ -685,7 +686,8 @@ class HomeController extends Controller
             , ['parameter', '=', $key->id]
           ])
           ->whereRaw('MONTH(log_transaksis.log_date) = '.$i.' AND YEAR(log_transaksis.log_date) = YEAR("'.$req_date.'")')
-          ->orderBy('created_at', 'desc')->first();
+          // ->orderBy('created_at', 'desc')->first();
+          ->orderBy('id', 'desc')->first();
         }
         for ($j=0; $j < count($tempArr); $j++) {
           $tempVal += optional($tempArr[$j])->perfomance;
@@ -722,7 +724,8 @@ class HomeController extends Controller
             , ['parameter', '=', $key->id]
           ])
           ->whereRaw($qWhere[$i])
-          ->orderBy('created_at', 'desc')->first();
+          // ->orderBy('created_at', 'desc')->first();
+          ->orderBy('id', 'desc')->first();
         }
         for ($j=0; $j < count($tempArr); $j++) {
           $list_realisasi[] = [
@@ -971,7 +974,8 @@ class HomeController extends Controller
           }
         //->whereRaw('MONTH(log_date) = MONTH(CURDATE()) AND YEAR(log_date) = YEAR(CURDATE())')
         $summary_per_parameter = $summary_per_parameter->whereRaw('MONTH(log_date) = '.$request->month.' AND YEAR(log_date) = '.$request->year.'')
-        ->orderBy('created_at', 'desc')->first();
+        // ->orderBy('created_at', 'desc')->first();
+        ->orderBy('id', 'desc')->first();
         if ($summary_per_parameter) {
           $realisasi = round(optional($summary_per_parameter)->realisasi);
           if ($parameter->id == 6) { // kalo parameternya bebrnilai service level dari layanan digital media, buat realisasi nya ga di roound
@@ -1126,9 +1130,11 @@ class HomeController extends Controller
               ]);
           }
         $summary_per_parameter = $summary_per_parameter->whereRaw('MONTH(log_date) = '.$request->month.' AND YEAR(log_date) = '.$request->year.'')
-        ->orderBy('created_at', 'desc')->first();
+        // ->orderBy('created_at', 'desc')->first();
+        ->orderBy('id', 'desc')->first();
         $summary_per_parameter1 = $summary_per_parameter1->whereRaw('MONTH(log_date) = '.$request->month.' AND YEAR(log_date) = '.$request->year.'')
-        ->orderBy('created_at', 'desc')->first();
+        // ->orderBy('created_at', 'desc')->first();
+        ->orderBy('id', 'desc')->first();
         if ($summary_per_parameter) {
           $realisasi = round(optional($summary_per_parameter)->realisasi);
           if ($parameter->id == 6) { // kalo parameternya bebrnilai service level dari layanan digital media, buat realisasi nya ga di roound
