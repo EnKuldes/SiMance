@@ -195,9 +195,9 @@ class HomeController extends Controller
         );
       }
 
-      $lt = new log_transaksi;
-      $lt->layanan = $id_layanan;
-      $lt->parameter = $id_parameter;
+      // $lt = new log_transaksi;
+      // $lt->layanan = $id_layanan;
+      // $lt->parameter = $id_parameter;
 
       $kpi_model = DB::table('kpi')->where([
         ['id_layanan', '=', $id_layanan]
@@ -205,11 +205,15 @@ class HomeController extends Controller
         , ['active', '=', 'current']
       ])->first();
 
-      $lt->satuan = $kpi_model->satuan;
-      $lt->target = $kpi_model->target;
-      $lt->bobot = $kpi_model->bobot;
+      // $lt->satuan = $kpi_model->satuan;
+      // $lt->target = $kpi_model->target;
+      // $lt->bobot = $kpi_model->bobot;
 
       $dt = daily_transaksi::where([
+        ['id_layanan', '=', $id_layanan]
+        , ['id_parameter', '=', $id_parameter]
+      ]);
+      $dt1 = DB::table('daily_transaksis')->where([
         ['id_layanan', '=', $id_layanan]
         , ['id_parameter', '=', $id_parameter]
       ]);
@@ -299,29 +303,39 @@ class HomeController extends Controller
       }
       $qWhere .= ", 0) as realisasi";
       $dt->selectRaw($qWhere);
+      $dt1->selectRaw($qWhere);
       $dt->whereRaw('MONTH(daily_transaksis_justifikasi.tanggal) = MONTH("'.$request->input_date.'") AND YEAR(daily_transaksis_justifikasi.tanggal) = YEAR("'.$request->input_date.'")');
+      $dt1->whereRaw('MONTH(daily_transaksis.tanggal) = MONTH("'.$request->input_date.'") AND YEAR(daily_transaksis.tanggal) = YEAR("'.$request->input_date.'")');
       if ($id_parameter == 15 OR $id_parameter == 16 OR $id_parameter == 17) {
           $dt->orderBy('daily_transaksis_justifikasi.tanggal', 'desc');
+          $dt1->orderBy('daily_transaksis.tanggal', 'desc');
       }
       $dt = $dt->first();
+      $dt1 = $dt1->first();
       $realisasi = $dt->realisasi;
+      $realisasi1 = $dt1->realisasi;
       $achievement = ($realisasi/$kpi_model->target)*100;
+      $achievement1 = ($realisasi1/$kpi_model->target)*100;
       // Ada yang berbeda perhiyungannya dari yg umum, dilakuka disini aja perubahannya
       // Contoh Untuk Parameter Quality Layanan (ID Parameter 5) dari Layanan 147 (ID Layanan 1)
       switch ($id_parameter) {
         case 5:
           $achievement = (100-$realisasi)/(100-$kpi_model->target)*100;
+          $achievement1 = (100-$realisasi1)/(100-$kpi_model->target)*100;
           break;
         case 6:
           if ($realisasi == 0) {
             $achievement = 0;
+            $achievement1 = 0;
           }
           else{
             $achievement = ($kpi_model->target/60)/($realisasi/60)*100;
+            $achievement1 = ($kpi_model->target/60)/($realisasi1/60)*100;
           }
           break;
         case 10:
           $achievement = (100-$realisasi)/(100-$kpi_model->target)*100;
+          $achievement1 = (100-$realisasi1)/(100-$kpi_model->target)*100;
           break;
         default:
           # do nothing
@@ -329,6 +343,7 @@ class HomeController extends Controller
       }
 
       $perfomance = ($achievement*$kpi_model->bobot)/100; // berubah nama jadi perfomance
+      $perfomance1 = ($achievement1*$kpi_model->bobot)/100; // berubah nama jadi perfomance
       // Buat nentuin nilai persentasi bobot
       if ( $this->compare_two_value($realisasi, $kpi_model->target, $param_compare) ) {
         $persetasi_bobot = $kpi_model->bobot;
@@ -336,32 +351,52 @@ class HomeController extends Controller
       else{
         $persetasi_bobot = ($kpi_model->bobot*$achievement)/100;
       }
-
-      $lt->realisasi = $realisasi; // Realisasi nyari dari data daily input per month
-      $lt->achievement = $achievement; // Nilai Acgievments didapat dari Realiasi / Target
-      $lt->perfomance = $perfomance; // perfomance  didapat achievemenst * bobots
-      $lt->persetasi_bobot = $persetasi_bobot;
-      $lt->log_date = $input_date;//now()->subDays(1);
-      $lt->save();
-
-      if ($request->is_justifikasi != 1) {
-        DB::table('log_transaksis')->insert(
-            [
-              'layanan' => $lt->layanan
-              , 'parameter' => $lt->parameter
-              , 'satuan' => $lt->satuan
-              , 'target' => $lt->target
-              , 'bobot' => $lt->bobot
-              , 'realisasi' => $lt->realisasi
-              , 'achievement' => $lt->achievement
-              , 'persetasi_bobot' => $lt->persetasi_bobot
-              , 'perfomance' => $lt->perfomance
-              , 'log_date' => $lt->log_date
-              , 'created_at' => $lt->created_at
-              , 'updated_at' => $lt->updated_at
-            ]
-        );
+      if ( $this->compare_two_value($realisasi1, $kpi_model->target, $param_compare) ) {
+        $persetasi_bobot1 = $kpi_model->bobot;
       }
+      else{
+        $persetasi_bobot1 = ($kpi_model->bobot*$achievement1)/100;
+      }
+
+      // $lt->realisasi = $realisasi; // Realisasi nyari dari data daily input per month
+      // $lt->achievement = $achievement; // Nilai Acgievments didapat dari Realiasi / Target
+      // $lt->perfomance = $perfomance; // perfomance  didapat achievemenst * bobots
+      // $lt->persetasi_bobot = $persetasi_bobot;
+      // $lt->log_date = $input_date;//now()->subDays(1);
+      // $lt->save();
+
+      DB::table('log_transaksis_justifikasi')->insert(
+          [
+            'layanan' => $id_layanan
+            , 'parameter' => $id_parameter
+            , 'satuan' => $kpi_model->satuan
+            , 'target' => $kpi_model->target
+            , 'bobot' => $kpi_model->bobot
+            , 'realisasi' => $realisasi
+            , 'achievement' => $achievement
+            , 'persetasi_bobot' => $persetasi_bobot
+            , 'perfomance' => $perfomance
+            , 'log_date' => $input_date
+            , 'created_at' => now()
+            , 'updated_at' => now()
+          ]
+      );
+      DB::table('log_transaksis')->insert(
+          [
+            'layanan' => $id_layanan
+            , 'parameter' => $id_parameter
+            , 'satuan' => $kpi_model->satuan
+            , 'target' => $kpi_model->target
+            , 'bobot' => $kpi_model->bobot
+            , 'realisasi' => $realisasi1
+            , 'achievement' => $achievement1
+            , 'persetasi_bobot' => $persetasi_bobot1
+            , 'perfomance' => $perfomance1
+            , 'log_date' => $input_date
+            , 'created_at' => now()
+            , 'updated_at' => now()
+          ]
+      );
 
       if ($request->is_justifikasi == 1 && $request->has('note_anomaly')) {
         DB::table('anomaly_note')->updateOrInsert(
