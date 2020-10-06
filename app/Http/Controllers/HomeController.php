@@ -907,10 +907,18 @@ class HomeController extends Controller
           else{
             $progress_bar_width1 = 100 - $progress_bar_width;
           }
-          $progress_bar .= '<div class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width: '.$progress_bar_width1.'%">';
-          $progress_bar .= '<span>'.$progress_bar_width1.'% OK</span></div>';
-          $progress_bar .= '<div class="progress-bar progress-bar-striped progress-bar-animated bg-'.$progress_bar_color.'" style="width: '.$progress_bar_width.'%">';
-          $progress_bar .= '<span>'.round($realisasi).''.$satuan.' NOK</span></div></div></li>';
+          if ($key->id == 5) {
+            $progress_bar .= '<div class="progress-bar progress-bar-striped progress-bar-animated bg-'.$progress_bar_color.'" style="width: '.$progress_bar_width.'%">';
+            $progress_bar .= '<span>'.round($realisasi).''.$satuan.' OK</span></div>';
+            $progress_bar .= '<div class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width: '.$progress_bar_width1.'%">';
+            $progress_bar .= '<span>'.$progress_bar_width1.'% NOK</span></div></div></li>';
+          }
+          else{
+            $progress_bar .= '<div class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width: '.$progress_bar_width1.'%">';
+            $progress_bar .= '<span>'.$progress_bar_width1.'% OK</span></div>';
+            $progress_bar .= '<div class="progress-bar progress-bar-striped progress-bar-animated bg-'.$progress_bar_color.'" style="width: '.$progress_bar_width.'%">';
+            $progress_bar .= '<span>'.round($realisasi).''.$satuan.' NOK</span></div></div></li>';
+          }
         }
         else{
           $progress_bar .= '<div class="d-flex align-items-center mb-1">'.$key->parameter_desc.' <span class="text-muted ml-auto">Target '.$key->target.' | Bobot '.$key->bobot.'</span></div>';
