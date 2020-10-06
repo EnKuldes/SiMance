@@ -237,7 +237,8 @@ class HomeController extends Controller
           $param_compare = '>=';
           break;
         case 5:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 15 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+          // $qWhere .= 'SUM(CASE WHEN id_formulasi = 15 THEN nilai ELSE 0 END)/SUM(nilai)*100';
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 14 THEN nilai ELSE 0 END)/SUM(nilai)*100';
           $param_compare = '<=';
           break;
         // Digital Media
@@ -319,10 +320,10 @@ class HomeController extends Controller
       // Ada yang berbeda perhiyungannya dari yg umum, dilakuka disini aja perubahannya
       // Contoh Untuk Parameter Quality Layanan (ID Parameter 5) dari Layanan 147 (ID Layanan 1)
       switch ($id_parameter) {
-        case 5:
+        /*case 5:
           $achievement = (100-$realisasi)/(100-$kpi_model->target)*100;
           $achievement1 = (100-$realisasi1)/(100-$kpi_model->target)*100;
-          break;
+          break;*/
         case 6:
           if ($realisasi == 0) {
             $achievement = 0;
