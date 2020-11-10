@@ -871,7 +871,8 @@ class HomeController extends Controller
           }
         //->whereRaw('MONTH(log_date) = MONTH(CURDATE()) AND YEAR(log_date) = YEAR(CURDATE())')
         $lt = $lt->whereRaw('MONTH(log_date) = '.$request->month.' AND YEAR(log_date) = '.$request->year.'')
-        ->orderBy('created_at', 'desc')->first();
+        // ->orderBy('created_at', 'desc')->first();
+        ->orderBy('id', 'desc')->first();
         if ($lt) {
           $realisasi = optional($lt)->realisasi;
           $achievement = optional($lt)->achievement;
