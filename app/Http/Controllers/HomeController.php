@@ -253,7 +253,7 @@ class HomeController extends Controller
           $param_compare = '>=';
           break;
         case 8:
-          $qWhere .= 'SUM(CASE WHEN id_formulasi = 25 OR id_formulasi = 26 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 27 THEN nilai ELSE 0 END)*100';
+          $qWhere .= 'SUM(CASE WHEN id_formulasi = 25 OR id_formulasi = 26 OR id_formulasi = 50 OR id_formulasi = 51 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 27 THEN nilai ELSE 0 END)*100';
           $param_compare = '>=';
           break;
         case 9:
@@ -594,7 +594,7 @@ class HomeController extends Controller
             $param_compare = '>=';
             break;
           case 8:
-            $qWhere .= 'SUM(CASE WHEN id_formulasi = 25 OR id_formulasi = 26 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 27 THEN nilai ELSE 0 END)*100';
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 25 OR id_formulasi = 26 OR id_formulasi = 50 OR id_formulasi = 51 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 27 THEN nilai ELSE 0 END)*100';
             $param_compare = '>=';
             break;
           case 9:
