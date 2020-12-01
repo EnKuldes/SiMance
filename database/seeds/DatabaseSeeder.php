@@ -154,5 +154,12 @@ class DatabaseSeeder extends Seeder
             array('id_layanan' => '4', 'id_parameter' => '18', 'satuan' => '%', 'target' => '98', 'bobot' => '40')
         );
         DB::table('kpi')->insert($data_kpi);
+
+        $this->call(modify_formulasis_digital_media::class);
+        $this->call(new_formulasis_digital_media_rasio_sales_parameters::class);
+        
+        $this->call(update_parameter_and_kpi_C4::class);
+        $this->call(new_paramater_vital_sign::class);
+        $this->call(new_formulasi_vital_sign::class);
     }
 }
