@@ -63,11 +63,11 @@
             tbody_html += '<td>'+ data[i]['realisasi_verifikasi'] + data[i]['satuan'] +'</td>';
             tbody_html += '<td>'+ data[i]['achievement'] +'%</td>';
             tbody_html += '<td>'+ data[i]['achievement_verifikasi'] +'%</td>';
-            tbody_html += '<td>'+ data[i]['persetasi_bobot'] +'%</td>';
-            tbody_html += '<td>'+ data[i]['persetasi_bobot_verifikasi'] +'%</td>';
+            tbody_html += '<td>'+ data[i]['perfomance'] +'%</td>';
+            tbody_html += '<td>'+ data[i]['perfomance_verifikasi'] +'%</td>';
             tbody_html += '</tr>';
-            sum_persetasi_bobot += data[i]['persetasi_bobot'];
-            sum_persetasi_bobot_verifikasi += data[i]['persetasi_bobot_verifikasi'];
+            sum_persetasi_bobot += data[i]['perfomance'];
+            sum_persetasi_bobot_verifikasi += data[i]['perfomance_verifikasi'];
           }
           var tfoot_html = '<tr><td colspan="8" class="text-center">Total</td><td>'+ sum_persetasi_bobot +'%</td><td>'+ sum_persetasi_bobot_verifikasi +'%</td></tr>'
           $('#table-perfomance tbody').html(tbody_html);
@@ -117,7 +117,7 @@
           <td colspan="4">{{ Auth::user()->layanans->layanan_desc }} [<span class="date_label"></span>]</td>
           <td colspan="2">Realisasi</td>
           <td colspan="2">Achievement</td>
-          <td colspan="2">%Bobot</td>
+          <td colspan="2">%Perfomance</td>
         </tr>
         <tr class="font-weight-semibold">
           <td>Parameter</td>
