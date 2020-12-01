@@ -78,11 +78,25 @@
           </a>
         </li>
 
+        <li class="nav-item">
+          <a href="/cc-147-vital-sign" class="navbar-nav-link">
+            <i class="icon-exclamation mr-2"></i>
+            Vital Sign CC 147
+          </a>
+        </li>
+
         @elseif (Auth::user()->layanan == 2)
         <li class="nav-item">
           <a href="/digital-media" class="navbar-nav-link">
             <i class="icon-presentation mr-2"></i>
             Daily Digital Media
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="/digital-media-vital-sign" class="navbar-nav-link">
+            <i class="icon-exclamation mr-2"></i>
+            Vital Sign Digital Media
           </a>
         </li>
 
