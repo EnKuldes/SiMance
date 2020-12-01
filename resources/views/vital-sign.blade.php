@@ -668,12 +668,6 @@
       else { $('#'+list_tables[i]).show() }
     }
   }
-  function change_table_data_anomaly(table_id) {
-    for (var i = 0; i < list_tables_anomaly.length; i++) {
-      if (table_id != list_tables_anomaly[i]) { $('#'+list_tables_anomaly[i]).hide() }
-      else { $('#'+list_tables_anomaly[i]).show() }
-    }
-  }
 
   // Document Ready
     $(document).ready(function() {
@@ -682,7 +676,6 @@
       reset_input();
       //init_chart_element();
       change_table_data("summary_table_{{ $temp_table_id }}");
-      change_table_data_anomaly("list_notes_anomaly_{{ $temp_table_id }}");
       //get_realisasi_monthly()
       $('#input_date').pickadate({format: 'yyyy-mm-dd'});
     });
