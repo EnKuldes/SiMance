@@ -141,6 +141,16 @@ class HomeController extends Controller
       return view('cc-147')->with('data',$data);;
     }
 
+    # Vital Sign
+    public function vital_sign()
+    {
+      $data['parameters_tab'] = DB::table('parameters')->select('id', 'parameter_desc')->where([
+        ['is_enabled','=','1']
+      ])->where('id_layanan', '=', auth()->user()->layanan)->get();
+
+      return view('cc-147')->with('data',$data);;
+    }
+
     # Save Target, Bobot dan Satuan
     public function save_daily_input(Request $request)
     {
