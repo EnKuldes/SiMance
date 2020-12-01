@@ -144,11 +144,11 @@ class HomeController extends Controller
     # Vital Sign
     public function vital_sign()
     {
-      $data['parameters_tab'] = DB::table('parameters')->select('id', 'parameter_desc')->where([
+      $data['parameters_tab'] = DB::table('parameter_vital_sign')->select('id', 'parameter_desc')->where([
         ['is_enabled','=','1']
       ])->where('id_layanan', '=', auth()->user()->layanan)->get();
 
-      return view('cc-147')->with('data',$data);;
+      return view('vital-sign')->with('data',$data);;
     }
 
     # Save Target, Bobot dan Satuan
@@ -431,6 +431,50 @@ class HomeController extends Controller
       return response()->json(['success' => "success"], 200);
     }
 
+    # Save Daily Vital Sign
+    public function save_daily_vital_sign(Request $request)
+    {
+      $todayDate = date('Y-m-d');
+      # Error messages validation
+      $messages = [
+        'select_parameter.required' => "You haven't choose parameter yet.",
+        'select_formulasi.required'  => "You haven't choose item yet.",
+        'input_date.required'  => "You haven't input a date yet.",
+        'input_date.before_or_equal'  => "You input a date greater than today date.",
+      ];
+      # Rules Validation
+      $validation = $this->validate($request, [
+        'select_parameter' => 'required',
+        'select_formulasi' => 'required',
+        'input_date' => 'required|before_or_equal:'.$todayDate,
+      ], $messages);
+
+      $id_layanan = auth()->user()->layanan;
+      $id_parameter = $request->select_parameter;
+      $id_formulasi = $request->select_formulasi;
+      $input_date = $request->input_date;
+
+      $saveResult = DB::table('daily_vital_sign')->updateOrInsert(
+        [
+          'id_layanan' => auth()->user()->layanan
+          , 'id_parameter' => $request->select_parameter
+          , 'id_formulasi' => $request->select_formulasi
+          , 'tanggal' => $input_date//now()->subDays(1)->format('Y-m-d')
+        ],
+        [
+          'nilai' => $request->value_formulasi
+          , 'user_input' => auth()->user()->username
+          , 'updated_at' => now()
+        ]
+      );
+      if ( !$saveResult ) {
+        abort(500, 'Error while saving value.');
+      }
+
+      // Return hasilnya
+      return response()->json(['success' => "success"], 200);
+    }
+
     # Func untuk comparison
     protected function compare_two_value($val1, $val2, $operator)
     {
@@ -674,6 +718,117 @@ class HomeController extends Controller
       return response()->json( $datas );
     }
 
+    public function get_monthly_data_vital_sign(Request $request)
+    {
+      $table_name1 = 'daily_vital_sign';
+      
+      $list_date = DB::table($table_name1)->where([
+        [''.$table_name1.'.id_parameter', '=', $request->id_parameter]
+      ])
+      ->whereRaw('MONTH('.$table_name1.'.tanggal) = '.$request->month.' AND YEAR('.$table_name1.'.tanggal) = '.$request->year)
+      ->selectRaw('
+        DAY('.$table_name1.'.tanggal) AS day
+        , '.$table_name1.'.tanggal AS date
+      ')
+      ->orderBy('day')
+      ->distinct()->get();
+
+      $datas = [];
+      foreach ($list_date as $date_value) {
+        $dataToJoin = DB::table($table_name1)
+        ->where([
+          [''.$table_name1.'.id_layanan', '=', auth()->user()->layanan]
+          , [''.$table_name1.'.id_parameter', '=', $request->id_parameter]
+        ])
+        ->whereRaw(''.$table_name1.'.tanggal = "'.$date_value->date.'"')
+        ->selectRaw(
+          'DAY('.$table_name1.'.tanggal) AS DAY
+          , DATE_FORMAT('.$table_name1.'.tanggal, "%Y-%m") AS DATE
+          , '.$table_name1.'.nilai AS value_item
+          , '.$table_name1.'.id_formulasi AS id_formulasi'
+        );
+
+        $data = DB::table('formulasi_vital_sign')
+        ->leftJoin('parameter_vital_sign', 'parameter_vital_sign.id', '=', 'formulasi_vital_sign.id_parameter')
+        ->leftJoinSub($dataToJoin, 'res', function ($join) {
+            $join->on('res.id_formulasi', '=', 'formulasi_vital_sign.id');
+        })
+        ->where([
+          ['parameter_vital_sign.id_layanan', '=', auth()->user()->layanan]
+          , ['parameter_vital_sign.id', '=', $request->id_parameter]
+          , ['formulasi_vital_sign.is_enabled', '=', '1']
+        ])
+        ->selectRaw('
+          parameter_vital_sign.parameter_desc AS parameter_desc
+          , formulasi_vital_sign.formulasi_desc AS value_desc
+          , IFNULL(res.day, DAY("'.$date_value->date.'"))  AS `day`
+          , IFNULL(res.date, "'.$date_value->date.'") AS `date`
+          , IFNULL(res.value_item, 0) AS value_item
+        ')
+        ->orderBy('parameter_vital_sign.id')
+        ->orderBy('res.id_formulasi')
+        ->orderBy('res.day')
+        ->get();
+
+        $satuan = '';
+        $dt = DB::table('daily_vital_sign')->where([
+          ['id_layanan', '=', auth()->user()->layanan]
+          // , ['id_parameter', '=', $id_parameter]
+        ]);
+        $qWhere = "IFNULL(";
+        switch ($request->id_parameter) {
+          // 147
+          case 1:
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 1 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 4 THEN nilai ELSE 0 END)*100';
+            $satuan = '%';
+            break;
+          case 2:
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 2 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 4 THEN nilai ELSE 0 END)*100';
+            $satuan = '%';
+            break;
+          case 3:
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 3 THEN nilai ELSE 0 END)';
+            break;
+          case 4:
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 4 THEN nilai ELSE 0 END)';
+            break;
+          // SOsmed
+          case 5:
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 5 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 8 THEN nilai ELSE 0 END)*100';
+            $satuan = '%';
+            break;
+          case 6:
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 6 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 8 THEN nilai ELSE 0 END)*100';
+            $satuan = '%';
+            break;
+          case 7:
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 7 THEN nilai ELSE 0 END)';
+            break;
+          case 8:
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 8 THEN nilai ELSE 0 END)';
+            break;
+
+          default:
+            abort(500, 'Error, Parameter not found');
+            break;
+        }
+        $qWhere .= ", 0) as realisasi";
+        $dt->selectRaw($qWhere);
+        $dt->whereRaw('daily_vital_sign.tanggal = "'.$date_value->date.'"');
+        $dt = $dt->first();
+        $realisasi = $dt->realisasi;
+
+        foreach ($data as $detailed_data) {
+          //$detailed_data->total_item = $total_data_daily->total_item;
+          $detailed_data->realisasi = round($realisasi);
+          $datas[] = $detailed_data;
+        }
+      }
+
+
+      return response()->json( $datas );
+    }
+
     # Perfomance Comparation Monthly
     public function get_perfomance_comparation(Request $request)
     {
@@ -784,6 +939,69 @@ class HomeController extends Controller
         $list_realisasi = (object) $list_realisasi;
       }
 
+      return response()->json($list_realisasi);
+    }
+
+    public function get_realisasi_monthly_vital_sign(Request $request)
+    {
+      $list_parameter = DB::table('parameter_vital_sign')->where([
+        ['id_layanan', '=', auth()->user()->layanan]
+      ])->get();
+      $list_realisasi = [];
+      foreach ($list_parameter as $parameter) {
+        $satuan = '';
+        $dt = DB::table('daily_vital_sign')->where([
+          ['id_layanan', '=', auth()->user()->layanan]
+          // , ['id_parameter', '=', $id_parameter]
+        ]);
+        $qWhere = "IFNULL(";
+        switch ($parameter->id) {
+          // 147
+          case 1:
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 1 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 4 THEN nilai ELSE 0 END)*100';
+            $satuan = '%';
+            break;
+          case 2:
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 2 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 4 THEN nilai ELSE 0 END)*100';
+            $satuan = '%';
+            break;
+          case 3:
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 3 THEN nilai ELSE 0 END)';
+            break;
+          case 4:
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 4 THEN nilai ELSE 0 END)';
+            break;
+          // SOsmed
+          case 5:
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 5 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 8 THEN nilai ELSE 0 END)*100';
+            $satuan = '%';
+            break;
+          case 6:
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 6 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 8 THEN nilai ELSE 0 END)*100';
+            $satuan = '%';
+            break;
+          case 7:
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 7 THEN nilai ELSE 0 END)';
+            break;
+          case 8:
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 8 THEN nilai ELSE 0 END)';
+            break;
+
+          default:
+            abort(500, 'Error, Parameter not found');
+            break;
+        }
+        $qWhere .= ", 0) as realisasi";
+        $dt->selectRaw($qWhere);
+        $dt->whereRaw('MONTH(daily_vital_sign.tanggal) = "'.$request->month.'" AND YEAR(daily_vital_sign.tanggal) = "'.$request->year.'"');
+        $dt = $dt->first();
+        $realisasi = $dt->realisasi;
+        $list_realisasi[] = [
+          "realisasi"=>round($realisasi)
+          , "satuan"=>$satuan
+        ];
+      }
+      $list_realisasi = (object) $list_realisasi;
       return response()->json($list_realisasi);
     }
 
@@ -1304,7 +1522,7 @@ class HomeController extends Controller
       }
       $datas = $datas->get();
       return response()->json($datas);
-    }
+    }    
     public function list_date(Request $request)
     {
       if (auth()->user()->layanan == 0) {
@@ -1312,6 +1530,55 @@ class HomeController extends Controller
       }
       else{
           $datas = DB::table('daily_transaksis')->where([
+            ['id_layanan','=',auth()->user()->layanan]
+          ]);
+      }
+      if ( request()->ajax() ) {
+        if (!empty($request->select_year)) {
+          $datas->whereYear('tanggal', '=', $request->select_year)->select(DB::raw('MONTH(tanggal) as month'))->distinct()->orderBy('month', 'asc');
+        }
+        else {
+          $datas->select(DB::raw('YEAR(tanggal) as year'))->distinct()->orderBy('year', 'desc');
+        }
+      }
+      $datas = $datas->get();
+      return response()->json($datas);
+    }
+
+    public function list_parameter_vital_sign(Request $request)
+    {
+      $datas = DB::table('parameter_vital_sign')->select('id', 'parameter_desc')->where([
+        ['is_enabled','=','1']
+      ]);
+      if (auth()->user()->layanan !== null) {
+          $datas->where('id_layanan', '=', auth()->user()->layanan);
+      }
+      $datas = $datas->get();
+      return response()->json($datas);
+    }
+    public function list_formulasi_vital_sign(Request $request)
+    {
+      $datas = DB::table('formulasi_vital_sign')->select('id', 'formulasi_desc')->where([
+        ['is_enabled','=','1']
+      ]);
+      if ( request()->ajax() ) {
+        if (!empty($request->id)) {
+          $datas->where('id', '=', $request->id);
+        }
+        elseif (!empty($request->id_parameter)) {
+          $datas->where('id_parameter', '=', $request->id_parameter);
+        }
+      }
+      $datas = $datas->get();
+      return response()->json($datas);
+    }
+    public function list_date_vital_sign(Request $request)
+    {
+      if (auth()->user()->layanan == 0) {
+          $datas = DB::table('daily_vital_sign');
+      }
+      else{
+          $datas = DB::table('daily_vital_sign')->where([
             ['id_layanan','=',auth()->user()->layanan]
           ]);
       }

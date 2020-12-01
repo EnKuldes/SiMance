@@ -77,6 +77,12 @@ Route::post('/get-list-anomaly', 'HomeController@get_list_anomaly')->name('get_i
 Route::post('/get-perfomance-system-verifikasi-layanan', 'HomeController@get_perfomance_system_verifikasi_layanan')->name('get_information');
 
 Route::get('/vital-sign', 'HomeController@vital_sign')->name('vital-sign');
+Route::post('/list-parameter-vs', 'HomeController@list_parameter_vital_sign')->name('list-parameter-vs');
+Route::post('/list-formulasi-vs', 'HomeController@list_formulasi_vital_sign')->name('list-formulasi-vs');
+Route::post('/list-date-vs', 'HomeController@list_date_vital_sign')->name('list-date-vs');
+Route::post('/vital-sign/save', 'HomeController@save_daily_vital_sign')->name('vital-sign-save-daily');
+Route::post('/get-realisasi-monthly-vs', 'HomeController@get_realisasi_monthly_vital_sign')->name('get-realisasi-monthly-vs');
+Route::post('/get-monthly-data-vs', 'HomeController@get_monthly_data_vital_sign')->name('get-monthly-data-vs');
 
 // Tes PHPOffice/PHPWord
 Route::get('generate-docx', 'HomeController@generateDocx');

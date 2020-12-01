@@ -1,6 +1,6 @@
 @extends('layouts/app')
 
-@section('title', Auth::user()->layanans->layanan_desc)
+@section('title', 'Vital Sign '.Auth::user()->layanans->layanan_desc)
 
 @section('liblary')
 <script src="assets/js/plugins/visualization/echarts/echarts.min.js"></script>
@@ -23,13 +23,6 @@
   var tempYear = 0;
   var tempMonth = 0;
   window['dashboard-type'] = 0; // Default nya Data Real
-
-  // Switchery
-  $('.form-check-input-switch').bootstrapSwitch({
-    size: 'mini'
-  });
-  // Text Area
-  $('#note-anomaly-div').hide();
 
   function numbersonly(e){
     var unicode=e.charCode? e.charCode : e.keyCode
@@ -63,7 +56,7 @@
     });
     $.ajax({
      type:"post",
-     url:'/list-parameter',
+     url:'{{ route('list-parameter-vs') }}',
          //data: {},
          success: function(data){
 
@@ -89,7 +82,7 @@
       });
       $.ajax({
        type:"post",
-       url:'/list-formulasi',
+       url:'{{ route('list-formulasi-vs') }}',
        data: {'id_parameter':id},
        success: function(data){
         var ahtml = '<option></option>';
@@ -109,38 +102,6 @@
     });
   }
   {{--  FUnc Chain 3 dan Chain 4 pindah ke Layouts App Blade --}}
-  // Func-Func Inactive
-  function tab_for_parameter(id_parameter) {
-    get_current_kpi(id_parameter);
-    $('#form-target-bobot input[name=value_parameter]').val(id_parameter);
-  }
-  function get_current_kpi(id_parameter) {
-    $.ajaxSetup({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-      });
-      $.ajax({
-       type:"post",
-       url:'/get-current-kpi',
-       data: {'id_parameter':id_parameter},
-       success: function(data){
-        var spanTitles = ['cur_target', 'cur_bobot', 'param_name'];
-        var valueTitles = ['cur_target', 'cur_bobot', 'parameter_desc'];
-        for (var i = 0; i < spanTitles.length; i++) {
-          $("#" + spanTitles[i]).html(data[0][valueTitles[i]]);
-        }
-      },
-      error : function(data) {
-
-        console.log("Error");
-
-      }
-    }).done(function(){
-
-    });
-  }
-
   // Func-Func Active
   function get_realisasi_monthly(year_value, month_value) {
     $.ajaxSetup({
@@ -151,7 +112,7 @@
     });
     $.ajax({
      type:"post",
-     url:'/get-realisasi-monthly',
+     url:'{{ route('get-realisasi-monthly-vs') }}',
          data: {year: year_value, month: month_value},
          success: function(data){
           var labelTitles = [
@@ -201,7 +162,7 @@
     });
     $.ajax({
      type:"post",
-     url:'/daily/save',
+     url:'{{ route('vital-sign-save-daily') }}',
      data: $( this ).serialize(),
      success: function(data){
       $('#saveBtn').button('reset');
@@ -254,10 +215,6 @@
     else{ window['dashboard-type'] = 0; }
     refresh_charts();
   });
-  $('#is_justifikasi').on('switchChange.bootstrapSwitch', function(event, state) {
-    $('#note_anomaly').prop('required',state);
-    $('#note-anomaly-div').toggle(100);
-  });
   
   // Button On Click
   function reset_input() {
@@ -298,21 +255,6 @@
     }
     @endphp
     "summary_table_{{ $record->id }}",
-    @endforeach
-  ]
-
-  // Variable penampung html tables list notes anomaly
-  var list_tables_anomaly = [
-    @php
-    $temp_table_id = 0;
-    @endphp
-    @foreach ($data['parameters_tab'] as $record)
-    @php
-    if ($temp_table_id == 0){
-      $temp_table_id = $record->id;
-    }
-    @endphp
-    "list_notes_anomaly_{{ $record->id }}",
     @endforeach
   ]
 
@@ -424,354 +366,7 @@
       }
     },],
     };
-  var line_basic_options = {
-        // Define colors
-        color: ["#EF5350", "#66BB6A", "#2196F3"],
-
-        // Global text styles
-        textStyle: {
-          fontFamily: "Roboto, Arial, Verdana, sans-serif",
-          fontSize: 13
-        },
-
-        // Chart animation duration
-        animationDuration: 750,
-
-        // Setup grid
-        grid: {
-          left: 0,
-          right: 40,
-          top: 35,
-          bottom: 0,
-          containLabel: true
-        },
-
-        // Add legend
-        legend: {
-          //data: ["Total Incident Logic", "Closed by Frontliner", "Tiket Logic"],
-          itemHeight: 8,
-          itemGap: 20
-        },
-
-        // Add tooltip
-        tooltip: {
-          trigger: "axis",
-          backgroundColor: "rgba(0,0,0,0.75)",
-          padding: [10, 15],
-          textStyle: {
-            fontSize: 13,
-            fontFamily: "Roboto, sans-serif"
-          }
-        },
-
-        // Horizontal axis
-        xAxis: [
-          {
-            type: "category",
-            boundaryGap: false,
-            axisLabel: {
-              color: "#333"
-            },
-            axisLine: {
-              lineStyle: {
-                color: "#999"
-              }
-            },
-            splitLine: {
-              lineStyle: {
-                color: ["#eee"]
-              }
-            }
-          }
-        ],
-
-        // Vertical axis
-        yAxis: [
-          {
-            type: "value",
-            axisLabel: {
-              formatter: "{value}",
-              color: "#333"
-            },
-            axisLine: {
-              lineStyle: {
-                color: "#999"
-              }
-            },
-            splitLine: {
-              lineStyle: {
-                color: ["#eee"]
-              }
-            },
-            splitArea: {
-              show: true,
-              areaStyle: {
-                color: ["rgba(250,250,250,0.1)", "rgba(0,0,0,0.01)"]
-              }
-            }
-          }
-        ],
-      };
-  var line_basic1_options = {
-        // Define colors
-        color: ["#2196F3", "#66BB6A", "#EF5350"],
-
-        // Global text styles
-        textStyle: {
-          fontFamily: "Roboto, Arial, Verdana, sans-serif",
-          fontSize: 13
-        },
-
-        // Chart animation duration
-        animationDuration: 750,
-
-        // Setup grid
-        grid: {
-          left: 0,
-          right: 40,
-          top: 35,
-          bottom: 0,
-          containLabel: true
-        },
-
-        // Add legend
-        legend: {
-          //data: ["Total Responden", "Puas", "Tiket Puas"],
-          itemHeight: 8,
-          itemGap: 20
-        },
-
-        // Add tooltip
-        tooltip: {
-          trigger: "axis",
-          backgroundColor: "rgba(0,0,0,0.75)",
-          padding: [10, 15],
-          textStyle: {
-            fontSize: 13,
-            fontFamily: "Roboto, sans-serif"
-          }
-        },
-
-        // Horizontal axis
-        xAxis: [
-          {
-            type: "category",
-            boundaryGap: false,
-            axisLabel: {
-              color: "#333"
-            },
-            axisLine: {
-              lineStyle: {
-                color: "#999"
-              }
-            },
-            splitLine: {
-              lineStyle: {
-                color: ["#eee"]
-              }
-            }
-          }
-        ],
-
-        // Vertical axis
-        yAxis: [
-          {
-            type: "value",
-            axisLabel: {
-              formatter: "{value}",
-              color: "#333"
-            },
-            axisLine: {
-              lineStyle: {
-                color: "#999"
-              }
-            },
-            splitLine: {
-              lineStyle: {
-                color: ["#eee"]
-              }
-            },
-            splitArea: {
-              show: true,
-              areaStyle: {
-                color: ["rgba(250,250,250,0.1)", "rgba(0,0,0,0.01)"]
-              }
-            }
-          }
-        ],
-      };
-  var line_basic2_options = {
-        // Define colors
-        color: ["#2196F3", "#66BB6A", "#EF5350"],
-
-        // Global text styles
-        textStyle: {
-          fontFamily: "Roboto, Arial, Verdana, sans-serif",
-          fontSize: 13
-        },
-
-        // Chart animation duration
-        animationDuration: 750,
-
-        // Setup grid
-        grid: {
-          left: 0,
-          right: 40,
-          top: 35,
-          bottom: 0,
-          containLabel: true
-        },
-
-        // Add legend
-        legend: {
-          //data: ["Total Agent", "Agent OK", "Agent NOK"],
-          itemHeight: 8,
-          itemGap: 20
-        },
-
-        // Add tooltip
-        tooltip: {
-          trigger: "axis",
-          backgroundColor: "rgba(0,0,0,0.75)",
-          padding: [10, 15],
-          textStyle: {
-            fontSize: 13,
-            fontFamily: "Roboto, sans-serif"
-          }
-        },
-
-        // Horizontal axis
-        xAxis: [
-          {
-            type: "category",
-            boundaryGap: false,
-            axisLabel: {
-              color: "#333"
-            },
-            axisLine: {
-              lineStyle: {
-                color: "#999"
-              }
-            },
-            splitLine: {
-              lineStyle: {
-                color: ["#eee"]
-              }
-            }
-          }
-        ],
-
-        // Vertical axis
-        yAxis: [
-          {
-            type: "value",
-            axisLabel: {
-              formatter: "{value}",
-              color: "#333"
-            },
-            axisLine: {
-              lineStyle: {
-                color: "#999"
-              }
-            },
-            splitLine: {
-              lineStyle: {
-                color: ["#eee"]
-              }
-            },
-            splitArea: {
-              show: true,
-              areaStyle: {
-                color: ["rgba(250,250,250,0.1)", "rgba(0,0,0,0.01)"]
-              }
-            }
-          }
-        ],
-
-      };
-  var line_stacked_options = {
-        // Global text styles
-        textStyle: {
-          fontFamily: "Roboto, Arial, Verdana, sans-serif",
-          fontSize: 13
-        },
-
-        // Chart animation duration
-        animationDuration: 750,
-
-        // Setup grid
-        grid: {
-          left: 0,
-          right: 20,
-          top: 35,
-          bottom: 0,
-          containLabel: true
-        },
-
-        // Add legend
-        legend: {
-          itemHeight: 8,
-          itemGap: 20
-        },
-
-        // Add tooltip
-        tooltip: {
-          trigger: "axis",
-          backgroundColor: "rgba(0,0,0,0.75)",
-          padding: [10, 15],
-          textStyle: {
-            fontSize: 13,
-            fontFamily: "Roboto, sans-serif"
-          }
-        },
-
-        // Horizontal axis
-        xAxis: [
-          {
-            type: "category",
-            boundaryGap: false,
-            axisLabel: {
-              color: "#333"
-            },
-            axisLine: {
-              lineStyle: {
-                color: "#999"
-              }
-            },
-            splitLine: {
-              lineStyle: {
-                color: ["#eee"]
-              }
-            }
-          }
-        ],
-
-        // Vertical axis
-        yAxis: [
-          {
-            type: "value",
-            axisLabel: {
-              color: "#333"
-            },
-            axisLine: {
-              lineStyle: {
-                color: "#999"
-              }
-            },
-            splitLine: {
-              lineStyle: {
-                color: ["#eee"]
-              }
-            },
-            splitArea: {
-              show: true,
-              areaStyle: {
-                color: ["rgba(250,250,250,0.1)", "rgba(0,0,0,0.01)"]
-              }
-            }
-          }
-        ],
-      };
+  
   // Func untuk Transform data dengan mencari key yang unique lalu
   function trans_val(data, key) {
     var resArr = [];
@@ -904,7 +499,6 @@
     ];
     for (var i = 0; i < list_option_charts.length; i++) {
       get_monthly_data( $("#list_year").val(), $('#list_month').val(), param_id[i], charts[i], list_option_charts[i], list_type_charts[i], list_tables[i])
-      get_list_anomaly( $("#list_year").val(), $('#list_month').val(), param_id[i], list_tables_anomaly[i])
     }
     //get_monthly_data( $("#list_year").val(), $('#list_month').val(), 1, charts[0], list_option_charts[0], list_type_charts[0], list_tables[0])
   }
@@ -919,7 +513,7 @@
     });
     $.ajax({
      type:"post",
-     url:'/get-monthly-data',
+     url:'{{ route('get-monthly-data-vs') }}',
          data: {year: year_value, month: month_value, id_parameter: parameter_value},
          success: function(data){
           var list_day = trans_val(data, 'day');
@@ -933,42 +527,6 @@
 
           // Init Populate Tabe Data
           $('#'+table_element).html(populate_table(data, list_day, tempVal, tempList, parameter_value))
-
-          /*columns_basic_options.xAxis[0].data = list_day;
-          line_basic_options.xAxis[0].data = list_day;
-          line_basic1_options.xAxis[0].data = list_day;
-          line_basic2_options.xAxis[0].data = list_day;
-          line_stacked_options.xAxis[0].data = list_day;
-
-          var list_parameter = trans_val(data, 'parameter_desc');
-
-          var tempVal =  list_parameter[0];
-          var tempList = list_legend(data, tempVal);
-          columns_basic_options.legend.data = tempList;
-          columns_basic_options.series = list_data_series(data, tempVal, tempList, 'bar');
-
-          tempVal =  list_parameter[1];
-          tempList = list_legend(data, tempVal);
-          line_basic_options.legend.data = tempList;
-          line_basic_options.series = list_data_series(data, tempVal, tempList, 'line');
-
-          tempVal =  list_parameter[2];
-          tempList = list_legend(data, tempVal);
-          line_stacked_options.legend.data = tempList;
-          line_stacked_options.series = list_data_series(data, tempVal, tempList, 'line');
-
-          tempVal =  list_parameter[3];
-          tempList = list_legend(data, tempVal);
-          line_basic1_options.legend.data = tempList;
-          line_basic1_options.series = list_data_series(data, tempVal, tempList, 'line');
-
-          tempVal =  list_parameter[4];
-          tempList = list_legend(data, tempVal);
-          line_basic2_options.legend.data = tempList;
-          line_basic2_options.series = list_data_series(data, tempVal, tempList, 'line');
-
-          init_chart_element()*/
-
         },
         error: function(jqXhr, json, errorThrown){// this are default for ajax errors
           var errors = jqXhr.responseJSON;
@@ -984,52 +542,6 @@
       });
     }
   
-  // Get List Anomali
-  function get_list_anomaly(year_value, month_value, parameter_value, table_element) {
-      $.ajaxSetup({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          , 'dashboard-type': window['dashboard-type']
-        }
-      });
-      $.ajax({
-       type:"post",
-       url:'/get-list-anomaly',
-           data: {year: year_value, month: month_value, id_parameter: parameter_value},
-           success: function(data){
-            var thead_html = '<thead><tr><td style="width: 10%;">Formulasi</td><td style="width: 15%;">Date</td><td style="width: 60%;">Notes</td><td style="width: 15%;">Created by</td></tr></thead>';
-            var tbody_html = '<tbody>';
-            if (data.length > 0) {
-              for (var i = 0; i < data.length; i++) {
-                tbody_html += '<tr>';
-                tbody_html += '<td>'+ data[i]['formulasi_desc'] +'</td>';
-                tbody_html += '<td>'+ data[i]['tanggal'] +'</td>';
-                tbody_html += '<td>'+ data[i]['note'] +'</td>';
-                tbody_html += '<td>'+ data[i]['user_input'] +'</td>';
-                tbody_html += '</tr>';
-              }
-            }
-            else{
-              tbody_html += '<tr>';
-              tbody_html += '<td colspan="4">There is no anomaly.</td>';
-              tbody_html += '</tr>';
-            }
-            tbody_html += '</tbody>';
-            $('#'+table_element).html(thead_html + tbody_html);
-          },
-          error: function(jqXhr, json, errorThrown){// this are default for ajax errors
-            var errors = jqXhr.responseJSON;
-            var errorsHtml = '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Error ' + jqXhr.status + ': ' + errorThrown + '</div>';
-            notificationScript("error", "Error " + jqXhr.status, errorThrown);
-            $.each(errors['errors'], function (index, value) {
-              errorsHtml += '<div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom: 0;><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + value + '</div>';
-              notificationScript("error", "Error Field", value);
-            });
-          }
-        }).done(function(){
-
-        });
-    }
   // Refresh Charts
   function refresh_charts() {
     f_clear_chart();
@@ -1193,9 +705,8 @@
         <div class="card-body p-0">
           <ul class="nav nav-sidebar mb-2">
             <li class="nav-item-header">
-              Parameter <input type="checkbox" data-off-color="success" data-on-text="Verifikasi" data-off-text="Real" class="form-check-input-switch" id="parameter-desc" unchecked>
+              Parameter
               </li>
-            {{-- <section id="parameter_side_bar"> --}}
               @php
               $i = 0;
               @endphp
@@ -1211,43 +722,6 @@
               $i++;
               @endphp
               @endforeach
-              {{--
-              <li class="nav-item">
-                <a href="#service_level" class="nav-link active" data-toggle="tab" onclick="change_table_data('summary_table_sl')">
-                  <i class="icon-cog"></i>
-                  Service Level
-                  <span class="badge bg-info badge-pill ml-auto" id="sl_val">0%</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#fcr" class="nav-link" data-toggle="tab" onclick="change_table_data('summary_table_fcr')">
-                  <i class="icon-watch2"></i>
-                  FCR
-                  <span class="badge bg-info badge-pill ml-auto" id="fcr_val">0%</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#rasio_sales" class="nav-link" data-toggle="tab" onclick="change_table_data('summary_table_rs')">
-                  <i class="icon-clipboard5"></i>
-                  Rasio Sales
-                  <span class="badge bg-info badge-pill ml-auto" id="rs_val">0%</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#ces" class="nav-link" data-toggle="tab" onclick="change_table_data('summary_table_ces')">
-                  <i class="icon-search4"></i>
-                  CES (by customer)
-                  <span class="badge bg-info badge-pill ml-auto" id="ces_val">0%</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#quality_layanan" class="nav-link" data-toggle="tab" onclick="change_table_data('summary_table_ql')">
-                  <i class="icon-thumbs-up2"></i>
-                  Quality Layanan
-                  <span class="badge bg-info badge-pill ml-auto" id="ql_val">0%</span>
-                </a>
-              </li>
-              --}}
             {{-- </section> --}}
           </ul>
         </div>
@@ -1292,108 +766,6 @@
     $i++;
     @endphp
     @endforeach
-
-    {{--
-    <div class="tab-pane fade active show" id="service_level">
-      <!-- Basic columns -->
-      <div class="card">
-        <div class="card-header header-elements-inline">
-          <h5 class="card-title">Service Level [<span class="date_label"></span>]</h5>
-          <div class="header-elements">
-            <button type="button" class="btn bg-info btn-icon ml-3 legitRipple" data-toggle="modal"
-              data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
-          </div>
-        </div>
-
-        <div class="card-body">
-          <div class="chart-container">
-            <div class="chart" id="columns_basic" style="height: 300px;"></div>
-          </div>
-        </div>
-      </div>
-      <!-- /basic columns -->
-    </div>
-
-    <div class="tab-pane fade" id="fcr">
-      <!-- Basic line -->
-      <div class="card">
-        <div class="card-header header-elements-inline">
-          <h5 class="card-title">FCR [<span class="date_label"></span>]</h5>
-          <div class="header-elements">
-            <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
-              data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
-          </div>
-        </div>
-
-        <div class="card-body">
-          <div class="chart-container">
-            <div class="chart" id="line_basic" style="height: 300px;"></div>
-          </div>
-        </div>
-      </div>
-      <!-- /basic line -->
-    </div>
-
-    <div class="tab-pane fade" id="rasio_sales">
-      <!-- Stacked lines -->
-      <div class="card">
-        <div class="card-header header-elements-inline">
-          <h5 class="card-title">Rasio Sales [<span class="date_label"></span>]</h5>
-          <div class="header-elements">
-            <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
-              data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
-          </div>
-        </div>
-
-        <div class="card-body">
-          <div class="chart-container">
-            <div class="chart" id="line_stacked" style="height: 300px;"></div>
-          </div>
-        </div>
-      </div>
-      <!-- /stacked lines -->
-    </div>
-
-    <div class="tab-pane fade" id="ces">
-      <!-- Basic line -->
-      <div class="card">
-        <div class="card-header header-elements-inline">
-          <h5 class="card-title">CES (by customer) [<span class="date_label"></span>]</h5>
-          <div class="header-elements">
-            <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
-              data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
-          </div>
-        </div>
-
-        <div class="card-body">
-          <div class="chart-container">
-            <div class="chart" id="line_basic1" style="height: 300px;"></div>
-          </div>
-        </div>
-      </div>
-      <!-- /basic line -->
-    </div>
-
-    <div class="tab-pane fade" id="quality_layanan">
-      <!-- Basic line -->
-      <div class="card">
-        <div class="card-header header-elements-inline">
-          <h5 class="card-title">Quality Layanan [<span class="date_label"></span>]</h5>
-          <div class="header-elements">
-            <button type="button" class="btn bg-pink-400 btn-icon ml-3 legitRipple" data-toggle="modal"
-              data-target="#insert-new-data"><i class="icon-pencil7"></i></button>
-          </div>
-        </div>
-
-        <div class="card-body">
-          <div class="chart-container">
-            <div class="chart" id="line_basic2" style="height: 300px;"></div>
-          </div>
-        </div>
-      </div>
-      <!-- /basic line -->
-    </div>
-    --}}
 
     <div class="tab-pane fade" id="target_bobot_management">
       <div class="card">
@@ -1513,18 +885,6 @@
     <table class="table table-xs table-bordered" id="summary_table_{{ $record->id }}">
     </table>
     @endforeach
-    {{--
-    <table class="table table-xs table-bordered" id="summary_table_sl">
-    </table>
-    <table class="table table-xs table-bordered" id="summary_table_fcr">
-    </table>
-    <table class="table table-xs table-bordered" id="summary_table_rs">
-    </table>
-    <table class="table table-xs table-bordered" id="summary_table_ces">
-    </table>
-    <table class="table table-xs table-bordered" id="summary_table_ql">
-    </table>
-    --}}
   </div>
 </div>
 <div class="card">
@@ -1577,18 +937,6 @@
             <div class="col-sm-7">
               <input type="text" class="form-control" autocomplete="off" name="value_formulasi" id="value_formulasi"
                 onkeypress="return numbersonly(event)" required>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-form-label col-sm-5">Justifikasi</label>
-            <div class="col-sm-7">
-              <input type="checkbox" data-off-color="success" data-on-text="Yes" data-off-text="No" class="form-check-input-switch" id="is_justifikasi" name="is_justifikasi" value="1" unchecked>
-            </div>
-          </div>
-          <div class="form-group row" id="note-anomaly-div">
-            <label class="col-form-label col-sm-5">Note</label>
-            <div class="col-sm-7">
-              <textarea rows="3" cols="3" class="form-control" placeholder="Note" style="resize:none" name="note_anomaly" id="note_anomaly"></textarea>
             </div>
           </div>
         </div>
