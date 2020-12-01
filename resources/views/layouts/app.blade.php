@@ -79,7 +79,7 @@
         </li>
 
         <li class="nav-item">
-          <a href="/cc-147-vital-sign" class="navbar-nav-link">
+          <a href="/vital-sign" class="navbar-nav-link">
             <i class="icon-exclamation mr-2"></i>
             Vital Sign CC 147
           </a>
@@ -94,7 +94,7 @@
         </li>
 
         <li class="nav-item">
-          <a href="/digital-media-vital-sign" class="navbar-nav-link">
+          <a href="/vital-sign" class="navbar-nav-link">
             <i class="icon-exclamation mr-2"></i>
             Vital Sign Digital Media
           </a>
