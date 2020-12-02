@@ -705,7 +705,7 @@
               @endphp
               @foreach ($data['parameters_tab'] as $record)
               <li class="nav-item">
-                <a href="#pid_{{ $record->id }}" class="nav-link {{ $i == 0 ? 'active' : '' }}" data-toggle="tab" onclick="change_table_data('summary_table_{{ $record->id }}'); change_table_data_anomaly('list_notes_anomaly_{{ $record->id }}');">
+                <a href="#pid_{{ $record->id }}" class="nav-link {{ $i == 0 ? 'active' : '' }}" data-toggle="tab" onclick="change_table_data('summary_table_{{ $record->id }}'); ">
                   <i class="icon-cog"></i>
                   {{ $record->parameter_desc }}
                   <span class="badge bg-info badge-pill ml-auto" id="{{ $record->id }}_val">0%</span>
