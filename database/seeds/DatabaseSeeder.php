@@ -164,5 +164,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(update_parameter_and_formulasi_vital_sign::class);
 
+        $this->call(modify_formulasi_digital_media_v1::class);        
+
     }
 }
