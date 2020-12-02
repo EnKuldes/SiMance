@@ -565,6 +565,12 @@ class HomeController extends Controller
           , '.$table_name1.'.id_formulasi AS id_formulasi'
         );
 
+        // Untuk Handling apabila ada Formulasi yang tidak ingin ditampilkans
+        $rawQuery = '1 = 1';
+        if ($request->id_parameter == 6) {
+          $rawQuery = 'formulasis.id not in (48, 52)';
+        }
+
         $data = DB::table('formulasis')
         ->leftJoin('parameters', 'parameters.id', '=', 'formulasis.id_parameter')
         ->leftJoinSub($dataToJoin, 'res', function ($join) {
@@ -575,6 +581,7 @@ class HomeController extends Controller
           , ['parameters.id', '=', $request->id_parameter]
           , ['formulasis.is_enabled', '=', '1']
         ])
+        ->whereRaw($rawQuery) // Klausal Query untuk memisahkan formulasi yang tidak ingin di tampilkans
         ->selectRaw('
           parameters.parameter_desc AS parameter_desc
           , formulasis.formulasi_desc AS value_desc
@@ -1316,6 +1323,12 @@ class HomeController extends Controller
             ->groupBy('id_formulasi');
         }
 
+        // Untuk Handling apabila ada Formulasi yang tidak ingin ditampilkans
+        $rawQuery = '1 = 1';
+        if ($tempArr[$i]['paramater_id'] == 6) {
+          $rawQuery = 'formulasis.id not in (48, 52)';
+        }
+
         $total_input_per_formulasi = DB::table('formulasis')
         ->selectRaw('
           formulasis.id_parameter,
@@ -1332,6 +1345,7 @@ class HomeController extends Controller
         ->whereRaw("
           formulasis.is_enabled = '1' AND formulasis.id_parameter = ".$tempArr[$i]['paramater_id']."
           ")
+        ->whereRaw($rawQuery) // Klausal Query untuk memisahkan formulasi yang tidak ingin di tampilkans
         ->get();
         $tempArr1 = [];
         foreach ($total_input_per_formulasi as $total_per_formulasi) {
@@ -1520,6 +1534,13 @@ class HomeController extends Controller
           $datas->where('id_parameter', '=', $request->id_parameter);
         }
       }
+      // Untuk Handling apabila ada Formulasi yang tidak ingin ditampilkans
+      $rawQuery = '1 = 1';
+      if ($request->id_parameter == 6) {
+        $rawQuery = 'id not in (48, 52)';
+      }
+      $datas->whereRaw($rawQuery); // Klausal Query untuk memisahkan formulasi yang tidak ingin di tampilkans
+
       $datas = $datas->get();
       return response()->json($datas);
     }    
