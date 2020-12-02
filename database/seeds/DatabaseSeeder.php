@@ -161,5 +161,8 @@ class DatabaseSeeder extends Seeder
         $this->call(update_parameter_and_kpi_C4::class);
         $this->call(new_paramater_vital_sign::class);
         $this->call(new_formulasi_vital_sign::class);
+
+        $this->call(update_parameter_and_formulasi_vital_sign::class);
+
     }
 }
