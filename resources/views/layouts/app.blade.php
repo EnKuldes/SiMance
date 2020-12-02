@@ -78,25 +78,11 @@
           </a>
         </li>
 
-        <li class="nav-item">
-          <a href="/vital-sign" class="navbar-nav-link">
-            <i class="icon-exclamation mr-2"></i>
-            Vital Sign CC 147
-          </a>
-        </li>
-
         @elseif (Auth::user()->layanan == 2)
         <li class="nav-item">
           <a href="/digital-media" class="navbar-nav-link">
             <i class="icon-presentation mr-2"></i>
             Daily Digital Media
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a href="/vital-sign" class="navbar-nav-link">
-            <i class="icon-exclamation mr-2"></i>
-            Vital Sign Digital Media
           </a>
         </li>
 
@@ -131,6 +117,15 @@
           <a href="/performance-system-verifikasi" class="navbar-nav-link">
             <i class="icon-chart mr-2"></i>
             Perfomance System: Verifikasi
+          </a>
+        </li>
+        @endif
+
+        @if (Auth::user()->layanan != 0 && ( Auth::user()->layanan == 1 || Auth::user()->layanan == 2 ))
+        <li class="nav-item">
+          <a href="/vital-sign" class="navbar-nav-link">
+            <i class="icon-exclamation mr-2"></i>
+            Vital Sign
           </a>
         </li>
         @endif

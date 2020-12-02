@@ -773,17 +773,17 @@ class HomeController extends Controller
         $satuan = '';
         $dt = DB::table('daily_vital_sign')->where([
           ['id_layanan', '=', auth()->user()->layanan]
-          // , ['id_parameter', '=', $id_parameter]
+          , ['id_parameter', '=', $request->id_parameter]
         ]);
         $qWhere = "IFNULL(";
         switch ($request->id_parameter) {
           // 147
           case 1:
-            $qWhere .= 'SUM(CASE WHEN id_formulasi = 1 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 4 THEN nilai ELSE 0 END)*100';
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 1 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 9 THEN nilai ELSE 0 END)*100';
             $satuan = '%';
             break;
           case 2:
-            $qWhere .= 'SUM(CASE WHEN id_formulasi = 2 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 4 THEN nilai ELSE 0 END)*100';
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 2 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 10 THEN nilai ELSE 0 END)*100';
             $satuan = '%';
             break;
           case 3:
@@ -794,11 +794,11 @@ class HomeController extends Controller
             break;
           // SOsmed
           case 5:
-            $qWhere .= 'SUM(CASE WHEN id_formulasi = 5 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 8 THEN nilai ELSE 0 END)*100';
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 5 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 11 THEN nilai ELSE 0 END)*100';
             $satuan = '%';
             break;
           case 6:
-            $qWhere .= 'SUM(CASE WHEN id_formulasi = 6 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 8 THEN nilai ELSE 0 END)*100';
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 6 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 12 THEN nilai ELSE 0 END)*100';
             $satuan = '%';
             break;
           case 7:
@@ -952,17 +952,17 @@ class HomeController extends Controller
         $satuan = '';
         $dt = DB::table('daily_vital_sign')->where([
           ['id_layanan', '=', auth()->user()->layanan]
-          // , ['id_parameter', '=', $id_parameter]
+          , ['id_parameter', '=', $parameter->id]
         ]);
         $qWhere = "IFNULL(";
         switch ($parameter->id) {
           // 147
           case 1:
-            $qWhere .= 'SUM(CASE WHEN id_formulasi = 1 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 4 THEN nilai ELSE 0 END)*100';
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 1 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 9 THEN nilai ELSE 0 END)*100';
             $satuan = '%';
             break;
           case 2:
-            $qWhere .= 'SUM(CASE WHEN id_formulasi = 2 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 4 THEN nilai ELSE 0 END)*100';
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 2 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 10 THEN nilai ELSE 0 END)*100';
             $satuan = '%';
             break;
           case 3:
@@ -973,11 +973,11 @@ class HomeController extends Controller
             break;
           // SOsmed
           case 5:
-            $qWhere .= 'SUM(CASE WHEN id_formulasi = 5 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 8 THEN nilai ELSE 0 END)*100';
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 5 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 11 THEN nilai ELSE 0 END)*100';
             $satuan = '%';
             break;
           case 6:
-            $qWhere .= 'SUM(CASE WHEN id_formulasi = 6 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 8 THEN nilai ELSE 0 END)*100';
+            $qWhere .= 'SUM(CASE WHEN id_formulasi = 6 THEN nilai ELSE 0 END)/SUM(CASE WHEN id_formulasi = 12 THEN nilai ELSE 0 END)*100';
             $satuan = '%';
             break;
           case 7:
