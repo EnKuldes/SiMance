@@ -698,7 +698,7 @@
         <div class="card-body p-0">
           <ul class="nav nav-sidebar mb-2">
             <li class="nav-item-header">
-              Parameter
+              Vital Sign {{ Auth::user()->layanans->layanan_desc }}
               </li>
               @php
               $i = 0;

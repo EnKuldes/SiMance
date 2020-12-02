@@ -125,7 +125,7 @@
         <li class="nav-item">
           <a href="/vital-sign" class="navbar-nav-link">
             <i class="icon-exclamation mr-2"></i>
-            Vital Sign
+            Vital Sign {{ Auth::user()->layanans->layanan_desc }}
           </a>
         </li>
         @endif
