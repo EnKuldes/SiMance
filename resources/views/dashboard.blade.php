@@ -148,6 +148,11 @@ $('#detail_response_time').on('hidden.bs.collapse', function() {
               content += '<div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> '+data[i]['realisasi_per_formulasi'][2]['formulasi_desc'];
             }
             else{
+              // Kondisional Digital Media
+              if(data[i]['paramater_id'] == 6){
+                content += '<div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> All Response Time <a href="#detail_response_time" id="detail_response_time_btn" data-toggle="collapse" data-target=".multi-collapse" class="text-default"><i class="servicedrop icon-circle-down2"></i></a></div><div class="collapse multi-collapse" id="detail_response_time">';
+              }
+
               for (var j = 0; j < data[i]['realisasi_per_formulasi'].length; j++) {
                 content += '<div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> '+data[i]['realisasi_per_formulasi'][j]['formulasi_desc'];
               }
@@ -167,10 +172,28 @@ $('#detail_response_time').on('hidden.bs.collapse', function() {
               content += '<p class="font-weight-bold font-size-sm text-center mb-0 text-success">'+new Intl.NumberFormat().format(data[i]['realisasi_per_formulasi'][2]['formulasi_total'])+'</p>';
             }
             else{
+              // Kondisional Digital Media
+              if(data[i]['paramater_id'] == 6){
+                  content += '<p class="font-weight-bold font-size-sm text-center mb-0 mt-3 '
+                  content += 'text-success">';
+                  var tmp_x = 0; // Variabel Penampung Nilai Total
+                  for (var j = 0; j < data[i]['realisasi_per_formulasi'].length; j++) {
+                    tmp_x += parseFloat(data[i]['realisasi_per_formulasi'][j]['formulasi_total']);
+                  }
+                  content += new Intl.NumberFormat().format( tmp_x );
+                  content += '</p>';
+                  content += '<div class="collapse multi-collapse" id="detail_response_time1">';
+              }
+
               for (var j = 0; j < data[i]['realisasi_per_formulasi'].length; j++) {
                 content += '<p class="font-weight-bold font-size-sm text-center mb-0'
                 content += (j == 0) ? ' mt-3 ' : ' ';
                 content += 'text-success">'+new Intl.NumberFormat().format(data[i]['realisasi_per_formulasi'][j]['formulasi_total'])+'</p>';
+              }
+
+              // Kondisional Digital Media
+              if(data[i]['paramater_id'] == 6){
+                content += '</div>';
               }
             }
             content += '</td>';
@@ -763,63 +786,6 @@ $('#detail_response_time').on('hidden.bs.collapse', function() {
     </div>
     <!-- /basic columns -->
   </div>
-  <table class="table text-nowrap">
-    <tbody>
-      <tr>
-        <td>
-          <div class="d-flex align-items-center">
-            <div>
-              <a href="#" class="text-default font-weight-semibold letter-icon-title">Response Time</a>
-  
-              <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> 
-                All Response Time
-                <a href="#detail_response_time" id="detail_response_time_btn" data-toggle="collapse" data-target=".multi-collapse" class="text-default">
-                  <i class="servicedrop icon-circle-down2"></i>
-                </a>
-              </div>
-              
-  
-              <div class="collapse multi-collapse" id="detail_response_time">
-                <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1 ml-2"></i>Channel 1</div>
-                <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1 ml-2"></i>Channel 2</div>
-              </div>
-            </div>
-          </div>
-        </td>
-        <td>
-          <p class="font-weight-bold font-size-sm text-center mb-0 mt-3 text-success">
-            0
-          </p>
-          <div class="collapse multi-collapse" id="detail_response_time1">
-          <p class="font-weight-bold font-size-sm text-center mb-0 text-success">
-            0
-          </p>
-          <p class="font-weight-bold font-size-sm text-center mb-0 text-success">
-            0
-          </p>
-          </div>
-        </td>
-        <td>
-          <p class="font-weight-bold font-size-lg text-center text-success mb-0">
-            0%</p>
-        </td>
-        <td>
-          <p class="font-weight-bold font-size-lg text-center text-orange mb-0">
-            0%</p>
-        </td>
-        <td>
-          <p class="font-weight-bold font-size-lg text-center mb-0 text-purple">
-            0%</p>
-        </td>
-        <td>
-          <p class="font-weight-bold font-size-lg text-center mb-0 text-info">
-            0%</p>
-        </td>
-      </tr>
-  
-     
-    </tbody>
-  </table>
   
 </div>
 @endsection
