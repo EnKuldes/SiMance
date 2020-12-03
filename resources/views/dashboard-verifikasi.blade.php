@@ -140,6 +140,11 @@
               content += '<div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> '+data[i]['realisasi_per_formulasi'][2]['formulasi_desc'];
             }
             else{
+              // Kondisional Digital Media
+              if(data[i]['paramater_id'] == 6){
+                content += '<div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> All Response Time <a href="#detail_response_time" id="detail_response_time_btn" data-toggle="collapse" data-target=".multi-collapse" class="text-default"><i class="servicedrop icon-circle-down2"></i></a></div><div class="collapse multi-collapse" id="detail_response_time">';
+              }
+
               for (var j = 0; j < data[i]['realisasi_per_formulasi'].length; j++) {
                 content += '<div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> '+data[i]['realisasi_per_formulasi'][j]['formulasi_desc'];
               }
@@ -159,10 +164,28 @@
               content += '<p class="font-weight-bold font-size-sm text-center mb-0 text-success">'+new Intl.NumberFormat().format(data[i]['realisasi_per_formulasi'][2]['formulasi_total'])+'</p>';
             }
             else{
+              // Kondisional Digital Media
+              if(data[i]['paramater_id'] == 6){
+                  content += '<p class="font-weight-bold font-size-sm text-center mb-0 mt-3 '
+                  content += 'text-success">';
+                  var tmp_x = 0; // Variabel Penampung Nilai Total
+                  for (var j = 0; j < data[i]['realisasi_per_formulasi'].length; j++) {
+                    tmp_x += parseFloat(data[i]['realisasi_per_formulasi'][j]['formulasi_total']);
+                  }
+                  content += new Intl.NumberFormat().format( tmp_x );
+                  content += '</p>';
+                  content += '<div class="collapse multi-collapse" id="detail_response_time1">';
+              }
+
               for (var j = 0; j < data[i]['realisasi_per_formulasi'].length; j++) {
                 content += '<p class="font-weight-bold font-size-sm text-center mb-0'
                 content += (j == 0) ? ' mt-3 ' : ' ';
                 content += 'text-success">'+new Intl.NumberFormat().format(data[i]['realisasi_per_formulasi'][j]['formulasi_total'])+'</p>';
+              }
+              
+              // Kondisional Digital Media
+              if(data[i]['paramater_id'] == 6){
+                content += '</div>';
               }
             }
             content += '</td>';
