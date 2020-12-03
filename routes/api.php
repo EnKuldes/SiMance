@@ -19,4 +19,4 @@ use Illuminate\Support\Facades\Route;
 });*/
 
 Route::post('/save-daily-input', "APIController@save_daily_input")->name('post.save-daily-input');
-Route::post('/save-daily-sl-sosmed-input', "APIController@save_daily_sl_sosmed_input_v2")->name('post.save-daily-sl-sosmed-input');
+Route::post('/save-daily-sl-sosmed-input', "APIController@save_daily_sl_sosmed_input_v3")->name('post.save-daily-sl-sosmed-input');
