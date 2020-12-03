@@ -20,6 +20,16 @@
 
 @section('script')
 <script type="text/javascript">
+  //icon change collapse
+
+$('#detail_response_time').on('shown.bs.collapse', function() {
+  $(".servicedrop").addClass('icon-circle-up2').removeClass('icon-circle-down2');
+});
+
+$('#detail_response_time').on('hidden.bs.collapse', function() {
+  $(".servicedrop").addClass('icon-circle-down2').removeClass('icon-circle-up2');
+});
+
   //Inisiasi BlockUI
   $('.card-body').block({ 
       message: '<i class="icon-spinner4 spinner"></i>',
@@ -439,7 +449,8 @@
       <div class="card-header header-elements-inline">
         <h5 class="card-title font-weight-bold">{{-- CC 147 --}}{{ Auth::user()->layanans->layanan_desc }} Realtime</h5>
         <div class="header-elements">
-          <span class="font-weight-bold font-size-lg text-info-600 ml-2" style="display:none;">TOTAL BOBOT | <span id="t_bobot">{{ round($t_bobot ?? 0) }}</span>%</span>
+          <span class="font-weight-bold font-size-lg text-info-600 ml-2" style="display:none;">TOTAL BOBOT | <span
+              id="t_bobot">{{ round($t_bobot ?? 0) }}</span>%</span>
         </div>
       </div>
 
@@ -453,7 +464,9 @@
                     {{ $kpiObject[0]->target  ?? 0}} | Bobot {{ $kpiObject[0]->bobot  ?? 0}}</span>
                 </div>
                 <div class="progress" style="height: 1.5rem;">
-                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round($target_service_level  ?? 0) > ($kpiObject[0]->target  ?? 0) ? "success" : "danger" }}" style="width: <?=$width_progressbar_sl ?? 0?>%">
+                  <div
+                    class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round($target_service_level  ?? 0) > ($kpiObject[0]->target  ?? 0) ? "success" : "danger" }}"
+                    style="width: <?=$width_progressbar_sl ?? 0?>%">
                     <span>{{ round($target_service_level  ?? 0) }}% Complete</span>
                   </div>
                 </div>
@@ -463,7 +476,9 @@
                 <div class="d-flex align-items-center mb-1">FCR <span class="text-muted ml-auto">Target
                     {{ $kpiObject[1]->target ?? 0 }} | Bobot {{ $kpiObject[1]->bobot ?? 0 }}</span></div>
                 <div class="progress" style="height: 1.5rem;">
-                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round($target_fcr  ?? 0) > ($kpiObject[1]->target  ?? 0) ? "success" : "danger" }}" style="width: <?=$width_progressbar_fcr ?? 0 ?>%">
+                  <div
+                    class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round($target_fcr  ?? 0) > ($kpiObject[1]->target  ?? 0) ? "success" : "danger" }}"
+                    style="width: <?=$width_progressbar_fcr ?? 0 ?>%">
                     <span>{{ round($target_fcr ?? 0 ) }}% Complete</span>
                   </div>
                 </div>
@@ -473,7 +488,9 @@
                 <div class="d-flex align-items-center mb-1">Rasio Sales <span class="text-muted ml-auto">Target
                     {{ $kpiObject[2]->target ?? 0 }} | Bobot {{ $kpiObject[2]->bobot ?? 0 }}</span></div>
                 <div class="progress" style="height: 1.5rem;">
-                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round($target_rasio_sales  ?? 0) > ($kpiObject[2]->target  ?? 0) ? "info" : "danger" }}" style="width: <?=$width_progressbar_rs ?? 0 ?>%">
+                  <div
+                    class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round($target_rasio_sales  ?? 0) > ($kpiObject[2]->target  ?? 0) ? "info" : "danger" }}"
+                    style="width: <?=$width_progressbar_rs ?? 0 ?>%">
                     <span>{{ round($target_rasio_sales ?? 0 ) }}% Complete</span>
                   </div>
                 </div>
@@ -483,24 +500,29 @@
                 <div class="d-flex align-items-center mb-1">CES (by customer) <span class="text-muted ml-auto">Target
                     {{ $kpiObject[3]->target ?? 0 }} | Bobot {{ $kpiObject[3]->bobot ?? 0 }}</span></div>
                 <div class="progress" style="height: 1.5rem;">
-                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round($target_ces  ?? 0) > ($kpiObject[3]->target  ?? 0) ? "info" : "danger" }}" style="width: <?=$width_progressbar_ces ?? 0 ?>%">
+                  <div
+                    class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round($target_ces  ?? 0) > ($kpiObject[3]->target  ?? 0) ? "info" : "danger" }}"
+                    style="width: <?=$width_progressbar_ces ?? 0 ?>%">
                     <span>{{ round($target_ces ?? 0 ) }}% Complete</span>
                   </div>
                 </div>
               </li>
 
               <li class="mt-4">
-                <div class="d-flex align-items-center mb-1">Quality Layanan <span class="text-muted ml-auto">Target NOK <
-                    {{ $kpiObject[4]->target ?? 0 }} | Bobot
-                    {{ $kpiObject[4]->bobot ?? 0 }}</span></div>
-                <div class="progress" style="height: 1.5rem;">
-                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round(100-($target_quality_layanan  ?? 0)) < ($revert_target ?? 0) ? "info" : "info" }}" style="width: <?= (100-($target_quality_layanan  ?? 0)) == 100 ? 0 : (100-($target_quality_layanan  ?? 0)); ?>%">
-                    <span>{{ round(100 - ($target_quality_layanan ?? 0) ) }}% OK</span>
-                  </div>
+                <div class="d-flex align-items-center mb-1">Quality Layanan <span class="text-muted ml-auto">Target NOK
+                    < {{ $kpiObject[4]->target ?? 0 }} | Bobot {{ $kpiObject[4]->bobot ?? 0 }}</span> </div> <div
+                      class="progress" style="height: 1.5rem;">
+                      <div
+                        class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round(100-($target_quality_layanan  ?? 0)) < ($revert_target ?? 0) ? "info" : "info" }}"
+                        style="width: <?= (100-($target_quality_layanan  ?? 0)) == 100 ? 0 : (100-($target_quality_layanan  ?? 0)); ?>%">
+                        <span>{{ round(100 - ($target_quality_layanan ?? 0) ) }}% OK</span>
+                      </div>
 
-                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round($target_quality_layanan  ?? 0) <= ($kpiObject[4]->target  ?? 0) ? "success" : "danger" }}" style="width: <?=$target_quality_layanan ?? 0 ?>%">
-                    <span>{{ round($target_quality_layanan ?? 0 ) }}% NOK</span>
-                  </div>
+                      <div
+                        class="progress-bar progress-bar-striped progress-bar-animated bg-{{ round($target_quality_layanan  ?? 0) <= ($kpiObject[4]->target  ?? 0) ? "success" : "danger" }}"
+                        style="width: <?=$target_quality_layanan ?? 0 ?>%">
+                        <span>{{ round($target_quality_layanan ?? 0 ) }}% NOK</span>
+                      </div>
                 </div>
               </li>
             </ul>
@@ -510,7 +532,7 @@
               <table class="table text-nowrap" id="summary_layanan">
                 <thead>
                   <tr>
-                    <td  class="font-weight-bold w-100">Parameter</td>
+                    <td class="font-weight-bold w-100">Parameter</td>
                     <td align="center" class="font-weight-bold">Real (Sum)</td>
                     <td align="center" class="font-weight-bold">Real (%)</td>
                     <td align="center" class="font-weight-bold">Achv (%)</td>
@@ -525,10 +547,11 @@
                         <div>
                           <a href="#" class="text-default font-weight-semibold letter-icon-title">Service Level</a>
                           <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> COF
-                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Call W/ 20 Sec
+                            <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i>
+                              Call W/ 20 Sec
+                            </div>
                           </div>
                         </div>
-                      </div>
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-sm text-center mb-0 mt-3 text-success">
@@ -561,11 +584,13 @@
                       <div class="d-flex align-items-center">
                         <div>
                           <a href="#" class="text-default font-weight-semibold letter-icon-title">FCR</a>
-                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Closed by Frontliner
-                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Tiket Logic
+                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i>
+                            Closed by Frontliner
+                            <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i>
+                              Tiket Logic
+                            </div>
                           </div>
                         </div>
-                      </div>
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-sm text-center mb-0 mt-3 text-success">
@@ -598,11 +623,13 @@
                       <div class="d-flex align-items-center">
                         <div>
                           <a href="#" class="text-default font-weight-semibold letter-icon-title">RASIO SALES</a>
-                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Total Transaksi
-                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> CWC REGIS
+                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i>
+                            Total Transaksi
+                            <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i>
+                              CWC REGIS
+                            </div>
                           </div>
                         </div>
-                      </div>
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-sm text-center mb-0 mt-3 text-success">
@@ -635,10 +662,11 @@
                       <div class="d-flex align-items-center">
                         <div>
                           <a href="#" class="text-default font-weight-semibold letter-icon-title">CES (by Customer)</a>
-                            <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Puas
-                            <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Tidak Puas
-                        </Tidak div>
-                      </div>
+                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Puas
+                            <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i>
+                              Tidak Puas
+                              </Tidak div>
+                            </div>
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-sm text-center mb-0 mt-3 text-success">
@@ -671,11 +699,13 @@
                       <div class="d-flex align-items-center">
                         <div>
                           <a href="#" class="text-default font-weight-semibold letter-icon-title">Quality Layanan</a>
-                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Jumlah Agent OK
-                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> Jumlah Agent NOK
+                          <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i>
+                            Jumlah Agent OK
+                            <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i>
+                              Jumlah Agent NOK
+                            </div>
                           </div>
                         </div>
-                      </div>
                     </td>
                     <td>
                       <p class="font-weight-bold font-size-sm text-center mb-0 mt-3 text-success">
@@ -733,5 +763,63 @@
     </div>
     <!-- /basic columns -->
   </div>
+  <table class="table text-nowrap">
+    <tbody>
+      <tr>
+        <td>
+          <div class="d-flex align-items-center">
+            <div>
+              <a href="#" class="text-default font-weight-semibold letter-icon-title">Response Time</a>
+  
+              <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1"></i> 
+                All Response Time
+                <a href="#detail_response_time" id="detail_response_time_btn" data-toggle="collapse" data-target=".multi-collapse" class="text-default">
+                  <i class="servicedrop icon-circle-down2"></i>
+                </a>
+              </div>
+              
+  
+              <div class="collapse multi-collapse" id="detail_response_time">
+                <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1 ml-2"></i>Channel 1</div>
+                <div class="text-muted font-size-sm"><i class="icon-arrow-right14 font-size-sm mr-1 ml-2"></i>Channel 2</div>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <p class="font-weight-bold font-size-sm text-center mb-0 mt-3 text-success">
+            0
+          </p>
+          <div class="collapse multi-collapse" id="detail_response_time1">
+          <p class="font-weight-bold font-size-sm text-center mb-0 text-success">
+            0
+          </p>
+          <p class="font-weight-bold font-size-sm text-center mb-0 text-success">
+            0
+          </p>
+          </div>
+        </td>
+        <td>
+          <p class="font-weight-bold font-size-lg text-center text-success mb-0">
+            0%</p>
+        </td>
+        <td>
+          <p class="font-weight-bold font-size-lg text-center text-orange mb-0">
+            0%</p>
+        </td>
+        <td>
+          <p class="font-weight-bold font-size-lg text-center mb-0 text-purple">
+            0%</p>
+        </td>
+        <td>
+          <p class="font-weight-bold font-size-lg text-center mb-0 text-info">
+            0%</p>
+        </td>
+      </tr>
+  
+     
+    </tbody>
+  </table>
+  
 </div>
 @endsection
